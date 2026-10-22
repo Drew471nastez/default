@@ -5,18 +5,13 @@
   The maximum number of items to display. Anything above shows as "99+".
 
   Colors: reads --cart-bubble-background / --cart-bubble-text from an ancestor. Falls back to a contrasting pair
-  computed from the palette foreground when unset.
+  inherited from the surrounding surface when unset.
 {%- enddoc -%}
-
-{% liquid
-  assign bubble_bg_fallback = settings.page_text_color
-  assign bubble_text_fallback = settings.page_background_color
-%}
 
 <div
   ref="cartBubble"
   class="cart-bubble{% if cart == empty %} visually-hidden{% endif %}"
-  style="--cart-bubble-background-fallback: {{ bubble_bg_fallback }}; --cart-bubble-text-fallback: {{ bubble_text_fallback }};"
+  style="--cart-bubble-background-fallback: var(--color-foreground); --cart-bubble-text-fallback: var(--color-background);"
   {% assign item_count = cart.item_count %}
   {% if item_count <= 99 %}
     data-maintain-ratio

@@ -586,7 +586,7 @@
       {
         "type": "range",
         "id": "gap",
-        "label": "t:settings.gap",
+        "label": "Space between items",
         "min": 0,
         "max": 48,
         "step": 4,
@@ -606,7 +606,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -619,16 +623,27 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
-        "placeholder": "t:settings.default"
+        "label": "Custom background",
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Custom text color",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {
         "type": "header",

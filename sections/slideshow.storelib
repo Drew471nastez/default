@@ -63,20 +63,18 @@
 %}
 
 {% liquid
-  if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank
-    assign skip_section_contrast = false
-    if section.settings.content_position == 'on-media'
-      assign skip_section_contrast = true
-    endif
-    render 'contrast-override', color_scheme: section.settings.theme_color_scheme, background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
+  assign skip_section_contrast = false
+  if section.settings.content_position == 'on-media'
+    assign skip_section_contrast = true
   endif
+  render 'contrast-override', color_scheme: section.settings.theme_color_scheme, use_theme_default: true, text_color: section.settings.text_color, background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
 %}
 
 <div
-  class="section-background{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="section-background color-custom-{{ section.id }}"
 ></div>
 <div
-  class="slideshow-section spacing-style section {{ section_width_class }}{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %} disable-section-top-offset"
+  class="slideshow-section spacing-style section {{ section_width_class }} color-custom-{{ section.id }} disable-section-top-offset"
   style="{% render 'spacing-padding', settings: section.settings %}; --slideshow-gap: {{ section.settings.slideshow_gap }}px;{% if rounded_slide_corners %} --corner-radius: {{ section.settings.corner_radius }}px;{% endif %}"
 >
   <h2 class="visually-hidden">{{ 'accessibility.slideshow' | t }}</h2>
@@ -671,7 +669,7 @@
       {
         "type": "select",
         "id": "section_width",
-        "label": "t:settings.width",
+        "label": "Content width",
         "options": [
           {
             "value": "page-width",
@@ -761,7 +759,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -774,16 +776,27 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
-        "placeholder": "t:settings.default"
+        "label": "Custom background",
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Custom text color",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {
         "type": "header",

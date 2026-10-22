@@ -278,7 +278,7 @@
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
+        "label": "Custom background",
         "placeholder": "t:settings.default"
       },
       {
@@ -325,7 +325,7 @@
       {
         "type": "select",
         "id": "border",
-        "label": "t:settings.style",
+        "label": "Border style",
         "options": [
           {
             "value": "none",
@@ -345,7 +345,7 @@
         "max": 4,
         "step": 1,
         "unit": "px",
-        "label": "t:settings.thickness",
+        "label": "Border thickness",
         "default": 1,
         "visible_if": "{{ block.settings.border != 'none' }}"
       },
@@ -356,7 +356,7 @@
         "max": 100,
         "step": 1,
         "unit": "%",
-        "label": "t:settings.opacity",
+        "label": "Border opacity",
         "default": 100,
         "visible_if": "{{ block.settings.border != 'none' }}"
       },
@@ -370,7 +370,7 @@
       {
         "type": "range",
         "id": "border_radius",
-        "label": "t:settings.border_radius",
+        "label": "Corner radius",
         "min": 0,
         "max": 100,
         "step": 1,

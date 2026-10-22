@@ -153,9 +153,9 @@
     --theme-drawer-width: 30rem;
     --narrow-content-width: 36rem;
     --normal-content-width: 42rem;
-    --narrow-page-width: 90rem;
-    --normal-page-width: 120rem;
-    --wide-page-width: 150rem;
+    --narrow-page-width: {{ settings.content_max_width | default: 1440 }}px;
+    --normal-page-width: {{ settings.content_max_width | default: 1440 | times: 1.333333 | round: 0 }}px;
+    --wide-page-width: {{ settings.content_max_width | default: 1440 | times: 1.666667 | round: 0 }}px;
 
     /* Section Heights */
     --section-height-small: 15rem;
@@ -288,8 +288,14 @@
       for font_size in font_sizes
         assign size_setting = 'type_size_[font_size]' | replace: '[font_size]', font_size
         assign font_size_value = settings[size_setting] | times: 1
-        assign font_size_string = '[font_size_value]' | replace: '[font_size_value]', font_size_value
-        assign index = font_size_values | find_index: font_size_string
+        assign index = 0
+        for candidate_size in font_size_values
+          assign candidate_number = candidate_size | times: 1
+          if candidate_number == font_size_value
+            assign index = forloop.index0
+            break
+          endif
+        endfor
 
         if font_size_value >= fluid_size_cutoff
 
@@ -322,7 +328,7 @@
             Calculate the fluid and maximum size for each font size
           endcomment
           assign fluid_size_min_rem = fluid_font_size_min | divided_by: 16.0
-          assign fluid_size = font_size_value | times: 0.1
+          assign fluid_size = font_size_value | times: 0.1 | round: 4
           assign fluid_size_max_rem = font_size_value | divided_by: 16.0
 
           echo '--font-size--[font_size]: clamp([fluid_size_min_rem]rem, [fluid_size]vw, [fluid_size_max_rem]rem);' | replace: '[font_size]', font_size | replace: '[fluid_size_min_rem]', fluid_size_min_rem | replace: '[fluid_size]', fluid_size | replace: '[fluid_size_max_rem]', fluid_size_max_rem
@@ -461,8 +467,8 @@
     --gap-2xl: 2rem;
     --gap-3xl: 3rem;
 
-    --spacing-scale-md: 0.7;
-    --spacing-scale-default: 1.0;
+    --spacing-scale-md: {{ settings.section_spacing_scale | default: 100 | divided_by: 100.0 | times: 0.7 }};
+    --spacing-scale-default: {{ settings.section_spacing_scale | default: 100 | divided_by: 100.0 }};
 
     /* Checkout buttons gap */
     --checkout-button-gap: 10px;
@@ -585,9 +591,14 @@
 
     /* Button size */
     --button-size-md: 36px;
-    --button-size: var(--minimum-touch-target);
+    --button-size: {{ settings.button_min_height | default: 44 }}px;
     --button-padding-inline: 24px;
     --button-padding-block: 16px;
+
+    --input-font-family: var(--font-{{ settings.type_preset | default: 'paragraph' }}--family);
+    --input-font-size: var(--font-{{ settings.type_preset | default: 'paragraph' }}--size);
+    --input-font-weight: var(--font-{{ settings.type_preset | default: 'paragraph' }}--weight);
+    --input-line-height: var(--font-{{ settings.type_preset | default: 'paragraph' }}--line-height);
 
     /* Button font-family */
     --button-font-family-primary: var(--font-{{ settings.type_font_button_primary }}--family);
@@ -596,8 +607,8 @@
     --button-font-weight-secondary: var(--font-{{ settings.type_font_button_secondary }}--weight);
 
     /* Button text case */
-    --button-text-case-primary: {{ settings.button_text_case_primary }};
-    --button-text-case-secondary: {{ settings.button_text_case_secondary }};
+    --button-text-case-primary: {{ settings.button_text_case_primary | replace: 'default', 'none' }};
+    --button-text-case-secondary: {{ settings.button_text_case_secondary | replace: 'default', 'none' }};
 
     /* Borders */
     --border-color: rgb(var(--color-border-rgb) / var(--opacity-50));

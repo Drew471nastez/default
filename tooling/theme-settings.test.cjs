@@ -5,6 +5,11 @@ const path = require('node:path');
 const postcss = require('postcss');
 const {root, source, body, schema, settings, color, engine, render} = require('./theme-test-runtime.cjs');
 
+function sectionSettings(file, overrides = {}) {
+  const data = JSON.parse(source(file).match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]);
+  return {...Object.fromEntries(((data.shopify || data).settings || []).filter(s => s.id && s.default !== undefined).map(s => [s.id, s.default])), ...overrides};
+}
+
 function validateSettings(list, location) {
   const ids = new Set();
   for (const setting of list || []) {
@@ -66,7 +71,7 @@ test('section scheme controls reach a renderer and retain the default/custom cho
     if (!controls.some(s => s.id === 'theme_color_scheme')) continue;
     count++;
     assert(controls.find(s => s.id === 'theme_color_scheme').default === 'inherit');
-    assert(/color_scheme: (section\.settings|section_settings)\.theme_color_scheme|render 'section'|render 'product-information-content'/.test(body(raw)), file);
+    assert(/color_scheme: (section\.settings|section_settings)\.theme_color_scheme|render 'section'|render 'product-information-content'|color_scheme: account_scheme/.test(body(raw)), file);
   }
   assert(count >= 30, `expected broad coverage, found ${count}`);
 });
@@ -82,10 +87,10 @@ for (const name of ['surface', 'inverse', 'accent']) test(`${name} scheme render
   assert(styles.includes(`--color-input-text: ${values[`scheme_${name}_text`]}`));
 });
 
-test('default scheme keeps custom colors; an unset section background emits no override', async () => {
+test('inherited block colors emit no override; Custom keeps explicit colors', async () => {
   const inherited = await render('snippets/contrast-override.storelib', {color_scheme:'inherit', section_id:'test'});
   assert(!inherited.includes('<style>'));
-  const custom = await render('snippets/contrast-override.storelib', {color_scheme:'inherit', background_color:color('#aabbcc'),text_color:color('#112233'),section_id:'test'});
+  const custom = await render('snippets/contrast-override.storelib', {color_scheme:'custom', background_color:color('#aabbcc'),text_color:color('#112233'),section_id:'test'});
   assert(custom.includes('--color-background: #aabbcc'));
   assert(custom.includes('--color-foreground: #112233'));
 });
@@ -157,4 +162,155 @@ test('policy pages retain their content while using shared typography and scheme
     assert(out.includes(section.settings.body));
     assert(out.includes(`<h1 class="h2">${section.settings.heading}</h1>`));
   }
+});
+
+test('all directly referenced section and block controls are actually declared', () => {
+  for (const folder of ['sections','blocks']) for (const file of fs.readdirSync(path.join(root,folder))) {
+    if (!file.endsWith('.storelib')) continue;
+    const raw=source(`${folder}/${file}`);
+    const data=JSON.parse(raw.match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]);
+    const ids=new Set(((data.shopify || data).settings || []).map(s => s.id));
+    const object=folder==='sections'?'section':'block';
+    const references=[...body(raw).matchAll(new RegExp('(?<![\\w.])'+object+'\\.settings\\.([\\w-]+)','g'))].map(m => m[1]);
+    for (const id of references) assert(ids.has(id),`${file}: undeclared ${id}`);
+  }
+});
+
+test('a real section follows the theme default and can opt into Custom colors', async () => {
+  const file='sections/custom-liquid.storelib';
+  const values=settings({default_section_color_scheme:'inverse'});
+  const out=await render(file,{settings:values,section:{id:'custom-section',settings:sectionSettings(file,{theme_color_scheme:'inherit',custom_liquid:'<p>Section content</p>'})}});
+  assert(out.includes('--color-background: #171717'));
+  assert(out.includes('Section content'));
+  const custom=await render(file,{settings:values,section:{id:'custom-section',settings:sectionSettings(file,{theme_color_scheme:'custom',background_color:color('#ddeeff'),text_color:color('#112233')})}});
+  assert(custom.includes('--color-background: #ddeeff'));
+  assert(custom.includes('--color-foreground: #112233'));
+});
+
+test('nested groups follow the parent or resolve their own shared/custom scheme', async () => {
+  const values=settings();
+  const context={block:{id:'group',settings:{theme_color_scheme:'inherit',background_color:color('#ddeeff')}},children:'<p>Nested content</p>'};
+  const template="{% render 'group', settings: block.settings, block_id: block.id, children: children %}";
+  const inherited=await engine({settings:values}).parseAndRender(template,context);
+  assert(inherited.includes('color-custom-group'));
+  assert(!inherited.includes('--color-background:'));
+  context.block.settings.theme_color_scheme='inverse';
+  const fixed=await engine({settings:values}).parseAndRender(template,context);
+  assert(fixed.includes('--color-background: #171717'));
+  assert(fixed.includes('Nested content'));
+  context.block.settings.theme_color_scheme='custom';
+  const custom=await engine({settings:values}).parseAndRender(template,context);
+  assert(custom.includes('--color-background: #ddeeff'));
+});
+
+test('low-contrast text is repaired on page and section surfaces, with an explicit opt-out', async () => {
+  const values=settings({page_background_color:'#ffffff',page_text_color:'#ffffff',ensure_text_contrast:true});
+  const page=await render('snippets/color-palette.storelib',{settings:values});
+  assert(page.includes('--color-foreground: #000000'));
+  const section=await render('snippets/contrast-override.storelib',{settings:values,color_scheme:'base',section_id:'contrast'});
+  assert(section.includes('--color-foreground: #000000'));
+  const exact=await render('snippets/contrast-override.storelib',{settings:settings({page_background_color:'#ffffff',page_text_color:'#ffffff',ensure_text_contrast:false}),color_scheme:'base',section_id:'contrast'});
+  assert(exact.includes('--color-foreground: #ffffff'));
+});
+
+test('spacing accepts editor underscore keys, preserves zero, and supports Shopify hyphen keys', async () => {
+  const underscored=await render('snippets/spacing-style.storelib',{settings:{padding_block_start:0,padding_block_end:16}});
+  assert(underscored.includes('--padding-block-start: 0px'));
+  assert(underscored.includes('--padding-block-end: 16px'));
+  const hyphenated=await render('snippets/spacing-padding.storelib',{settings:{'padding-block-start':12,padding_block_start:40}});
+  assert(hyphenated.includes('--padding-block-start: 12px'));
+});
+
+test('responsive heading sizes use the adjacent smaller preset when deriving their minimum', async () => {
+  const values=settings({type_size_h1:'56',type_size_h2:'48',type_size_h3:'32',type_size_h4:'24',type_size_h5:'18',type_size_h6:'16',type_size_paragraph:'14'});
+  const out=await render('snippets/theme-styles-variables.storelib',{settings:values});
+  assert(out.includes('--font-size--h1: clamp(3rem, 5.6vw, 3.5rem)'));
+  assert(out.includes('--font-size--h2: clamp(2.25rem, 4.8vw, 3rem)'));
+});
+
+test('search product cards use the same appearance variables as grid product cards', async () => {
+  const values=settings({product_card_padding:18,product_card_radius:12,product_card_price_size:19});
+  const resource={id:'p1',title:'Search product',url:'/products/example',available:true,price:1000,selected_or_first_available_variant:{price:1000}};
+  const search=await render('snippets/resource-card.storelib',{settings:values,resource_type:'product',resource});
+  assert(search.includes('resource-card--theme'));
+  assert(search.includes('--padding-block-start: 18px'));
+  assert(search.includes('--border-radius: 12px'));
+  assert(search.includes('--card-price-size: 19px'));
+  const collection=await render('snippets/resource-card.storelib',{settings:values,resource_type:'collection',resource});
+  assert(!/class="[^"]*resource-card--theme/.test(collection));
+});
+
+for (const mode of ['login','signup','account']) test(`${mode} account screen uses the built-in account service and correct cross-navigation`, async () => {
+  const file='sections/customer-access.storelib';
+  const out=await render(file,{shop:{customer_accounts_enabled:true},routes:{account_url:'/account'},customer:null,section:{id:mode,settings:sectionSettings(file,{mode})}});
+  assert(out.includes('href="/account"'));
+  assert(out.includes(mode==='signup'?'href="/login"':'href="/signup"'));
+  assert(!out.includes('type="password"'));
+  assert(!out.includes('<form'));
+});
+
+test('signed-in accounts render escaped server-provided profile details and a management handoff', async () => {
+  const file='sections/customer-access.storelib';
+  const out=await render(file,{shop:{customer_accounts_enabled:true},routes:{account_url:'/account'},customer:{name:'<script>bad</script>',email:'customer@example.test'},section:{id:'profile',settings:sectionSettings(file,{mode:'account'})}});
+  assert(out.includes('&lt;script&gt;bad&lt;/script&gt;'));
+  assert(out.includes('customer@example.test'));
+  assert(out.includes('Manage your account'));
+  assert(!out.includes('New here?'));
+});
+
+test('disabled customer accounts do not show a broken authentication action', async () => {
+  const file='sections/customer-access.storelib';
+  const out=await render(file,{shop:{customer_accounts_enabled:false},routes:{account_url:'/account'},section:{id:'disabled',settings:sectionSettings(file)}});
+  assert(out.includes('Customer accounts are unavailable'));
+  assert(!out.includes('href="/account"'));
+});
+
+test('every global control has an explicit consumer or a verified dynamic token family', () => {
+  const files = ['sections','blocks','snippets','layout','shopify/assets'].flatMap(folder => fs.readdirSync(path.join(root,folder)).filter(file => /\.(storelib|css|js)$/.test(file)).map(file => `${folder}/${file}`));
+  const code=files.map(file => source(file).split('<schema>')[0]).join('\n');
+  for (const group of schema) for (const control of group.settings || []) {
+    if (!control.id) continue;
+    const dynamicType=/^type_(size|font|case|line_height|letter_spacing|weight)_(paragraph|h[1-6])$/.test(control.id);
+    const dynamicScheme=/^scheme_(surface|inverse|accent)_(background|text)$/.test(control.id);
+    assert(code.includes(`settings.${control.id}`) || code.includes(`settings['${control.id}']`) || dynamicType || dynamicScheme,`Disconnected global control: ${control.id}`);
+  }
+});
+
+test('header accounts follow the configured login/dashboard pages and visibility setting', async () => {
+  const context={settings:settings(),shop:{customer_accounts_enabled:true},routes:{account_url:'/account',cart_url:'/cart'},cart:{item_count:0},section:{settings:{}},display_style:'icon'};
+  const guest=await render('snippets/header-actions.storelib',context);
+  assert(guest.includes('href="/login"'));
+  const member=await render('snippets/header-actions.storelib',{...context,customer:{id:'member'}});
+  assert(member.includes('href="/customer-account"'));
+  const hidden=await render('snippets/header-actions.storelib',{...context,settings:settings({account_show_header:false})});
+  assert(!hidden.includes('class="storelib-account-link"'));
+});
+
+test('header underlay backgrounds resolve the same default and explicit schemes as sections', async () => {
+  const values=settings({default_section_color_scheme:'inverse'});
+  const inherited=await render('snippets/scheme-background.storelib',{settings:values,color_scheme:'inherit',use_theme_default:true,custom_background:color('#abcdef')});
+  assert.equal(inherited.trim(),'#171717');
+  const custom=await render('snippets/scheme-background.storelib',{settings:values,color_scheme:'custom',use_theme_default:true,custom_background:color('#abcdef')});
+  assert.equal(custom.trim(),'#abcdef');
+});
+
+test('product descriptions use the selected parent product outside preview mode', async () => {
+  const out=await render('blocks/product-description.storelib',{closest:{product:{description:'<p>Product details from the selected product.</p>'}},block:{id:'description',settings:{type_preset:'rte'}}});
+  assert(out.includes('Product details from the selected product.'));
+});
+
+test('all theme documents parse with the Shopify compatibility adapter', () => {
+  const parser=engine();
+  let count=0;
+  for (const folder of ['sections','blocks','snippets','layout']) for (const file of fs.readdirSync(path.join(root,folder))) {
+    if (!file.endsWith('.storelib')) continue;
+    assert.doesNotThrow(() => parser.parse(body(source(`${folder}/${file}`))),`${folder}/${file}`);
+    count++;
+  }
+  assert(count>=280);
+});
+
+test('explicit media-section text controls take effect even when automatic media contrast is skipped', async () => {
+  const out=await render('snippets/contrast-override.storelib',{color_scheme:'custom',background_color:color('#000000'),text_color:color('#ffffff'),skip_contrast:true,section_id:'hero'});
+  assert(out.includes('--color-foreground: #ffffff'));
 });

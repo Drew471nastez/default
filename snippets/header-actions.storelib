@@ -64,7 +64,7 @@
   {% endif %}
   {{- block.shopify_attributes -}}
 >
-  {% if shop.customer_accounts_enabled %}
+  {% if shop.customer_accounts_enabled and settings.account_show_header != false %}
     {% liquid
       assign account_actions_style = ''
       if display_style == 'text' and section
@@ -93,7 +93,7 @@
       {%- endcomment -%}
       <a
         class="storelib-account-link"
-        href="{{ routes.account_url | default: '/account' }}"
+        href="{% if customer %}{{ settings.account_dashboard_page | default: routes.account_url | default: '/account' | url | escape }}{% else %}{{ settings.account_login_page | default: routes.account_url | default: '/account' | url | escape }}{% endif %}"
         aria-label="{{ 'content.account_title' | t }}"
         {% if account_actions_style != blank %}
           style="{{ account_actions_style }}"

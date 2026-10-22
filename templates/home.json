@@ -30,7 +30,9 @@
         "section_height_custom": 50,
         "stack_media_on_mobile": false,
         "vertical_alignment_flex_direction_column": "flex-end",
-        "horizontal_alignment_flex_direction_column": "center"
+        "horizontal_alignment_flex_direction_column": "center",
+        "theme_color_scheme": "custom",
+        "text_color": "#ffffff"
       },
       "blocks": {
         "text_YLPk4p": {
@@ -265,7 +267,8 @@
         "columns_gap": 12,
         "background_color": "#000000",
         "padding_block_end": 48,
-        "padding_block_start": 48
+        "padding_block_start": 48,
+        "theme_color_scheme": "custom"
       },
       "blocks": {
         "static-header": {

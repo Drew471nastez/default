@@ -394,7 +394,7 @@
       {
         "type": "select",
         "id": "type_preset",
-        "label": "t:settings.preset",
+        "label": "Text style",
         "options": [
           {
             "value": "rte",
@@ -439,7 +439,7 @@
       {
         "type": "select",
         "id": "font",
-        "label": "t:settings.font",
+        "label": "Font family",
         "options": [
           {
             "value": "var(--font-body--family)",
@@ -464,7 +464,7 @@
       {
         "type": "select",
         "id": "font_size",
-        "label": "t:settings.size",
+        "label": "Custom text size",
         "options": [
           {
             "value": "",
@@ -541,7 +541,7 @@
       {
         "type": "select",
         "id": "line_height",
-        "label": "t:settings.line_height",
+        "label": "Line spacing",
         "options": [
           {
             "value": "tight",
@@ -562,7 +562,7 @@
       {
         "type": "select",
         "id": "letter_spacing",
-        "label": "t:settings.letter_spacing",
+        "label": "Letter spacing",
         "options": [
           {
             "value": "tight",
@@ -583,7 +583,7 @@
       {
         "type": "select",
         "id": "case",
-        "label": "t:settings.case",
+        "label": "Capitalization",
         "options": [
           {
             "value": "none",
@@ -624,7 +624,7 @@
       {
         "type": "color",
         "id": "text_color",
-        "label": "t:settings.text_color",
+        "label": "Custom text color",
         "placeholder": "t:settings.default"
       },
       {

@@ -5,6 +5,22 @@
 
 {% comment %} Compute palette lightest & darkest once for smart contrast {% endcomment %}
 {% liquid
+  assign page_foreground = settings.page_text_color
+  assign page_foreground_rgb = settings.page_text_color.rgb
+  if settings.ensure_text_contrast != false
+    assign page_contrast = settings.page_background_color | color_contrast: page_foreground
+    if page_contrast < 4.5
+      assign black_contrast = settings.page_background_color | color_contrast: '#000000'
+      assign white_contrast = settings.page_background_color | color_contrast: '#ffffff'
+      if black_contrast >= white_contrast
+        assign page_foreground = '#000000'
+        assign page_foreground_rgb = '0 0 0'
+      else
+        assign page_foreground = '#ffffff'
+        assign page_foreground_rgb = '255 255 255'
+      endif
+    endif
+  endif
   assign palette_lightest = '#ffffff'
   assign palette_lightest_brightness = -1
   assign palette_darkest = '#000000'
@@ -168,10 +184,10 @@
   :root {
     --color-background: {{ settings.page_background_color }};
     --color-background-rgb: {{ settings.page_background_color.rgb }};
-    --color-foreground: {{ settings.page_text_color }};
-    --color-foreground-rgb: {{ settings.page_text_color.rgb }};
-    --color-border: {{ settings.page_text_color }};
-    --color-border-rgb: {{ settings.page_text_color.rgb }};
+    --color-foreground: {{ page_foreground }};
+    --color-foreground-rgb: {{ page_foreground_rgb }};
+    --color-border: {{ page_foreground }};
+    --color-border-rgb: {{ page_foreground_rgb }};
     --palette-lightest: {{ palette_lightest }};
     --palette-lightest-rgb: {{ palette_lightest.rgb }};
     --palette-darkest: {{ palette_darkest }};

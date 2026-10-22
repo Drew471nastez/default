@@ -19,6 +19,17 @@
   else
     assign ratio = image_aspect_ratio
   endif
+  if resource_type == 'product'
+    assign image_hover = settings.show_second_image_on_hover
+    case settings.product_card_image_ratio
+      when 'square'
+        assign ratio = '1'
+      when 'portrait'
+        assign ratio = '4 / 5'
+      when 'landscape'
+        assign ratio = '16 / 9'
+    endcase
+  endif
   assign image_width = image_width | default: 1200
   assign widths = '240, 352, 832, 1200'
   assign image_sizes = image_sizes | default: 'auto'
@@ -54,8 +65,9 @@
   >
 {%- endif -%}
 <div
-  class="resource-card{% if style == 'overlay' %} resource-card--overlay{% endif %}"
+  class="resource-card{% if resource_type == 'product' %} resource-card--theme color-custom-theme-product-card{% endif %}{% if style == 'overlay' %} resource-card--overlay{% endif %}"
   data-resource-type="{{ resource_type }}"
+  {% if resource_type == 'product' %}style="{% render 'product-card-theme-style' %} --resource-card-image-fit: {{ settings.product_card_image_fit | default: 'cover' }};"{% endif %}
 >
   <a
     class="resource-card__link"
@@ -173,6 +185,40 @@
 {%- endif -%}
 
 {% stylesheet %}
+  .resource-card.resource-card--theme {
+    gap: var(--product-card-gap);
+    padding-block: var(--padding-block-start) var(--padding-block-end);
+    padding-inline: var(--padding-inline-start) var(--padding-inline-end);
+    border: var(--border-width) var(--border-style) var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    text-align: var(--product-card-text-align);
+  }
+
+  .resource-card--theme .resource-card__title {
+    font-family: var(--card-title-family);
+    font-size: var(--card-title-size);
+    font-style: var(--card-title-style);
+    font-weight: var(--card-title-weight);
+    line-height: var(--card-title-line-height);
+    letter-spacing: var(--card-title-tracking);
+    text-transform: var(--card-title-case);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--card-title-lines);
+    overflow: hidden;
+  }
+
+  .resource-card--theme .resource-card__content :is(.price, .compare-at-price) {
+    font-family: var(--card-price-family);
+    font-size: var(--card-price-size);
+    font-weight: var(--card-price-weight);
+  }
+
+  .resource-card--theme .resource-card__image {
+    object-fit: var(--resource-card-image-fit);
+  }
+
   .resource-card__wrapper {
     display: block;
     height: 100%;
@@ -325,7 +371,7 @@
 
   .resource-card:has(.resource-card__image--secondary) {
     &:hover,
-    &:focus {
+    &:focus-within {
       --resource-card-secondary-image-opacity: 1;
     }
   }

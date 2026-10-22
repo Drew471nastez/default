@@ -249,7 +249,7 @@
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
+        "label": "Custom background",
         "placeholder": "t:settings.default"
       },
       {

@@ -452,9 +452,7 @@
 {% endcapture %}
 
 {%- liquid
-  if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank
-    render 'contrast-override', color_scheme: section.settings.theme_color_scheme, background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
-  endif
+    render 'contrast-override', color_scheme: section.settings.theme_color_scheme, use_theme_default: true, text_color: section.settings.text_color, background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
 -%}
 
 {% # A first-section hero consumes `--header-group-height` at first paint (`.hero-wrapper:first-child` rule below) %}
@@ -462,7 +460,7 @@
 
 <div
   id="Hero-{{ section.id }}"
-  class="hero{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero color-custom-{{ section.id }}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
   style="
     --hero-border-style: {{ section.settings.border }};
     --hero-border-width: {{ section.settings.border_width }}px;
@@ -1772,14 +1770,14 @@
       {
         "type": "checkbox",
         "id": "vertical_on_mobile",
-        "label": "t:settings.vertical_on_mobile",
+        "label": "Stack vertically on mobile",
         "default": true,
         "visible_if": "{{ section.settings.content_direction == 'row' }}"
       },
       {
         "type": "select",
         "id": "horizontal_alignment",
-        "label": "t:settings.alignment",
+        "label": "Horizontal alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1804,7 +1802,7 @@
       {
         "type": "select",
         "id": "vertical_alignment",
-        "label": "t:settings.position",
+        "label": "Vertical alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1832,7 +1830,7 @@
       {
         "type": "select",
         "id": "horizontal_alignment_flex_direction_column",
-        "label": "t:settings.alignment",
+        "label": "Horizontal alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1853,7 +1851,7 @@
       {
         "type": "select",
         "id": "vertical_alignment_flex_direction_column",
-        "label": "t:settings.position",
+        "label": "Vertical alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1878,7 +1876,7 @@
       {
         "type": "range",
         "id": "gap",
-        "label": "t:settings.gap",
+        "label": "Space between items",
         "min": 0,
         "max": 100,
         "step": 1,
@@ -1888,7 +1886,7 @@
       {
         "type": "select",
         "id": "section_width",
-        "label": "t:settings.width",
+        "label": "Content width",
         "options": [
           {
             "value": "page-width",
@@ -1955,7 +1953,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -1968,16 +1970,27 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
-        "placeholder": "t:settings.default"
+        "label": "Custom background",
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Custom text color",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {
         "type": "checkbox",
@@ -2068,6 +2081,42 @@
         "step": 1,
         "unit": "px",
         "default": 0
+      },
+      {
+        "type": "select",
+        "id": "border",
+        "label": "Border style",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "solid",
+            "label": "Solid"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "range",
+        "id": "border_width",
+        "label": "Border thickness",
+        "min": 0,
+        "max": 8,
+        "step": 1,
+        "default": 0,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "border_opacity",
+        "label": "Border opacity",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 100,
+        "unit": "%"
       }
     ],
     "presets": [

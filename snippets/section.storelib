@@ -15,7 +15,7 @@
   endif
 %}
 {% render 'contrast-override',
-  color_scheme: section.settings.theme_color_scheme,
+  color_scheme: section.settings.theme_color_scheme, use_theme_default: true, text_color: section.settings.text_color,
   background_color: background_color,
   section_id: section_id,
   skip_contrast: skip_contrast

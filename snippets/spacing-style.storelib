@@ -13,7 +13,8 @@
   assign keys = 'padding-block-start,padding-block-end,padding-inline-start,padding-inline-end' | split: ','
 
   for key in keys
-    assign value = settings[key]
+    assign alternate_key = key | replace: '-', '_'
+    assign value = settings[key] | default: settings[alternate_key]
 
     if value != blank
       echo '--'

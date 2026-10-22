@@ -353,7 +353,7 @@
       {
         "type": "select",
         "id": "type_preset",
-        "label": "t:settings.preset",
+        "label": "Text style",
         "options": [
           {
             "value": "",

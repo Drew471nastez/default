@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "customer-access",
+      "settings": {
+        "mode": "signup",
+        "heading": "Create an account",
+        "intro": "<p>Get started with your customer account.</p>",
+        "primary_label": "Continue to sign up"
+      }
+    }
+  },
+  "order": ["main"]
+}

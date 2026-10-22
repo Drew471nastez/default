@@ -1,0 +1,17 @@
+<template compat="shopify">
+{%- liquid
+  assign active_scheme = color_scheme | default: 'inherit'
+  if use_theme_default and active_scheme == 'inherit'
+    assign active_scheme = settings.default_section_color_scheme | default: 'base'
+  endif
+  case active_scheme
+    when 'surface', 'inverse', 'accent'
+      assign color_key = 'scheme_' | append: active_scheme | append: '_background'
+      echo settings[color_key] | default: settings.page_background_color
+    when 'custom'
+      echo custom_background | default: settings.page_background_color
+    else
+      echo settings.page_background_color | default: settings.color_palette.background
+  endcase
+-%}
+</template>

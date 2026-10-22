@@ -18,11 +18,16 @@
   Form tokens that exist only on .color-custom-{id} (never on .text-block prose
   containers): --input-disabled-*, --checkbox-border.
 
-  Input chrome (--color-input-*) is not emitted by this snippet — inputs use the
-  global Input Fields settings defined in color-palette.liquid across all surfaces.
+  Named schemes emit button and input colors as a readable pair. Page colors and
+  Custom colors retain the global Button and Form field settings.
+
+  Sections pass use_theme_default: true, so inherit follows default_section_color_scheme.
+  Nested groups leave it false, so inherit keeps the containing section's colors.
 
   @param {string} [background_color] - Custom background color. Nothing is output when blank or fully transparent (alpha == 0).
-  @param {string} [text_color] - Explicit text color. Skips smart contrast when provided.
+  @param {string} [text_color] - Explicit text color, subject to optional surface contrast protection.
+  @param {string} [color_scheme] - inherit, base, surface, inverse, accent, or custom.
+  @param {boolean} [use_theme_default] - Sections resolve inherit through the global default; nested groups leave this false.
   @param {string} [border_color] - Optional border color to override if contrast is insufficient.
   @param {string} section_id - Unique identifier for scoping the CSS variables.
   @param {boolean} [skip_contrast] - When true, apply only the background color without any contrast overrides.
@@ -47,15 +52,30 @@
 
 {% liquid
   assign uses_shared_scheme = false
-  if color_scheme == 'surface' or color_scheme == 'inverse' or color_scheme == 'accent'
+  if use_theme_default
+    if color_scheme == blank or color_scheme == 'inherit' or color_scheme == 'white'
+      assign color_scheme = settings.default_section_color_scheme | default: 'base'
+    endif
+  endif
+  if color_scheme == 'base'
+    assign background_color = settings.page_background_color | default: settings.color_palette.background
+    assign text_color = settings.page_text_color | default: settings.color_palette.foreground
+    assign skip_contrast = false
+  elsif color_scheme == 'surface' or color_scheme == 'inverse' or color_scheme == 'accent'
     assign uses_shared_scheme = true
     assign scheme_background_key = 'scheme_' | append: color_scheme | append: '_background'
     assign scheme_text_key = 'scheme_' | append: color_scheme | append: '_text'
     assign background_color = settings[scheme_background_key]
     assign text_color = settings[scheme_text_key]
     assign skip_contrast = false
+  elsif color_scheme == 'inherit'
+    assign background_color = ''
+    assign text_color = ''
   endif
   assign skip_contrast = skip_contrast | default: false, allow_false: true
+  if text_color != blank
+    assign skip_contrast = false
+  endif
   assign preset = preset | default: 'content'
 
   assign has_background = false
@@ -76,7 +96,7 @@
     endif
 
     # --- Effective foreground text color ---
-    # 1. Explicit text_color wins.
+    # 1. Start with explicit text_color when present.
     # 2. Else, use settings.page_text_color if it contrasts (>= 4.5).
     # 3. Else, fall back to the brightness-based palette extreme (contrast_var).
     if text_color != blank
@@ -88,8 +108,30 @@
         assign effective_text_color = settings.page_text_color
         assign effective_text_color_rgb = settings.page_text_color.rgb
       else
-        assign effective_text_color = contrast_var
-        assign effective_text_color_rgb = contrast_rgb_var
+        assign black_contrast = background_color | color_contrast: '#000000'
+        assign white_contrast = background_color | color_contrast: '#ffffff'
+        if black_contrast >= white_contrast
+          assign effective_text_color = '#000000'
+          assign effective_text_color_rgb = '0 0 0'
+        else
+          assign effective_text_color = '#ffffff'
+          assign effective_text_color_rgb = '255 255 255'
+        endif
+      endif
+    endif
+
+    if settings.ensure_text_contrast != false
+      assign chosen_contrast = background_color | color_contrast: effective_text_color
+      if chosen_contrast < 4.5
+        assign black_contrast = background_color | color_contrast: '#000000'
+        assign white_contrast = background_color | color_contrast: '#ffffff'
+        if black_contrast >= white_contrast
+          assign effective_text_color = '#000000'
+          assign effective_text_color_rgb = '0 0 0'
+        else
+          assign effective_text_color = '#ffffff'
+          assign effective_text_color_rgb = '255 255 255'
+        endif
       endif
     endif
 
@@ -116,23 +158,23 @@
     .color-custom-{{ section_id }},
     .color-custom-{{ section_id }} .text-block {
       {% if uses_shared_scheme %}
-        --color-primary-button-background: {{ text_color }};
+        --color-primary-button-background: {{ effective_text_color }};
         --color-primary-button-text: {{ background_color }};
-        --color-primary-button-border: {{ text_color }};
+        --color-primary-button-border: {{ effective_text_color }};
         --color-primary-button-hover-background: {{ background_color }};
-        --color-primary-button-hover-text: {{ text_color }};
-        --color-primary-button-hover-border: {{ text_color }};
-        --color-primary-button-focus-outline: {{ text_color }};
+        --color-primary-button-hover-text: {{ effective_text_color }};
+        --color-primary-button-hover-border: {{ effective_text_color }};
+        --color-primary-button-focus-outline: {{ effective_text_color }};
         --color-secondary-button-background: {{ background_color }};
-        --color-secondary-button-text: {{ text_color }};
-        --color-secondary-button-border: {{ text_color }};
-        --color-secondary-button-hover-background: {{ text_color }};
+        --color-secondary-button-text: {{ effective_text_color }};
+        --color-secondary-button-border: {{ effective_text_color }};
+        --color-secondary-button-hover-background: {{ effective_text_color }};
         --color-secondary-button-hover-text: {{ background_color }};
-        --color-secondary-button-hover-border: {{ text_color }};
+        --color-secondary-button-hover-border: {{ effective_text_color }};
         --color-input-background: {{ background_color }};
-        --color-input-text: {{ text_color }};
-        --color-input-text-rgb: {{ text_color.rgb }};
-        --color-input-border: {{ text_color }};
+        --color-input-text: {{ effective_text_color }};
+        --color-input-text-rgb: {{ effective_text_color_rgb }};
+        --color-input-border: {{ effective_text_color }};
       {% endif %}
       /* Background */
       --color-background: {{ background_color }};

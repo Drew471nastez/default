@@ -15,12 +15,14 @@
 {%- enddoc -%}
 
 {% liquid
+  assign block_id = block_id | default: block.id
+  assign background_color = background_color | default: settings.background_color
   assign skip_contrast = false
   if settings.background_media != blank and settings.background_media != 'none'
     assign skip_contrast = true
   endif
 %}
-{% render 'contrast-override', background_color: background_color, section_id: block_id, skip_contrast: skip_contrast %}
+{% render 'contrast-override', color_scheme: settings.theme_color_scheme, text_color: settings.text_color, background_color: background_color, section_id: block_id, skip_contrast: skip_contrast %}
 
 <div
   class="
@@ -31,7 +33,7 @@
     spacing-style
     size-style
     {{ class }}
-    {% if background_color != blank %} color-custom-{{ block_id }}{% endif %}
+    color-custom-{{ block_id }}
   "
   style="
     {% render 'border-override', settings: settings %}

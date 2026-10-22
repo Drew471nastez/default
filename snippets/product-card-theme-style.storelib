@@ -1,0 +1,24 @@
+<template compat="shopify">
+--border-width: {{ settings.product_card_border_width | default: 0 }}px;
+--border-style: solid;
+--border-color: rgb(var(--color-border-rgb) / 0.2);
+--border-radius: {{ settings.product_card_radius | default: 0 }}px;
+--padding-block-start: {{ settings.product_card_padding | default: 0 }}px;
+--padding-block-end: {{ settings.product_card_padding | default: 0 }}px;
+--padding-inline-start: {{ settings.product_card_padding | default: 0 }}px;
+--padding-inline-end: {{ settings.product_card_padding | default: 0 }}px;
+--product-card-gap: {{ settings.product_card_gap | default: 16 }}px;
+--product-card-text-align: {{ settings.product_card_alignment | default: 'start' }};
+--product-card-alignment: stretch;
+--card-title-lines: {{ settings.product_card_title_lines | default: 3 }};
+--card-title-size: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--size);
+--card-title-family: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--family);
+--card-title-weight: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--weight);
+--card-title-style: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--style);
+--card-title-tracking: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--letter-spacing, normal);
+--card-title-line-height: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--line-height);
+--card-title-case: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--case);
+--card-price-family: var(--font-{{ settings.product_card_price_font | default: 'body' }}--family);
+--card-price-weight: var(--font-{{ settings.product_card_price_font | default: 'body' }}--weight);
+--card-price-size: {{ settings.product_card_price_size | default: 14 }}px;
+</template>

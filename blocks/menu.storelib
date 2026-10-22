@@ -427,13 +427,13 @@
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
+        "label": "Custom background",
         "placeholder": "t:settings.default"
       },
       {
         "type": "color",
         "id": "text_color",
-        "label": "t:settings.text_color",
+        "label": "Custom text color",
         "placeholder": "t:settings.default"
       },
       {

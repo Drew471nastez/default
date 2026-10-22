@@ -1,5 +1,5 @@
 <template compat="shopify">
-{% render 'contrast-override', color_scheme: section.settings.color_scheme, section_id: section.id %}
+{% render 'contrast-override', color_scheme: section.settings.color_scheme, use_theme_default: true, section_id: section.id %}
 <div class="section-background color-custom-{{ section.id }}"></div>
 <section
   class="section section--page-width color-custom-{{ section.id }} policy-rich-text"

@@ -151,7 +151,7 @@
       {
         "type": "select",
         "id": "horizontal_alignment",
-        "label": "t:settings.alignment",
+        "label": "Horizontal alignment",
         "options": [
           {
             "value": "flex-start",
@@ -175,7 +175,7 @@
       {
         "type": "range",
         "id": "gap",
-        "label": "t:settings.gap",
+        "label": "Space between items",
         "min": 0,
         "max": 100,
         "step": 1,

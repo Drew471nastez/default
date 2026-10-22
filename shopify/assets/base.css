@@ -1839,3 +1839,12 @@ main > .shopify-section:first-child .section:not(.disable-section-top-offset) {
     margin-top: calc(var(--header-height) * var(--transparent-header-offset-boolean) * -1);
   }
 }
+
+/* Shared form typography. Keep mobile fields at least 16px to avoid focus zoom. */
+:is(textarea, select, input:not([type='checkbox'], [type='radio'], [type='hidden'], [type='submit'], [type='button'])) {
+  color: var(--color-input-text, var(--color-foreground));
+  font-family: var(--input-font-family, var(--font-body--family));
+  font-size: max(1rem, var(--input-font-size, 1rem));
+  font-weight: var(--input-font-weight, var(--font-body--weight));
+  line-height: var(--input-line-height, var(--font-paragraph--line-height));
+}

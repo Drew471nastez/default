@@ -1,0 +1,140 @@
+<template compat="shopify">
+{% liquid
+  assign account_scheme = section.settings.theme_color_scheme
+  if account_scheme == blank or account_scheme == 'inherit'
+    assign account_scheme = settings.account_color_scheme | default: 'inherit'
+  endif
+  assign account_url = routes.account_url | default: '/account'
+  assign login_url = settings.account_login_page | default: '/login'
+  assign signup_url = settings.account_signup_page | default: '/signup'
+%}
+{% render 'contrast-override', color_scheme: account_scheme, use_theme_default: true, section_id: section.id %}
+<div class="section-background color-custom-{{ section.id }}"></div>
+<section
+  class="section section--page-width customer-access color-custom-{{ section.id }}"
+  aria-labelledby="customer-heading-{{ section.id }}"
+  style="--account-width: {{ settings.account_content_width | default: 480 }}px; --account-padding: {{ settings.account_padding | default: 64 }}px;"
+>
+  <div class="customer-access__content">
+    {% if shop.customer_accounts_enabled == false %}
+      <h1 class="h2" id="customer-heading-{{ section.id }}">{{ section.settings.unavailable_heading | escape }}</h1>
+      <div class="rte">{{ section.settings.unavailable_text }}</div>
+    {% elsif customer %}
+      <h1 class="h2" id="customer-heading-{{ section.id }}">{{ section.settings.signed_in_heading | escape }}</h1>
+      <div class="rte">{{ section.settings.signed_in_text }}</div>
+      <dl class="customer-access__details">
+        {% if customer.name != blank %}
+          <div><dt>{{ section.settings.name_label | escape }}</dt><dd>{{ customer.name | escape }}</dd></div>
+        {% endif %}
+        {% if customer.email != blank %}
+          <div><dt>{{ section.settings.email_label | escape }}</dt><dd>{{ customer.email | escape }}</dd></div>
+        {% endif %}
+      </dl>
+      <a class="button" href="{{ account_url | url | escape }}">{{ section.settings.manage_label | escape }}</a>
+    {% else %}
+      <h1 class="h2" id="customer-heading-{{ section.id }}">{{ section.settings.heading | escape }}</h1>
+      <div class="rte">{{ section.settings.intro }}</div>
+      {% comment %}
+        Authentication is deliberately handed to the platform's documented account route.
+        Both existing and new customers complete the platform's native flow there.
+        No password form, unverified auth endpoint, or client-side session is created here.
+      {% endcomment %}
+      <a class="button" href="{{ account_url | url | escape }}">{{ section.settings.primary_label | escape }}</a>
+      {% if section.settings.mode == 'signup' %}
+        <a class="customer-access__switch" href="{{ login_url | url | escape }}">{{ section.settings.login_label | escape }}</a>
+      {% else %}
+        <a class="customer-access__switch" href="{{ signup_url | url | escape }}">{{ section.settings.signup_label | escape }}</a>
+      {% endif %}
+    {% endif %}
+    {% if section.settings.back_url != blank %}
+      <a class="customer-access__back" href="{{ section.settings.back_url | url | escape }}">{{ section.settings.back_label | escape }}</a>
+    {% endif %}
+  </div>
+</section>
+{% stylesheet %}
+  .customer-access {
+    padding-block: clamp(24px, 6vw, var(--account-padding));
+  }
+
+  .customer-access__content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-lg);
+    width: 100%;
+    max-width: var(--account-width);
+    min-width: 0;
+    margin-inline: auto;
+    overflow-wrap: anywhere;
+  }
+
+  .customer-access__content :is(h1, p, dl) {
+    margin-block: 0;
+  }
+
+  .customer-access__content > .button {
+    width: 100%;
+    min-height: 44px;
+    white-space: normal;
+  }
+
+  .customer-access__details {
+    display: grid;
+    gap: var(--gap-md);
+    padding-block: var(--padding-lg);
+    border-block: 1px solid rgb(var(--color-border-rgb) / 0.25);
+  }
+
+  .customer-access__details dt {
+    font-family: var(--font-subheading--family);
+    font-weight: var(--font-subheading--weight);
+  }
+
+  .customer-access__details dd {
+    margin: 0;
+  }
+
+  .customer-access__switch,
+  .customer-access__back {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    width: fit-content;
+    max-width: 100%;
+    color: var(--color-foreground);
+    text-underline-offset: 0.2em;
+  }
+{% endstylesheet %}
+</template>
+
+<schema>
+{
+  "shopify": {
+    "name": "Customer account access",
+    "settings": [
+      {"type":"paragraph","content":"Uses Storelib’s built-in customer account flow. This section controls appearance and navigation; Storelib handles authentication and account management."},
+      {"type":"select","id":"mode","label":"Screen","default":"login","options":[{"value":"login","label":"Login"},{"value":"signup","label":"Signup"},{"value":"account","label":"Account overview"}]},
+      {"type":"select","id":"theme_color_scheme","label":"Color scheme","default":"inherit","options":[{"value":"inherit","label":"Use account theme settings"},{"value":"base","label":"Page colors"},{"value":"surface","label":"Soft surface"},{"value":"inverse","label":"Inverse"},{"value":"accent","label":"Accent"}]},
+      {"type":"header","content":"Signed-out screen"},
+      {"type":"text","id":"heading","label":"Heading","default":"Log in"},
+      {"type":"richtext","id":"intro","label":"Introduction","default":"<p>Sign in to view and manage your account.</p>"},
+      {"type":"text","id":"primary_label","label":"Account-service button","default":"Continue to sign in"},
+      {"type":"text","id":"signup_label","label":"Signup link","default":"New here? Create an account"},
+      {"type":"text","id":"login_label","label":"Login link","default":"Already have an account? Log in"},
+      {"type":"header","content":"Signed-in screen"},
+      {"type":"text","id":"signed_in_heading","label":"Heading","default":"Your account"},
+      {"type":"richtext","id":"signed_in_text","label":"Introduction","default":"<p>View your details and continue to manage your account.</p>"},
+      {"type":"text","id":"name_label","label":"Name label","default":"Name"},
+      {"type":"text","id":"email_label","label":"Email label","default":"Email"},
+      {"type":"text","id":"manage_label","label":"Manage-account button","default":"Manage your account"},
+      {"type":"header","content":"Accounts unavailable"},
+      {"type":"text","id":"unavailable_heading","label":"Heading","default":"Customer accounts are unavailable"},
+      {"type":"richtext","id":"unavailable_text","label":"Message","default":"<p>You can continue browsing the shop.</p>"},
+      {"type":"header","content":"Return navigation"},
+      {"type":"text","id":"back_label","label":"Link label","default":"Continue shopping"},
+      {"type":"url","id":"back_url","label":"Link destination","default":"/collections/all"}
+    ],
+    "presets": [{"name":"Customer account access"}]
+  }
+}
+</schema>

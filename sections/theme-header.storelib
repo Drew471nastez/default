@@ -50,8 +50,12 @@
 
   # Cart bubble colors: custom styles apply in every header state; default
   # mirrors the top row's effective text color, with a contrasting text color.
-  if section.settings.bubble_style == 'custom' or section.settings.text_color_top != blank or section.settings.background_color_top != blank
+  if section.settings.bubble_style == 'custom'
     assign cart_bubble_color_override = true
+  elsif section.settings.theme_color_scheme_top == 'custom'
+    if section.settings.text_color_top != blank or section.settings.background_color_top != blank
+      assign cart_bubble_color_override = true
+    endif
   endif
   if cart_bubble_color_override
     if section.settings.bubble_style == 'custom'
@@ -211,8 +215,14 @@
   assign bottom_transparent = false
 
   # Only explicit colors make a row transparent
-  assign top_row_color = section.settings.background_color_top
-  assign bottom_row_color = section.settings.background_color_bottom
+  assign top_row_color = ''
+  assign bottom_row_color = ''
+  if section.settings.theme_color_scheme_top == 'custom'
+    assign top_row_color = section.settings.background_color_top
+  endif
+  if section.settings.theme_color_scheme_bottom == 'custom'
+    assign bottom_row_color = section.settings.background_color_bottom
+  endif
 
   if top_row_color != blank and top_row_color.alpha != 1
     assign top_transparent = true
@@ -338,10 +348,13 @@
   }
 {% comment %}{% endcomment %}</script>
 
+{% capture top_row_background %}{% render 'scheme-background', color_scheme: section.settings.theme_color_scheme_top, custom_background: section.settings.background_color_top, use_theme_default: true %}{% endcapture %}
+{% capture bottom_row_background %}{% render 'scheme-background', color_scheme: section.settings.theme_color_scheme_bottom, custom_background: section.settings.background_color_bottom, use_theme_default: true %}{% endcapture %}
+
 <header-component
   id="header-component"
   class="{{ class }}"
-  data-theme-color="rgb({{ section.settings.background_color_top.rgb | default: settings.page_background_color.rgb }})"
+  data-theme-color="{{ top_row_background | strip }}"
   data-bubble-style="{{ section.settings.bubble_style }}"
   {% if transparent %}
     transparent="{{ transparent }}"
@@ -361,18 +374,8 @@
     data-header-rows="single"
   {% endif %}
   style="
-    {% if section.settings.theme_color_scheme_top == 'surface' or section.settings.theme_color_scheme_top == 'inverse' or section.settings.theme_color_scheme_top == 'accent' %}
-      {% assign top_scheme_background_key = 'scheme_' | append: section.settings.theme_color_scheme_top | append: '_background' %}
-      --color-background-top-row: {{ settings[top_scheme_background_key] }};
-    {% else %}
-      --color-background-top-row: rgba({{ section.settings.background_color_top.rgba | default: settings.page_background_color.rgba }});
-    {% endif %}
-    {% if section.settings.theme_color_scheme_bottom == 'surface' or section.settings.theme_color_scheme_bottom == 'inverse' or section.settings.theme_color_scheme_bottom == 'accent' %}
-      {% assign bottom_scheme_background_key = 'scheme_' | append: section.settings.theme_color_scheme_bottom | append: '_background' %}
-      --color-background-bottom-row: {{ settings[bottom_scheme_background_key] }};
-    {% else %}
-      --color-background-bottom-row: rgba({{ section.settings.background_color_bottom.rgba | default: settings.page_background_color.rgba }});
-    {% endif %}
+    --color-background-top-row: {{ top_row_background | strip }};
+    --color-background-bottom-row: {{ bottom_row_background | strip }};
     {% if transparent and text_color_transparent != blank %}
       --color-transparent-text: {{ text_color_transparent }};
       --color-transparent-text-rgb: {{ text_color_transparent.rgb }};
@@ -454,7 +457,7 @@
 
     {% capture content %}
       {% if custom_color_styles %}
-        {% render 'contrast-override', color_scheme: section.settings[row_scheme_setting], background_color: section.settings[row_setting], text_color: section.settings[text_setting], section_id: row_class_id %}
+        {% render 'contrast-override', color_scheme: section.settings[row_scheme_setting], use_theme_default: true, background_color: section.settings[row_setting], text_color: section.settings[text_setting], section_id: row_class_id %}
       {% endif %}
       {% render 'header-row',
         row: row,
@@ -2178,7 +2181,7 @@
       {
         "type": "select",
         "id": "section_width",
-        "label": "t:settings.width",
+        "label": "Content width",
         "options": [
           {
             "value": "page-width",
@@ -2263,7 +2266,7 @@
       {
         "type": "range",
         "id": "border_width",
-        "label": "t:settings.border_width",
+        "label": "Border thickness",
         "min": 0,
         "max": 5,
         "step": 0.5,
@@ -2376,7 +2379,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -2389,22 +2396,28 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color_top",
-        "label": "t:settings.top_row_background",
-        "placeholder": "t:settings.default"
+        "label": "Custom top row background",
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ section.settings.theme_color_scheme_top == 'custom' }}"
       },
       {
         "type": "color",
         "id": "text_color_top",
-        "label": "t:settings.top_row_text",
-        "placeholder": "t:settings.default"
+        "label": "Custom top row text",
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ section.settings.theme_color_scheme_top == 'custom' }}"
       },
       {
         "type": "select",
@@ -2413,7 +2426,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -2426,24 +2443,28 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color_bottom",
-        "label": "t:settings.bottom_row_background",
+        "label": "Custom bottom row background",
         "placeholder": "t:settings.default",
-        "visible_if": "{{ section.settings.menu_row == 'bottom' or section.settings.localization_row == 'bottom' or section.settings.search_row == 'bottom' }}"
+        "visible_if": "{{ section.settings.theme_color_scheme_bottom == 'custom' }}"
       },
       {
         "type": "color",
         "id": "text_color_bottom",
-        "label": "t:settings.bottom_row_text",
+        "label": "Custom bottom row text",
         "placeholder": "t:settings.default",
-        "visible_if": "{{ section.settings.menu_row == 'bottom' or section.settings.localization_row == 'bottom' or section.settings.search_row == 'bottom' }}"
+        "visible_if": "{{ section.settings.theme_color_scheme_bottom == 'custom' }}"
       },
       {
         "type": "header",

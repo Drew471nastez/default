@@ -140,7 +140,7 @@
       {
         "type": "select",
         "id": "type_preset",
-        "label": "t:settings.type_preset",
+        "label": "Text style",
         "options": [
           {
             "value": "",

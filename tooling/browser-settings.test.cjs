@@ -3,6 +3,16 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const {chromium} = require('playwright');
 const {source, render, settings} = require('./theme-test-runtime.cjs');
+const {engine} = require('./theme-test-runtime.cjs');
+
+function defaultsFor(file, overrides = {}) {
+  const data=JSON.parse(source(file).match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]);
+  return {...Object.fromEntries(((data.shopify || data).settings || []).filter(s => s.id && s.default !== undefined).map(s => [s.id,s.default])), ...overrides};
+}
+
+async function openBrowser() {
+  return chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH || (fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined)});
+}
 
 test('theme controls reach computed styles at mobile, tablet and desktop sizes', async () => {
   const executablePath = process.env.CHROMIUM_PATH || (fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined);
@@ -43,4 +53,63 @@ test('theme controls reach computed styles at mobile, tablet and desktop sizes',
   } finally {
     await browser.close();
   }
+});
+
+test('section inheritance reaches groups, search cards and form fields in both text directions', async () => {
+  const browser=await openBrowser();
+  try {
+    const values=settings({default_section_color_scheme:'inverse',product_card_color_scheme:'inherit',type_preset:'h5',type_weight_h5:'700',product_card_padding:18,product_card_price_size:19,content_max_width:1200});
+    const global=await render('snippets/theme-styles-variables.storelib',{settings:values});
+    const palette=await render('snippets/color-palette.storelib',{settings:values});
+    const group=await engine({settings:values}).parseAndRender("{% render 'group', settings: group_settings, block_id: 'nested', children: children %}",{group_settings:{theme_color_scheme:'inherit'},children:'<p>Nested group content</p>'});
+    const resource=await render('snippets/resource-card.storelib',{settings:values,resource_type:'product',resource:{id:'p1',title:'A search product',url:'/products/example',available:true,price:1000,selected_or_first_available_variant:{price:1000}}});
+    const bubble=await render('snippets/cart-bubble.storelib',{settings:values,cart:{item_count:2}});
+    const content=group+resource+bubble+'<label for="fixture-email">Email</label><input id="fixture-email" type="email">';
+    const section=await render('sections/custom-liquid.storelib',{settings:values,section:{id:'section-test',settings:defaultsFor('sections/custom-liquid.storelib',{theme_color_scheme:'inherit',custom_liquid:content})}});
+    const page=await browser.newPage();
+    for (const width of [375,768,1440]) for (const dir of ['ltr','rtl']) {
+      await page.setViewportSize({width,height:900});
+      await page.setContent(`<!doctype html><html dir="${dir}"><head><style>${source('shopify/assets/base.css')}</style>${global}${palette}</head><body class="page-width-narrow">${section}</body></html>`);
+      const result=await page.evaluate(() => {
+        const read=s=>getComputedStyle(document.querySelector(s));
+        return {sectionBackground:read('.section').backgroundColor,groupBackground:read('.group-block').getPropertyValue('--color-background').trim(),cardPadding:read('.resource-card').paddingTop,priceSize:read('.resource-card .price').fontSize,fieldWeight:read('input').fontWeight,fieldColor:read('input').color,bubbleBackground:read('.cart-bubble__background').backgroundColor,bubbleText:read('.cart-bubble').color,overflow:document.documentElement.scrollWidth>innerWidth};
+      });
+      assert.equal(result.sectionBackground,'rgb(23, 23, 23)');
+      assert.equal(result.groupBackground,'#171717');
+      assert.equal(result.cardPadding,'18px');
+      assert.equal(result.priceSize,'19px');
+      assert.equal(result.fieldWeight,'700');
+      assert.equal(result.fieldColor,'rgb(255, 255, 255)');
+      assert.equal(result.bubbleBackground,'rgb(255, 255, 255)');
+      assert.equal(result.bubbleText,'rgb(23, 23, 23)');
+      assert(!result.overflow,`${width}px ${dir}: horizontal overflow`);
+    }
+  } finally {await browser.close();}
+});
+
+test('account screens stay usable on small screens and hand off to the platform account route', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    let screen='';
+    await page.route('https://theme.test/**',route => route.fulfill({contentType:'text/html',body:new URL(route.request().url()).pathname==='/account'?'<h1>Platform account route</h1>':screen}));
+    const values=settings();
+    const global=await render('snippets/theme-styles-variables.storelib',{settings:values});
+    const palette=await render('snippets/color-palette.storelib',{settings:values});
+    for (const width of [375,768,1440]) for (const mode of ['login','signup','account']) {
+      await page.setViewportSize({width,height:900});
+      const section=await render('sections/customer-access.storelib',{settings:values,shop:{customer_accounts_enabled:true},routes:{account_url:'/account'},section:{id:mode,settings:defaultsFor('sections/customer-access.storelib',{mode})}});
+      screen=`<!doctype html><html><head><style>${source('shopify/assets/base.css')}</style>${global}${palette}</head><body class="page-width-narrow">${section}</body></html>`;
+      await page.goto(`https://theme.test/${mode==='account'?'customer-account':mode}`);
+      assert.equal(await page.locator('h1').count(),1);
+      assert(!(await page.evaluate(() => document.documentElement.scrollWidth>innerWidth)));
+      const action=page.locator('.customer-access__content > .button');
+      assert((await action.boundingBox()).height>=44);
+      await page.keyboard.press('Tab');
+      assert(await action.evaluate(element => element===document.activeElement));
+      await action.click();
+      await page.waitForURL('https://theme.test/account');
+    }
+    // The route above is deliberately mocked; this verifies navigation, not authentication.
+  } finally {await browser.close();}
 });

@@ -8,10 +8,10 @@
       settings: {block.settings || section.settings}
 {%- endcomment -%}
 
---padding-block-start: {{ settings['padding-block-start'] | default: 0 }}px; --padding-block-end:
-{{- settings['padding-block-end'] | default: 0 -}}
-px; --padding-inline-start:{{ settings['padding-inline-start'] | default: 0 }}px; --padding-inline-end:
-{{- settings['padding-inline-end'] | default: 0 -}}
+--padding-block-start: {{ settings['padding-block-start'] | default: settings.padding_block_start | default: 0 }}px; --padding-block-end:
+{{- settings['padding-block-end'] | default: settings.padding_block_end | default: 0 -}}
+px; --padding-inline-start:{{ settings['padding-inline-start'] | default: settings.padding_inline_start | default: 0 }}px; --padding-inline-end:
+{{- settings['padding-inline-end'] | default: settings.padding_inline_end | default: 0 -}}
 px;
 
 </template>

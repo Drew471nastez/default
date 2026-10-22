@@ -23,6 +23,11 @@ function color(hex) {
 function settings(overrides = {}) {
   const values = {...defaults, ...JSON.parse(source('config/settings.json')).shopify, ...overrides};
   for (const [key, value] of Object.entries(values)) {
+    if (typeof value !== 'string') continue;
+    const reference = value.match(/^{{\s*settings\.([\w.]+)\s*}}$/);
+    if (reference) values[key] = reference[1].split('.').reduce((result, part) => result?.[part], values);
+  }
+  for (const [key, value] of Object.entries(values)) {
     if (typeof value === 'string' && /^#[\da-f]{6}$/i.test(value)) values[key] = color(value);
   }
   for (const role of ['body', 'subheading', 'heading', 'accent']) {
@@ -59,8 +64,35 @@ function engine(globals = {}) {
       },
     });
   }
+  // These Shopify operations are parsed only; local tests do not emulate services
+  // or dynamic block rendering. Storelib's compiler validates their arguments.
+  for (const name of ['content_for','section','sections','layout']) {
+    liquid.registerTag(name,{parse() {},render() {return '';}});
+  }
+  for (const name of ['form','paginate','javascript']) {
+    liquid.registerTag(name,{
+      parse(token,tokens) {
+        this.templates=[];
+        const stream=this.liquid.parser.parseStream(tokens)
+          .on(`tag:end${name}`,() => stream.stop())
+          .on('template',template => this.templates.push(template));
+        stream.start();
+      },
+      render() {throw new Error(`The local adapter cannot execute Shopify ${name} operations`);},
+    });
+  }
   liquid.registerFilter('color_brightness', value => value?.rgb?.split(' ').map(Number).reduce((a,b) => a+b,0)/3 || 0);
-  liquid.registerFilter('color_contrast', () => 7);
+  function luminance(value) {
+    const hex = String(value ?? '').replace('#', '');
+    if (!/^[\da-f]{6}$/i.test(hex)) throw new Error(`Unsupported fixture color: ${value}`);
+    const channels = hex.match(/../g).map(channel => parseInt(channel,16)/255)
+      .map(channel => channel <= 0.04045 ? channel/12.92 : ((channel+0.055)/1.055)**2.4);
+    return channels[0]*0.2126 + channels[1]*0.7152 + channels[2]*0.0722;
+  }
+  liquid.registerFilter('color_contrast', (a,b) => {
+    const first=luminance(a),second=luminance(b);
+    return (Math.max(first,second)+0.05)/(Math.min(first,second)+0.05);
+  });
   liquid.registerFilter('font_modify', (font, property, value) => font ? {...font, [property]: value === 'bold' ? 700 : value} : null);
   liquid.registerFilter('font_face', font => font ? `/* loaded ${font.family} ${font.weight} */` : '');
   liquid.registerFilter('standard_event_data', () => '{}');

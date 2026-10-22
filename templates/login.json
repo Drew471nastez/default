@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "customer-access",
+      "settings": {
+        "mode": "login",
+        "heading": "Log in",
+        "intro": "<p>Sign in to view and manage your account.</p>",
+        "primary_label": "Continue to sign in"
+      }
+    }
+  },
+  "order": ["main"]
+}

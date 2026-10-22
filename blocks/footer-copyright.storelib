@@ -125,13 +125,13 @@
       {
         "type": "color",
         "id": "text_color",
-        "label": "t:settings.text_color",
+        "label": "Custom text color",
         "placeholder": "t:settings.default"
       },
       {
         "type": "select",
         "id": "font_size",
-        "label": "t:settings.size",
+        "label": "Custom text size",
         "options": [
           {
             "value": "0.625rem",
@@ -159,7 +159,7 @@
       {
         "type": "select",
         "id": "case",
-        "label": "t:settings.case",
+        "label": "Capitalization",
         "options": [
           {
             "value": "none",

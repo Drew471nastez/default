@@ -1934,14 +1934,14 @@
       {
         "type": "checkbox",
         "id": "vertical_on_mobile",
-        "label": "t:settings.vertical_on_mobile",
+        "label": "Stack vertically on mobile",
         "default": true,
         "visible_if": "{{ section.settings.content_direction == 'row' }}"
       },
       {
         "type": "select",
         "id": "horizontal_alignment",
-        "label": "t:settings.alignment",
+        "label": "Horizontal alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1966,7 +1966,7 @@
       {
         "type": "select",
         "id": "vertical_alignment",
-        "label": "t:settings.position",
+        "label": "Vertical alignment",
         "options": [
           {
             "value": "flex-start",
@@ -1994,7 +1994,7 @@
       {
         "type": "select",
         "id": "horizontal_alignment_flex_direction_column",
-        "label": "t:settings.alignment",
+        "label": "Horizontal alignment",
         "options": [
           {
             "value": "flex-start",
@@ -2015,7 +2015,7 @@
       {
         "type": "select",
         "id": "vertical_alignment_flex_direction_column",
-        "label": "t:settings.position",
+        "label": "Vertical alignment",
         "options": [
           {
             "value": "flex-start",
@@ -2040,7 +2040,7 @@
       {
         "type": "range",
         "id": "gap",
-        "label": "t:settings.gap",
+        "label": "Space between items",
         "min": 0,
         "max": 100,
         "step": 1,
@@ -2054,7 +2054,7 @@
       {
         "type": "select",
         "id": "section_width",
-        "label": "t:settings.width",
+        "label": "Content width",
         "options": [
           {
             "value": "page-width",
@@ -2141,7 +2141,11 @@
         "options": [
           {
             "value": "inherit",
-            "label": "Default / custom colors"
+            "label": "Use theme default"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
           },
           {
             "value": "surface",
@@ -2154,17 +2158,27 @@
           {
             "value": "accent",
             "label": "Accent"
+          },
+          {
+            "value": "custom",
+            "label": "Custom colors"
           }
         ],
         "default": "inherit",
-        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "t:settings.background_color",
+        "label": "Custom background",
         "placeholder": "t:settings.default",
-        "visible_if": "{{ section.settings.background_media == 'none' }}"
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Custom text color",
+        "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {
         "type": "video",
@@ -2266,7 +2280,7 @@
       {
         "type": "select",
         "id": "border",
-        "label": "t:settings.style",
+        "label": "Border style",
         "options": [
           {
             "value": "none",
@@ -2286,7 +2300,7 @@
         "max": 100,
         "step": 1,
         "unit": "px",
-        "label": "t:settings.thickness",
+        "label": "Border thickness",
         "default": 1,
         "visible_if": "{{ section.settings.border != 'none' }}"
       },
@@ -2297,7 +2311,7 @@
         "max": 100,
         "step": 1,
         "unit": "%",
-        "label": "t:settings.opacity",
+        "label": "Border opacity",
         "default": 100,
         "visible_if": "{{ section.settings.border != 'none' }}"
       },
@@ -2311,7 +2325,7 @@
       {
         "type": "range",
         "id": "border_radius",
-        "label": "t:settings.border_radius",
+        "label": "Corner radius",
         "min": 0,
         "max": 100,
         "step": 1,
