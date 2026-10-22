@@ -497,9 +497,6 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {

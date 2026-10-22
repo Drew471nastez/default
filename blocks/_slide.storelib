@@ -564,9 +564,6 @@
         "type": "jumbo-text"
       },
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       }
     ],

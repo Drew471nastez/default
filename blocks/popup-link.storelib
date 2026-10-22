@@ -312,10 +312,40 @@
     "name": "t:names.popup_link",
     "blocks": [
       {
-        "type": "@theme"
+        "type": "@app"
       },
       {
-        "type": "@app"
+        "type": "text"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "icon"
+      },
+      {
+        "type": "video"
+      },
+      {
+        "type": "group"
+      },
+      {
+        "type": "spacer"
+      },
+      {
+        "type": "accordion"
+      },
+      {
+        "type": "custom-liquid"
+      },
+      {
+        "type": "email-signup"
+      },
+      {
+        "type": "contact-form"
       }
     ],
     "tag": null,

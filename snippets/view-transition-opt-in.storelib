@@ -7,6 +7,7 @@
   view-transitions.js drops the blocker again whenever no transition can actually run, and
   falls back to dropping it at 1800 ms. It is gated on the same settings (snippets/scripts.liquid).
 {% endcomment %}
+{% unless request.design_mode %}
 {% if settings.transition_to_main_product or settings.page_transition_enabled %}
   {% style %}
     @media (prefers-reduced-motion: no-preference) {
@@ -22,5 +23,6 @@
     id="view-transition-render-blocker"
   >
 {% endif %}
+{% endunless %}
 
 </template>

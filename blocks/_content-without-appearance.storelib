@@ -120,9 +120,6 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {
@@ -148,6 +145,9 @@
       },
       {
         "type": "_divider"
+      },
+      {
+        "type": "jumbo-text"
       }
     ],
     "settings": [

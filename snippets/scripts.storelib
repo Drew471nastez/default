@@ -59,6 +59,7 @@
   defer
 ></script>
 
+{% unless request.design_mode %}
 {% if settings.transition_to_main_product or settings.page_transition_enabled %}
   {%- comment -%}
     Inlined to avoid a network round trip for a render blocking asset.
@@ -67,6 +68,7 @@
     {{- 'view-transitions.js' | inline_asset_content -}}
 {% comment %}{% endcomment %}  </script>
 {% endif %}
+{% endunless %}
 
 <link
   rel="modulepreload"

@@ -176,10 +176,22 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
+        "type": "@app"
       },
       {
-        "type": "@app"
+        "type": "collection-title"
+      },
+      {
+        "type": "text"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "icon"
+      },
+      {
+        "type": "spacer"
       }
     ],
     "settings": [

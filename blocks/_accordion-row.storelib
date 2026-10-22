@@ -353,10 +353,28 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
+        "type": "@app"
       },
       {
-        "type": "@app"
+        "type": "text"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "icon"
+      },
+      {
+        "type": "video"
+      },
+      {
+        "type": "group"
+      },
+      {
+        "type": "custom-liquid"
       }
     ],
     "settings": [

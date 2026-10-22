@@ -1,4 +1,10 @@
 (function () {
+  // Editor canvas replacements are not storefront navigation. Do not snapshot
+  // the hero or hold its first paint when the editor refreshes the document.
+  if (window.Shopify?.designMode || document.documentElement.classList.contains('shopify-design-mode')) {
+    disableCrossDocumentViewTransitions();
+    return;
+  }
   // In-app WebViews (Android Facebook, Instagram, TikTok, etc.) ship a Chromium
   // WebView build that fails to paint during cross-document (MPA) View
   // Transitions and can freeze or white-screen the storefront on navigation.

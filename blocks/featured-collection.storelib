@@ -39,10 +39,25 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
+        "type": "@app"
       },
       {
-        "type": "@app"
+        "type": "collection-title"
+      },
+      {
+        "type": "text"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "group"
+      },
+      {
+        "type": "spacer"
       }
     ],
     "settings": [

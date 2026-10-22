@@ -551,13 +551,49 @@
     "tag": null,
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {
         "type": "_divider"
+      },
+      {
+        "type": "text"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "icon"
+      },
+      {
+        "type": "video"
+      },
+      {
+        "type": "group"
+      },
+      {
+        "type": "spacer"
+      },
+      {
+        "type": "accordion"
+      },
+      {
+        "type": "custom-liquid"
+      },
+      {
+        "type": "email-signup"
+      },
+      {
+        "type": "contact-form"
+      },
+      {
+        "type": "product-title"
+      },
+      {
+        "type": "price"
       }
     ],
     "settings": [

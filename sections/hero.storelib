@@ -1589,9 +1589,6 @@
     "class": "hero-wrapper section-wrapper",
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "text"
       },
       {

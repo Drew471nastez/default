@@ -931,9 +931,6 @@
     "class": "ui-test-collection-list",
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {

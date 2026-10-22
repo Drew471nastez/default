@@ -60,12 +60,9 @@
     "name": "Site colors",
     "settings": [
       {
-        "type": "color_palette",
+        "type": "paragraph",
         "id": "color_palette",
-        "default": {
-          "background": "#ffffff",
-          "foreground": "#000000"
-        },
+        "content": "Choose colors by what they change: Background, Text, Borders and Field text.",
         "visible_if": "{{ false }}"
       },
       {

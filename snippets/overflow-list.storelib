@@ -28,6 +28,31 @@
   {% endif %}
 >
   <template shadowrootmode="open">
+    <style>
+      /* Keep the header in one row before the shadow stylesheet arrives.
+         Editor replacements can create a fresh shadow root on every edit. */
+      [part='list'] {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: var(--overflow-list-alignment);
+        column-gap: 1rem;
+        height: 100%;
+        overflow: hidden;
+      }
+      [part='list'], [part='overflow-list'], [part='placeholder'] {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      [part='list'] { padding: var(--overflow-list-padding-block, 0) var(--overflow-list-padding-inline, 0); }
+      [part='overflow'] { display: none; }
+      [part='placeholder'] { visibility: hidden; width: 0; height: 0; }
+      slot[name='more']:not([hidden]) { display: flex; height: 100%; align-items: center; }
+      @media (max-width: 749px) {
+        [part='list'] { justify-content: var(--overflow-list-alignment-mobile); }
+      }
+    </style>
     {{ 'overflow-list.css' | asset_url | stylesheet_tag }}
 
     <ul part="list">

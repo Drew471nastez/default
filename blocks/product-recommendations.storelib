@@ -537,10 +537,19 @@
     "class": "product-recommendations-wrapper",
     "blocks": [
       {
-        "type": "@theme"
+        "type": "@app"
       },
       {
-        "type": "@app"
+        "type": "text"
+      },
+      {
+        "type": "button"
+      },
+      {
+        "type": "group"
+      },
+      {
+        "type": "spacer"
       }
     ],
     "settings": [

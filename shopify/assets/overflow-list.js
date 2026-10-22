@@ -28,6 +28,8 @@ export class OverflowMinimumEvent extends Event {
  * </overflow-list>
  */
 export class OverflowList extends DeclarativeShadowElement {
+  #connection = 0;
+
   static get observedAttributes() {
     return ['disabled', 'minimum-items'];
   }
@@ -49,11 +51,12 @@ export class OverflowList extends DeclarativeShadowElement {
 
   async connectedCallback() {
     super.connectedCallback();
+    const connection = ++this.#connection;
 
     // Styles for dynamically injected <overflow-list> elements are async.
     // We need to wait for them to be loaded before initializing the element to properly calculate the overflow.
     await this.#waitForStyles();
-
+    if (!this.isConnected || this.#connection !== connection) return;
     this.#initialize();
   }
 
@@ -67,7 +70,8 @@ export class OverflowList extends DeclarativeShadowElement {
     }
 
     return new Promise((resolve) => {
-      styles.addEventListener('load', resolve);
+      styles.addEventListener('load', resolve, { once: true });
+      styles.addEventListener('error', resolve, { once: true });
     });
   }
 
@@ -107,12 +111,7 @@ export class OverflowList extends DeclarativeShadowElement {
     };
 
     // Add event listener for reflow requests
-    this.addEventListener(
-      'reflow',
-      /** @param {CustomEvent<{lastVisibleElement?: HTMLElement}>} event */ (event) => {
-        this.#reflowItems(0, event.detail.lastVisibleElement);
-      }
-    );
+    this.addEventListener('reflow', this.#handleReflow);
 
     // When <overflow-list> is dynamically injected, the browser doesn't remove its <template> automatically.
     // In theory, we could get rid of it now, or in DeclarativeShadowElement, but that would invalidate the layout.
@@ -132,10 +131,17 @@ export class OverflowList extends DeclarativeShadowElement {
   }
 
   disconnectedCallback() {
+    this.#connection++;
+    this.removeEventListener('reflow', this.#handleReflow);
     this.#resizeObserver.disconnect();
     this.#mutationObserver.disconnect();
     this.#intersectionObserver.disconnect();
   }
+
+  /** @param {CustomEvent<{lastVisibleElement?: HTMLElement}>} event */
+  #handleReflow = (event) => {
+    this.#reflowItems(0, event.detail?.lastVisibleElement);
+  };
 
   get schedule() {
     return typeof Theme?.utilities?.scheduler?.schedule === 'function'
@@ -173,6 +179,7 @@ export class OverflowList extends DeclarativeShadowElement {
     if (entry?.isIntersecting) {
       this.#intersectionObserver.disconnect();
       setTimeout(() => {
+        if (!this.isConnected) return;
         // Remove the leftover <template> for dynamically injected <overflow-list> elements.
         this.querySelector(':scope > template[shadowrootmode="open"]')?.remove();
         this.#reflowItems(entry.boundingClientRect.height);
@@ -190,7 +197,7 @@ export class OverflowList extends DeclarativeShadowElement {
 
     requestAnimationFrame(() =>
       setTimeout(() => {
-        this.#reflowItems();
+        if (this.isConnected) this.#reflowItems();
         this.#scheduled = false;
       }, 0)
     );

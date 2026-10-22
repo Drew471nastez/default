@@ -768,9 +768,6 @@
     "name": "t:names.details",
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {
@@ -826,6 +823,9 @@
       },
       {
         "type": "product-custom-property"
+      },
+      {
+        "type": "disclosures"
       }
     ],
     "tag": null,

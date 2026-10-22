@@ -595,9 +595,6 @@
         "type": "collection-card"
       },
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       }
     ],

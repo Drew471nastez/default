@@ -77,6 +77,54 @@ function sectionSettings(file, overrides = {}) {
   return {...Object.fromEntries(((data.shopify || data).settings || []).filter(s => s.id && s.default !== undefined).map(s => [s.id, s.default])), ...overrides};
 }
 
+test('block libraries use explicit supported types and preserve configured and preset children', () => {
+  const schemas=new Map();
+  for (const folder of ['sections','blocks']) for (const file of fs.readdirSync(path.join(root,folder)).filter(f=>f.endsWith('.storelib'))) {
+    const parsed=JSON.parse(source(`${folder}/${file}`).match(/<schema>([\s\S]*?)<\/schema>/)[1]);
+    const doc=parsed.shopify||parsed;schemas.set(`${folder}/${file}`,doc);
+    assert(!(doc.blocks||[]).some(block=>block.type==='@theme'),`${folder}/${file}: unrestricted theme library`);
+    for (const child of doc.blocks||[]) {
+      if(child.type.startsWith('@')||child.settings)continue;
+      assert(fs.existsSync(path.join(root,'blocks',child.type+'.storelib')),`${file}: unknown supported block ${child.type}`);
+    }
+  }
+  function validate(owner,node) {
+    const doc=schemas.get(owner);if(!doc)return;
+    const allowed=new Set((doc.blocks||[]).map(block=>block.type));
+    for (const child of Object.values(node.blocks||{})) {
+      if(!child.type)continue;
+      if(!child.static)assert(allowed.has(child.type),`${owner}: existing ${child.type} is no longer supported`);
+      validate(`blocks/${child.type}.storelib`,child);
+    }
+  }
+  for (const [file,doc] of schemas) for (const preset of doc.presets||[])validate(file,preset);
+  for (const folder of ['templates','sections']) for (const file of fs.readdirSync(path.join(root,folder)).filter(f=>f.endsWith('.json'))) {
+    for (const section of Object.values(JSON.parse(source(`${folder}/${file}`)).sections||{})) validate(`sections/${section.type}.storelib`,section);
+  }
+  const hero=schemas.get('sections/hero.storelib').blocks.map(block=>block.type);
+  assert(hero.includes('text')&&hero.includes('button')&&!hero.includes('buy-buttons'));
+  assert.equal(schemas.get('sections/predictive-search.storelib').blocks.length,0);
+});
+
+test('site colors cannot expand the retired Color 1/Color 2 widget and retain saved palette data', () => {
+  const colors=schema.find(group=>group.name==='Site colors');
+  assert(!colors.settings.some(setting=>setting.type==='color_palette'));
+  assert.equal(colors.settings.find(setting=>setting.id==='color_palette').type,'paragraph');
+  const saved=JSON.parse(source('config/settings.json')).shopify.color_palette;
+  assert(saved && saved.background && saved.foreground,'legacy values must not be discarded');
+});
+
+test('editor renders no page-transition opt-in or first-paint blocker; storefront settings still work', async () => {
+  const values=settings({page_transition_enabled:true,transition_to_main_product:true});
+  const editor=await render('snippets/view-transition-opt-in.storelib',{settings:values,request:{design_mode:true}});
+  assert(!editor.includes('navigation: auto'));
+  assert(!editor.includes('rel="expect"'));
+  const storefront=await render('snippets/view-transition-opt-in.storelib',{settings:values,request:{design_mode:false}});
+  assert(storefront.includes('navigation: auto')&&storefront.includes('rel="expect"'));
+  const disabled=await render('snippets/view-transition-opt-in.storelib',{settings:settings({page_transition_enabled:false,transition_to_main_product:false}),request:{design_mode:false}});
+  assert(!disabled.includes('rel="expect"'));
+});
+
 function validateSettings(list, location) {
   const ids = new Set();
   for (const setting of list || []) {

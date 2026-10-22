@@ -218,9 +218,6 @@
     "name": "t:names.blog_post",
     "blocks": [
       {
-        "type": "@theme"
-      },
-      {
         "type": "@app"
       },
       {
@@ -234,6 +231,12 @@
       },
       {
         "type": "_blog-post-content"
+      },
+      {
+        "type": "text"
+      },
+      {
+        "type": "image"
       }
     ],
     "class": "section-wrapper",

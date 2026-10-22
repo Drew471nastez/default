@@ -30,6 +30,69 @@ async function renderHeaderLogo(overrides, sectionOverrides = {}) {
   return {html,variables:await render('snippets/theme-styles-variables.storelib',{settings:values})};
 }
 
+test('changing header position never stacks links or shifts the hero while a fresh shadow stylesheet loads', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
+    let stylesheetGate=Promise.resolve();
+    await page.route('https://theme.test/overflow-list.css?*',async route=>{
+      const gate=stylesheetGate;await gate;
+      await route.fulfill({contentType:'text/css',body:source('shopify/assets/overflow-list.css')});
+    });
+    const css=file=>source(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)[1];
+    const svg='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100"></svg>');
+    const logo=await renderHeaderLogo({logo:{url:svg,aspect_ratio:4}});
+    await page.setContent(`<style>${source('shopify/assets/base.css')}${css('sections/theme-header.storelib')}${css('blocks/_header-menu.storelib')}</style>${logo.variables}<style>header-actions{display:block;width:44px;height:44px;flex:none}overflow-list{display:block}</style><body class="page-width-narrow"><header-component class="header" id="header-component" data-menu-style="menu"><div class="header__row section section--page-width"><div id="columns" class="header__columns spacing-style"></div></div></header-component><main id="hero">Hero content below the header</main></body>`);
+    const hydration=source('shopify/assets/component.js').match(/export class DeclarativeShadowElement extends HTMLElement {[\s\S]*?\n}/)[0];
+    const notifier=source('shopify/assets/utilities.js').match(/export class ResizeNotifier extends ResizeObserver {[\s\S]*?\n}/)[0];
+    await page.addScriptTag({type:'module',content:'window.Theme={utilities:{}};\n'+hydration+'\n'+notifier+'\n'+source('shopify/assets/overflow-list.js').replace(/^import .*;\n/gm,'')});
+    let version=0;
+    const liquid=engine();
+    liquid.registerFilter('asset_url',file=>`https://theme.test/${file}?v=${version}`);
+    liquid.registerFilter('stylesheet_tag',url=>`<link rel="stylesheet" href="${url}">`);
+    const children=Array.from({length:6},(_,i)=>`<li style="flex:none;width:90px;height:44px"><a href="#${i}">Link ${i}</a></li>`).join('');
+    let expectedHeroTop;
+    for (const width of [1024,1440]) {
+      await page.setViewportSize({width,height:900});
+      expectedHeroTop=undefined;
+      for (const position of ['left','center','right','left']) {
+        version++;
+        let releaseStyles;stylesheetGate=new Promise(resolve=>releaseStyles=resolve);
+        const list=await liquid.parseAndRender("{% render 'overflow-list', children: children, class: 'overflow-menu' %}",{children});
+        const menu=`<header-menu class="header-menu"><div class="header-menu__inner"><nav>${list}</nav></div></header-menu>`;
+        const row=await liquid.parseAndRender("{% render 'header-row', row: 'top', order: 'logo,menu,actions', settings: positions, logo: logo, menu: menu, actions: actions %}",{
+          positions:{logo_position:position,menu_position:'left'},logo:logo.html,menu,actions:'<header-actions></header-actions>',
+        });
+        const requested=page.waitForRequest(request=>request.url().includes(`overflow-list.css?v=${version}`));
+        await page.locator('#columns').evaluate((el,html)=>el.innerHTML=html,row);
+        await requested;
+        const geometry=()=>page.evaluate(()=>({header:document.querySelector('#header-component').getBoundingClientRect().height,heroTop:document.querySelector('#hero').getBoundingClientRect().top,overflow:document.documentElement.scrollWidth>innerWidth}));
+        const before=await geometry();
+        assert(before.header<=100,`${position}: menu must be horizontal before its stylesheet arrives`);
+        assert(!before.overflow);
+        expectedHeroTop ??=before.heroTop;
+        assert.equal(before.heroTop,expectedHeroTop,'position changes must not make the header grow');
+        releaseStyles();
+        await page.waitForFunction(()=>document.querySelector('overflow-list').style.getPropertyValue('--overflow-count')!=='');
+        assert.deepEqual(await geometry(),before,'loading shadow CSS must not bump the header or hero');
+      }
+    }
+    assert.deepEqual(errors,[]);
+  } finally { await browser.close(); }
+});
+
+test('editor view-transition script removes stale blockers without activating storefront transitions', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    await page.setContent('<html class="shopify-design-mode"><head><link id="view-transition-render-blocker" rel="expect" href="#content"></head><body><main id="content">Content</main></body></html>');
+    await page.addScriptTag({content:source('shopify/assets/view-transitions.js')});
+    assert.equal(await page.locator('#view-transition-render-blocker').count(),0);
+    assert(await page.locator('head').evaluate(el=>el.textContent.includes('navigation: none')));
+  } finally { await browser.close(); }
+});
+
 test('uploaded header logos reserve space before decoding and do not move links when sticky/hover variants swap', async () => {
   const browser=await openBrowser();
   try {
