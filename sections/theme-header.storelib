@@ -592,8 +592,8 @@
 
     &[transparent='not-sticky'][data-sticky-state='active'],
     &:has(.menu-list__list-item > .menu-list__link:not([aria-haspopup]):hover) {
-      --header-logo-display: unset;
-      --header-logo-inverse-display: unset;
+      --header-logo-display: block;
+      --header-logo-inverse-display: none;
       --color-foreground: inherit;
       --color-foreground-rgb: inherit;
       --color-background: inherit;
@@ -628,8 +628,8 @@
     &:has(.mega-menu__list:hover),
     &:has(.menu-list__link:hover),
     &:has(header-menu[aria-expanded='true']) {
-      --header-logo-display: unset;
-      --header-logo-inverse-display: unset;
+      --header-logo-display: block;
+      --header-logo-inverse-display: none;
       --color-foreground: inherit;
       --color-foreground-rgb: inherit;
       --color-background: inherit;
@@ -854,6 +854,7 @@
   .header__column {
     display: flex;
     align-items: center;
+    min-width: 0;
 
     /* on mobile, header__column nodes are ignored to create a new grid-template-area based on all visible content */
     @media screen and (max-width: 749px) {
@@ -924,13 +925,13 @@
 
       /* If the header-menu is in the left column */
       &:has(.header__column--left header-menu) {
-        --header-left: auto;
-        --header-right: minmax(max-content, 1fr);
+        --header-left: minmax(0, 1fr);
+        --header-right: max-content;
       }
     }
 
     @media screen and (max-width: 749px) {
-      --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
+      --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) minmax(0, 1fr)
         var(--header-mobile-bookend) var(--header-mobile-bookend);
 
       grid-template-areas: 'leftA leftB center rightA rightB';
@@ -974,7 +975,7 @@
   /* not ideal but we need to duplicate these styles for when touch comes into play
     We could avoid the duplication using js to set the data-menu-style attribute on small screens instead of using @media queries */
   #header-component[data-menu-style='drawer'] .header__columns {
-    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
+    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) minmax(0, 1fr)
       var(--header-mobile-bookend) var(--header-mobile-bookend);
 
     grid-template-areas: 'leftA leftB center rightA rightB';

@@ -599,6 +599,13 @@
 
   .header-menu {
     height: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .header-menu__inner {
+    min-width: 0;
+    width: 100%;
   }
 
   .menu-list__submenu-inner {

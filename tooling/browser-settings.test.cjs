@@ -14,6 +14,105 @@ async function openBrowser() {
   return chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH || (fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined)});
 }
 
+async function renderHeaderLogo(overrides, sectionOverrides = {}) {
+  const values=settings(overrides);
+  const liquid=engine({settings:values});
+  // Image URLs/tags are supplied by Storelib in production. Keep that adapter
+  // limited to image markup; all logo Liquid, dimensions and CSS are real.
+  liquid.registerFilter('image_url',image=>image.url);
+  liquid.registerFilter('image_tag',(url,...attributes)=>{
+    const attrs=Object.fromEntries(attributes);
+    return `<img src="${url}" class="${attrs.class}" alt="Logo" style="${attrs.style||''}">`;
+  });
+  const html=await liquid.parseAndRender(require('./theme-test-runtime.cjs').body(source('blocks/_header-logo.storelib')),{
+    shop:{name:'Store'},block:{settings:{}},section:{settings:sectionOverrides},template:{name:'index'},routes:{root_url:'/'},
+  });
+  return {html,variables:await render('snippets/theme-styles-variables.storelib',{settings:values})};
+}
+
+test('uploaded header logos reserve space before decoding and do not move links when sticky/hover variants swap', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    const headerCSS=source('sections/theme-header.storelib').match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)[1];
+    const menuCSS=source('blocks/_header-menu.storelib').match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)[1];
+    for (const width of [375,768,1024,1440]) for (const direction of ['ltr','rtl']) {
+      await page.setViewportSize({width,height:900});
+      let releaseImages;
+      const pendingImages=new Promise(resolve=>releaseImages=resolve);
+      await page.route('https://theme.test/*.svg',async route=>{
+        await pendingImages;
+        await route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200"><rect width="800" height="200" fill="black"/></svg>'});
+      });
+      const logo=await renderHeaderLogo({logo:{url:'https://theme.test/normal.svg',aspect_ratio:4},logo_inverse:{url:'https://theme.test/alternate.svg',aspect_ratio:8}}, {enable_transparent_header_home:true,home_inverse_logo:true});
+      await page.setContent(`<html dir="${direction}"><head><style>${source('shopify/assets/base.css')}${headerCSS}${menuCSS}</style>${logo.variables}<style>header-actions{display:block;width:44px;height:44px;flex:none}.header__drawer{width:44px;height:44px}.header-menu__inner{white-space:nowrap}</style></head><body class="page-width-narrow"><header-component class="header" id="header-component" transparent="not-sticky" data-menu-style="${width<1024?'drawer':'menu'}"><div class="header__row section section--page-width"><div class="header__columns spacing-style"><div class="header__column header__column--left"><div class="header__drawer header__icon--menu"></div>${logo.html}<header-menu class="header-menu"><nav class="header-menu__inner"><a class="menu-list__link" href="#">Shop</a> <a class="menu-list__link" href="#">About</a></nav></header-menu></div><div class="header__column header__column--right"><header-actions></header-actions></div></div></div></header-component></body></html>`,{waitUntil:'domcontentloaded'});
+      const dimensions=()=>page.evaluate(()=>{
+        const rect=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
+        return {logo:rect('.header-logo'),menu:rect('header-menu'),header:rect('#header-component'),overflow:document.documentElement.scrollWidth>innerWidth};
+      });
+      const initial=await dimensions();
+      assert(initial.logo.width>0 && initial.logo.height>0,'reserve dimensions before the upload finishes loading');
+      assert(!initial.overflow,`${width}px ${direction}: uploaded logo overflow`);
+      releaseImages();
+      await page.waitForFunction(()=>[...document.querySelectorAll('.header-logo img')].every(img=>img.complete));
+      assert.deepEqual(await dimensions(),initial,'image decoding must not move navigation');
+      for (const sticky of ['active','inactive','active']) {
+        await page.locator('#header-component').evaluate((el,sticky)=>el.dataset.stickyState=sticky,sticky);
+        assert.deepEqual(await dimensions(),initial,'switching logo variants must keep the header footprint');
+        const visible=await page.locator('.header-logo > span').evaluateAll(nodes=>nodes.filter(node=>getComputedStyle(node).display!=='none').length);
+        assert.equal(visible,1,'only one logo variant may be displayed');
+      }
+      if(width>=1024) {
+        await page.locator('.menu-list__link').first().hover();
+        assert.deepEqual(await dimensions(),initial,'hovering the menu must not expand the logo');
+        assert.equal(await page.locator('[data-testid="header-logo-inverse"]').evaluate(el=>getComputedStyle(el).display),'none');
+      }
+      await page.unroute('https://theme.test/*.svg');
+    }
+  } finally { await browser.close(); }
+});
+
+test('replacing a logo repeatedly keeps real overflow navigation on one row and recovers links when space returns', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage({viewport:{width:1024,height:900}});
+    await page.route('https://theme.test/logo.svg',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="100"><rect width="2000" height="100" fill="black"/></svg>'}));
+    const css=file=>source(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)[1];
+    const logo=await renderHeaderLogo({logo:{url:'https://theme.test/logo.svg',aspect_ratio:2}});
+    const links=Array.from({length:6},(_,i)=>`<li style="flex:none;width:100px;height:44px;list-style:none"><a href="#${i}">Link ${i}</a></li>`).join('');
+    // Use the real shadow list, ResizeNotifier and hydration base class. These
+    // classes have no service dependency; no overflow behavior is stubbed here.
+    const shadow=`<style>${source('shopify/assets/overflow-list.css')}</style><ul part="list"><slot></slot><slot name="more" part="more" hidden><li style="width:60px;height:44px">More</li></slot><li part="placeholder" hidden></li></ul><div part="overflow"><ul part="overflow-list"><slot name="overflow"></slot></ul></div>`;
+    await page.setContent(`<style>${source('shopify/assets/base.css')}${css('sections/theme-header.storelib')}${css('blocks/_header-menu.storelib')}</style>${logo.variables}<style>header-actions{display:block;width:44px;height:44px;flex:none}overflow-list{display:block}</style><body class="page-width-narrow"><header-component class="header" id="header-component" data-menu-style="menu"><div class="header__row section section--page-width"><div class="header__columns spacing-style"><div class="header__column header__column--left">${logo.html}<header-menu class="header-menu"><div class="header-menu__inner"><nav><overflow-list class="overflow-menu"><template shadowrootmode="open">${shadow}</template>${links}</overflow-list></nav></div></header-menu></div><div class="header__column header__column--right"><header-actions></header-actions></div></div></div></header-component></body>`);
+    const hydration=source('shopify/assets/component.js').match(/export class DeclarativeShadowElement extends HTMLElement {[\s\S]*?\n}/)[0];
+    const notifier=source('shopify/assets/utilities.js').match(/export class ResizeNotifier extends ResizeObserver {[\s\S]*?\n}/)[0];
+    await page.addScriptTag({type:'module',content:'window.Theme={utilities:{}};\n'+hydration+'\n'+notifier+'\n'+source('shopify/assets/overflow-list.js').replace(/^import .*;\n/gm,'')});
+    await page.waitForFunction(()=>document.querySelector('overflow-list').style.getPropertyValue('--overflow-count')!=='');
+    let narrowCount;
+    for (const ratio of [20,1,20,1]) {
+      const next=await renderHeaderLogo({logo:{url:'https://theme.test/logo.svg',width:ratio*100,height:100}});
+      const oldWidth=await page.locator('header-menu').evaluate(el=>el.getBoundingClientRect().width);
+      await page.locator('.header-logo').evaluate((el,html)=>el.outerHTML=html,next.html);
+      await page.waitForFunction(oldWidth=>Math.abs(document.querySelector('header-menu').getBoundingClientRect().width-oldWidth)>1,oldWidth);
+      // Allow the component's own RAF + resize observer to finish reflowing.
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(resolve,0)))));
+      const result=await page.evaluate(()=>{
+        const list=document.querySelector('overflow-list');
+        const r=document.querySelector('.header-logo').getBoundingClientRect();
+        const menu=document.querySelector('header-menu').getBoundingClientRect();
+        const action=document.querySelector('header-actions').getBoundingClientRect();
+        return {count:+list.style.getPropertyValue('--overflow-count'),height:list.shadowRoot.querySelector('[part="list"]').getBoundingClientRect().height,logoRight:r.right,menuLeft:menu.left,menuRight:menu.right,actionLeft:action.left,overflow:document.documentElement.scrollWidth>innerWidth};
+      });
+      assert(!result.overflow);
+      assert(result.logoRight<=result.menuLeft+1,'logo must not overlap links');
+      assert(result.menuRight<=result.actionLeft+1,'menu must not overlap header actions');
+      assert.equal(result.height,44,'links must remain on one row');
+      if(ratio===20) { assert(result.count>0);narrowCount=result.count; }
+      else assert(result.count<narrowCount,'links must return when a smaller logo restores space');
+    }
+  } finally { await browser.close(); }
+});
+
 test('secondary images decode before a smooth crossfade, cancel safely and respect reduced motion', async () => {
   const browser=await openBrowser();
   try {

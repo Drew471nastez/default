@@ -22,6 +22,27 @@
   endif
 
   assign alt_text_fallback = 'accessibility.home_logo_alt' | t: store_name: shop.name
+  assign logo_height = settings.logo_height | default: 36
+  assign logo_height_mobile = settings.logo_height_mobile | default: 28
+  assign logo_ratio = settings.logo.aspect_ratio
+  if logo_ratio == blank or logo_ratio <= 0
+    if settings.logo.height > 0
+      assign logo_ratio = settings.logo.width | times: 1.0 | divided_by: settings.logo.height
+    else
+      assign logo_ratio = 1
+    endif
+  endif
+  assign inverse_ratio = inverse_logo.aspect_ratio
+  if inverse_ratio == blank or inverse_ratio <= 0
+    if inverse_logo.height > 0
+      assign inverse_ratio = inverse_logo.width | times: 1.0 | divided_by: inverse_logo.height
+    else
+      assign inverse_ratio = logo_ratio
+    endif
+  endif
+  assign slot_ratio = logo_ratio | at_least: inverse_ratio
+  assign slot_width = logo_height | times: slot_ratio | ceil
+  assign slot_width_mobile = logo_height_mobile | times: slot_ratio | ceil
 %}
 
 {% comment %}
@@ -34,24 +55,20 @@
   {% endif %}
   href="{{ routes.root_url }}"
   class="size-style spacing-style header-logo"
+  {% if settings.logo != blank or inverse_logo != blank %}data-image-logo{% endif %}
   style="
     {% render 'size-style', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
     --font-family: var(--font-body--family);
     --font-style: var(--font-body--style);
     --font-weight: 600;
+    --header-logo-width: {{ slot_width }}px;
+    --header-logo-width-mobile: {{ slot_width_mobile }}px;
+    --header-logo-height: {{ logo_height }}px;
+    --header-logo-height-mobile: {{ logo_height_mobile }}px;
   "
   {{ block.shopify_attributes }}
 >
-  {% liquid
-    assign logo_width = settings.logo_height | times: settings.logo.aspect_ratio | ceil
-    assign logo_width_mobile = settings.logo_height_mobile | times: settings.logo.aspect_ratio | ceil
-    assign inverse_logo_width = settings.logo_height | times: inverse_logo.aspect_ratio | ceil
-    assign inverse_logo_width_mobile = settings.logo_height_mobile | times: inverse_logo.aspect_ratio | ceil
-    assign logo_style = '--header-logo-image-width: ' | append: logo_width | append: 'px;' | append: '--header-logo-image-width-mobile: ' | append: logo_width_mobile | append: 'px; --header-logo-image-height: ' | append: settings.logo_height | append: 'px; --header-logo-image-height-mobile: ' | append: settings.logo_height_mobile | append: 'px;'
-    assign inverse_logo_style = '--header-logo-image-width: ' | append: inverse_logo_width | append: 'px;' | append: '--header-logo-image-width-mobile: ' | append: inverse_logo_width_mobile | append: 'px; --header-logo-image-height: ' | append: settings.logo_height | append: 'px; --header-logo-image-height-mobile: ' | append: settings.logo_height_mobile | append: 'px;'
-  %}
-
   <span
     {% if use_inverse_logo %}
       class="header-logo__solid-header-image-container"
@@ -61,10 +78,9 @@
     {% render 'image',
       image: settings.logo,
       class: 'header-logo__image',
-      height: settings.logo_height,
+      height: logo_height,
       alt_text_fallback: alt_text_fallback,
-      text_fallback: shop.name,
-      style: logo_style
+      text_fallback: shop.name
     %}
   </span>
 
@@ -76,10 +92,9 @@
       {% render 'image',
         image: inverse_logo,
         class: 'header-logo__image',
-        height: settings.logo_height,
+        height: logo_height,
         alt_text_fallback: alt_text_fallback,
-        text_fallback: shop.name,
-        style: inverse_logo_style
+        text_fallback: shop.name
       %}
     </span>
   {% endif %}
@@ -87,7 +102,9 @@
 
 {% stylesheet %}
   .header-logo {
-    display: flex;
+    display: grid;
+    min-width: 0;
+    max-width: 100%;
     height: 100%;
     font-size: var(--font-size--md);
     font-family: var(--font-family);
@@ -106,7 +123,7 @@
           [sticky='scroll-up'][data-scroll-direction='up']
         )
         & {
-        display: flex;
+        display: grid;
       }
     }
 
@@ -115,7 +132,7 @@
     }
 
     @media screen and (min-width: 750px) {
-      flex-shrink: 0;
+      flex-shrink: 1;
     }
 
     &:hover {
@@ -123,15 +140,35 @@
     }
   }
 
-  .header-logo__image {
-    object-fit: contain;
-    height: var(--header-logo-image-height-mobile);
-    width: var(--header-logo-image-width-mobile);
+  .header-logo[data-image-logo] {
+    width: var(--header-logo-width-mobile);
+    height: auto;
+    justify-content: normal;
 
     @media screen and (min-width: 750px) {
-      height: var(--header-logo-image-height);
-      width: var(--header-logo-image-width);
+      width: var(--header-logo-width);
     }
+  }
+
+  .header-logo > span {
+    /* Both variants share a footprint; swapping them must not resize navigation. */
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .header-logo[data-image-logo] > span {
+    height: var(--header-logo-height-mobile);
+
+    @media screen and (min-width: 750px) {
+      height: var(--header-logo-height);
+    }
+  }
+
+  .header-logo__image {
+    display: block;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
   }
 
   .header-logo__solid-header-image-container {
