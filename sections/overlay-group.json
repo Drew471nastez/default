@@ -1,0 +1,60 @@
+{
+  "type": "custom.overlay",
+  "name": "Overlay group",
+  "sections": {
+    "mobile_bottom_nav": {
+      "type": "mobile-bottom-nav",
+      "name": "Mobile bottom navigation",
+      "settings": {
+        "nav_label": "Mobile navigation",
+        "show_labels": true,
+        "behavior": "always",
+        "icon_size": 22,
+        "background_color": "#ffffff",
+        "text_color": "#000000"
+      },
+      "blocks": {
+        "nav_home": {
+          "type": "home",
+          "settings": {
+            "label": "Home"
+          }
+        },
+        "nav_menu": {
+          "type": "menu",
+          "settings": {
+            "label": "Menu"
+          }
+        },
+        "nav_search": {
+          "type": "search",
+          "settings": {
+            "label": "Search"
+          }
+        },
+        "nav_account": {
+          "type": "account",
+          "settings": {
+            "label": "Account"
+          }
+        },
+        "nav_cart": {
+          "type": "cart",
+          "settings": {
+            "label": "Cart"
+          }
+        }
+      },
+      "block_order": [
+        "nav_home",
+        "nav_menu",
+        "nav_search",
+        "nav_account",
+        "nav_cart"
+      ]
+    }
+  },
+  "order": [
+    "mobile_bottom_nav"
+  ]
+}
