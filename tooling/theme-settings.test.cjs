@@ -441,3 +441,35 @@ test('explicit media-section text controls take effect even when automatic media
   const out=await render('snippets/contrast-override.storelib',{color_scheme:'custom',background_color:color('#000000'),text_color:color('#ffffff'),skip_contrast:true,section_id:'hero'});
   assert(out.includes('--color-foreground: #ffffff'));
 });
+
+test('hover color lives in Buttons and Automatic, Custom and No change reach both buttons and shared schemes', async () => {
+  const buttons=schema.find(group=>group.name==='Buttons').settings;
+  const ids=buttons.map(setting=>setting.id);
+  const firstHeader=buttons.findIndex(setting=>setting.type==='header');
+  for (const id of ['storelib_button_hover_effect','storelib_button_hover_bg','storelib_button_hover_text']) {
+    assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1,id);
+    assert(ids.indexOf(id)>=0&&ids.indexOf(id)<firstHeader,id);
+  }
+  assert.deepEqual(buttons.find(setting=>setting.id==='storelib_button_hover_effect').options.map(option=>option.value),['theme','custom','none']);
+  assert(['theme','custom','none'].includes(JSON.parse(source('config/settings.json')).shopify.storelib_button_hover_effect),'saved value stays valid');
+
+  const hover=(css,kind)=>Object.fromEntries(['background','text','border'].map(part=>[part,css.match(new RegExp(`--color-${kind}-button-hover-${part}:\\s*([^;]+);`))[1].trim()]));
+  const base={palette_primary_button_background:'#3e3e3e',palette_primary_button_text:'#ffffff',palette_primary_button_border:'#3e3e3e',
+    palette_secondary_button_background:'#ffffff',palette_secondary_button_text:'#171717',palette_secondary_button_border:'#171717',
+    storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd'};
+  const automatic=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'theme'})});
+  assert.notEqual(hover(automatic,'primary').background.toLowerCase(),'#9b95c1');
+  const custom=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'custom'})});
+  for (const kind of ['primary','secondary']) assert.deepEqual(hover(custom,kind),{background:'#9b95c1',text:`rgb(${color('#fdfdfd').rgba})`,border:'#9b95c1'},kind);
+  const none=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'none'})});
+  assert.deepEqual(hover(none,'primary'),{background:`rgb(${color('#3e3e3e').rgba})`,text:`rgb(${color('#ffffff').rgba})`,border:`rgb(${color('#3e3e3e').rgba})`});
+  assert.deepEqual(hover(none,'secondary'),{background:`rgb(${color('#ffffff').rgba})`,text:`rgb(${color('#171717').rgba})`,border:`rgb(${color('#171717').rgba})`});
+
+  const scheme=async effect=>render('snippets/contrast-override.storelib',{settings:settings({...base,storelib_button_hover_effect:effect}),color_scheme:'inverse',section_id:'s'});
+  const inverseCustom=await scheme('custom');
+  assert.equal(hover(inverseCustom,'primary').background,'#9b95c1');
+  assert.equal(hover(inverseCustom,'secondary').text,'#fdfdfd');
+  const inverseNone=await scheme('none');
+  const button=kind=>inverseNone.match(new RegExp(`--color-${kind}-button-background:\\s*([^;]+);`))[1].trim();
+  for (const kind of ['primary','secondary']) assert.equal(hover(inverseNone,kind).background,button(kind),kind);
+});

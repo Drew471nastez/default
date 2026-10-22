@@ -30,7 +30,7 @@ All 182 declared global setting IDs have source-consumer coverage, including dyn
 
 ## Platform boundaries
 
-- `storelib_button_hover_effect` is saved by Storelib but is not declared by this theme. The platform-injected Hover & focus panel cannot be reorganized or fully tested from this checkout.
+- `storelib_button_hover_effect`, `storelib_button_hover_bg` and `storelib_button_hover_text` are now declared in the theme's Buttons group (see below). Whether Storelib then stops adding its own Hover & focus panel needs a live check.
 - Parent-editor refresh scheduling, the generated library/sidebar, account authentication, consent and commerce services require a live Storelib check. The theme does not invent editor message protocols or replace these services.
 - GitHub's commit-status endpoint has returned HTTP 403 in this environment. A successful Git push is not proof that Storelib accepted every changed file. Check the Storelib import result before publishing.
 
@@ -49,3 +49,7 @@ The requested end-to-end live preview is **not resolved by this theme patch**. T
 When a setting change reloads the preview, the page went back to the top. On desktop the page scrolls inside `.page-wrapper`, which browsers never restore, and the theme's own `history.state` restore is lost when the editor resets the frame's address. In design mode only, `theme-editor.js` now keeps the position per page in sessionStorage and puts it back as late content grows the page. It stops as soon as the creator scrolls, clicks or types. The browser regression covers a plain reload and an address reset at 375 and 1440 pixels, fails on the previous script and passes on this one.
 
 This does not stop the reload or shorten the delay before it. Those are the builder's.
+
+## Follow-up: hover and focus inside Buttons
+
+Storelib saved three hover settings for a Hover & focus panel of its own, and the theme used none of them. They are now declared in Buttons, ahead of Primary button, beside Hover speed and Focus outline, with their IDs and saved values kept. Hover color is Automatic (the theme's shift with readable text, the saved value), Custom (one hover background and text for primary and secondary buttons, including Surface, Inverse and Accent sections) or No change. The custom colors and Hover speed only show when they apply. Custom-colored sections keep their own button hovers.
