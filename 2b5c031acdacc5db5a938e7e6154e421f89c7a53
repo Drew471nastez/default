@@ -1,0 +1,18 @@
+**Storelib** read this push.
+
+5 files taken into the site as a draft.
+
+- `shopify/assets/base.css`
+- `shopify/config/settings_schema.json`
+- `snippets/color-palette.storelib`
+- `snippets/contrast-override.storelib`
+- `snippets/theme-styles-variables.storelib`
+
+Notes:
+
+- AGENTS.md is written by Storelib, so this change is replaced on the next Push.
+- README.md is written by Storelib, so this change is replaced on the next Push.
+
+Nothing is live until the creator presses Publish.
+
+Open the builder: https://storelib.com/website-builder/editor/7a716c19-6532-480d-a2b3-1bd1fad57eea
