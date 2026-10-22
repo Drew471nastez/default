@@ -1,0 +1,981 @@
+<template compat="shopify">
+{% doc %}
+  Mobile bottom navigation.
+
+  Fixed to the bottom of the screen on phones. Lives in the overlay group so it
+  is on every page. Menu, search, and cart use the same drawers as the header.
+{% enddoc %}
+
+{% liquid
+  assign nav_label = section.settings.nav_label | default: 'Mobile navigation'
+  assign nav_bg = section.settings.background_color | default: '#ffffff'
+  assign nav_fg = section.settings.text_color | default: '#000000'
+  assign icon_size = section.settings.icon_size | default: 22
+  assign cart_count = cart.item_count | default: 0
+  assign show_labels = section.settings.show_labels
+  assign has_items = false
+  assign has_cart = false
+
+  for block in section.blocks
+    assign count_block = true
+    if block.type == 'link' and block.settings.link == blank and request.design_mode == false
+      assign count_block = false
+    endif
+    if count_block
+      assign has_items = true
+      if block.type == 'cart'
+        assign has_cart = true
+      endif
+    endif
+  endfor
+%}
+
+{% if has_cart %}
+  <script
+    src="{{ 'cart-icon.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+
+{% if has_items %}
+  <mobile-bottom-nav
+    id="MobileBottomNav-{{ section.id }}"
+    class="mobile-bottom-nav{% if request.design_mode %} mobile-bottom-nav--editor{% endif %}"
+    data-storelib-bottom-bar
+    role="navigation"
+    aria-label="{{ nav_label | escape }}"
+    data-behavior="{{ section.settings.behavior | default: 'always' | escape }}"
+    style="--mobile-bottom-nav-bg: {{ nav_bg }}; --mobile-bottom-nav-fg: {{ nav_fg }}; --mobile-bottom-nav-icon: {{ icon_size }}px;"
+  >
+    {% for block in section.blocks %}
+      {% liquid
+        assign render_item = true
+        if block.type == 'link' and block.settings.link == blank and request.design_mode == false
+          assign render_item = false
+        endif
+
+        assign label = block.settings.label
+        assign item_tag = 'a'
+        assign item_href = ''
+        assign is_current = false
+        assign item_action = block.type
+
+        case block.type
+          when 'home'
+            assign item_href = routes.root_url | default: '/'
+            if label == blank
+              assign label = 'Home'
+            endif
+            if template.name == 'index'
+              assign is_current = true
+            endif
+          when 'menu'
+            assign item_tag = 'button'
+            if label == blank
+              assign label = 'accessibility.menu' | t
+            endif
+          when 'search'
+            assign item_tag = 'button'
+            if label == blank
+              assign label = 'content.search' | t
+            endif
+          when 'account'
+            assign item_href = routes.account_url | default: '/account'
+            if label == blank
+              assign label = 'content.account_title' | t
+            endif
+            if template.name == 'account' or template.name == 'login' or template.name == 'register' or template.name == 'order' or template.name == 'addresses' or template.name == 'activate_account' or template.name == 'reset_password'
+              assign is_current = true
+            endif
+          when 'cart'
+            if label == blank
+              assign label = 'content.cart_title' | t
+            endif
+            if settings.cart_type == 'drawer' and template.name != 'cart'
+              assign item_tag = 'button'
+            else
+              assign item_href = routes.cart_url | default: '/cart'
+              if template.name == 'cart'
+                assign is_current = true
+              endif
+            endif
+          when 'link'
+            assign item_href = block.settings.link
+            if label == blank
+              assign label = 'Shop'
+            endif
+            assign link_path = block.settings.link | split: '?' | first
+            if link_path != blank and request.path == link_path
+              assign is_current = true
+            endif
+        endcase
+
+        assign accessible_name = label
+        if block.type == 'cart' and cart_count > 0
+          if cart_count > 99
+            assign accessible_name = label | append: ', 99+'
+          else
+            assign accessible_name = label | append: ', ' | append: cart_count
+          endif
+        endif
+      %}
+
+      {% if render_item %}
+      {% if item_tag == 'button' %}
+        <button
+          type="button"
+          class="mobile-bottom-nav__item{% if is_current %} mobile-bottom-nav__item--current{% endif %}"
+          data-nav-action="{{ item_action }}"
+          data-label="{{ label | escape }}"
+          {% if item_action == 'menu' %}
+            data-close-label="{{ 'actions.close' | t | escape }}"
+            aria-expanded="false"
+            aria-controls="Details-menu-drawer-container"
+            aria-haspopup="true"
+          {% elsif item_action == 'search' %}
+            on:click="#search-modal/showDialog"
+            aria-expanded="false"
+            aria-controls="search-modal"
+            aria-haspopup="dialog"
+          {% elsif item_action == 'cart' %}
+            on:click="#cart-drawer/toggle"
+            aria-expanded="false"
+            aria-controls="cart-drawer"
+            aria-haspopup="dialog"
+          {% endif %}
+          aria-label="{{ accessible_name | escape }}"
+          {{ block.shopify_attributes }}
+        >
+      {% elsif item_href != blank %}
+        <a
+          href="{{ item_href }}"
+          class="mobile-bottom-nav__item{% if is_current %} mobile-bottom-nav__item--current{% endif %}"
+          data-nav-action="{{ item_action }}"
+          {% if is_current %}
+            aria-current="page"
+          {% endif %}
+          aria-label="{{ accessible_name | escape }}"
+          {{ block.shopify_attributes }}
+        >
+      {% else %}
+        <span
+          class="mobile-bottom-nav__item"
+          data-nav-action="{{ item_action }}"
+          aria-disabled="true"
+          {{ block.shopify_attributes }}
+        >
+      {% endif %}
+
+          <span class="mobile-bottom-nav__glyph">
+            {% case block.type %}
+              {% when 'menu' %}
+                <span class="mobile-bottom-nav__icon mobile-bottom-nav__icon--open" aria-hidden="true">
+                  {{ 'icon-menu.svg' | inline_asset_content }}
+                </span>
+                <span class="mobile-bottom-nav__icon mobile-bottom-nav__icon--close" aria-hidden="true">
+                  {{ 'icon-close-menu.svg' | inline_asset_content }}
+                </span>
+              {% when 'search' %}
+                <span class="mobile-bottom-nav__icon" aria-hidden="true">
+                  {{ 'icon-search.svg' | inline_asset_content }}
+                </span>
+              {% when 'account' %}
+                <span class="mobile-bottom-nav__icon" aria-hidden="true">
+                  {{ 'icon-account.svg' | inline_asset_content }}
+                </span>
+              {% when 'cart' %}
+                <cart-icon class="mobile-bottom-nav__cart">
+                  <span class="mobile-bottom-nav__icon" aria-hidden="true">
+                    {{ 'icon-cart.svg' | inline_asset_content }}
+                  </span>
+                  <span
+                    ref="cartBubble"
+                    class="mobile-bottom-nav__count{% if cart_count == 0 %} visually-hidden{% endif %}"
+                  >
+                    <span ref="cartBubbleText" class="mobile-bottom-nav__count-text">
+                      <span
+                        ref="cartBubbleCount"
+                        class="mobile-bottom-nav__count-value{% if cart_count == 0 %} hidden{% endif %}"
+                      >
+                        {% if cart_count > 99 %}99{% else %}{{ cart_count }}{% endif %}
+                      </span>
+                    </span>
+                  </span>
+                </cart-icon>
+              {% else %}
+                <span class="mobile-bottom-nav__icon" aria-hidden="true">
+                  {% liquid
+                    assign link_icon = 'home'
+                    if block.type == 'link'
+                      assign link_icon = block.settings.icon | default: 'bag'
+                    endif
+                  %}
+                  {% case link_icon %}
+                    {% when 'bag' %}
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="var(--icon-stroke-width)" d="M5.15 7.15h9.7l-.72 8.05a1 1 0 0 1-1 .9H6.87a1 1 0 0 1-1-.9l-.72-8.05Z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="var(--icon-stroke-width)" d="M7.55 7.15V5.6a2.45 2.45 0 0 1 4.9 0v1.55"/></svg>
+                    {% when 'grid' %}
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="var(--icon-stroke-width)" d="M3.5 3.5h5v5h-5zm8 0h5v5h-5zm-8 8h5v5h-5zm8 0h5v5h-5z"/></svg>
+                    {% when 'page' %}
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="var(--icon-stroke-width)" d="M6 3.25h5.15L16 8.1V16a.75.75 0 0 1-.75.75H6A.75.75 0 0 1 5.25 16V4A.75.75 0 0 1 6 3.25Z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="var(--icon-stroke-width)" d="M11.15 3.4V8H15.8"/></svg>
+                    {% when 'pin' %}
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="var(--icon-stroke-width)" d="M10 17.2s4.7-4 4.7-7.8a4.7 4.7 0 1 0-9.4 0c0 3.8 4.7 7.8 4.7 7.8Z"/><circle cx="10" cy="9.35" r="1.4" stroke="currentColor" stroke-width="var(--icon-stroke-width)"/></svg>
+                    {% else %}
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="var(--icon-stroke-width)" d="M3.25 8.45 10 3.2l6.75 5.25V16.2a1 1 0 0 1-1 1h-3.7v-4.55H7.95V17.2H4.25a1 1 0 0 1-1-1V8.45Z"/></svg>
+                  {% endcase %}
+                </span>
+            {% endcase %}
+          </span>
+          {% if show_labels %}
+            <span class="mobile-bottom-nav__label">{{ label | escape }}</span>
+          {% endif %}
+
+      {% if item_tag == 'button' or item_href != blank %}
+        {% if item_tag == 'button' %}
+          </button>
+        {% else %}
+          </a>
+        {% endif %}
+      {% else %}
+        </span>
+      {% endif %}
+      {% endif %}
+    {% endfor %}
+  </mobile-bottom-nav>
+
+  <script>
+    (function () {
+      if (customElements.get('mobile-bottom-nav')) return;
+
+      class MobileBottomNav extends HTMLElement {
+        #controller;
+
+        connectedCallback() {
+          this.#controller?.abort();
+          const controller = new AbortController();
+          this.#controller = controller;
+          const signal = controller.signal;
+
+          this.#bindMenu(signal);
+          this.#bindDialogs(signal);
+          this.#bindOffset(signal);
+          this.#bindScroll(signal);
+        }
+
+        disconnectedCallback() {
+          this.#controller?.abort();
+          this.#controller = null;
+          if (!document.querySelector('mobile-bottom-nav')) {
+            document.documentElement.style.setProperty('--mobile-bottom-nav-offset', '0px');
+          }
+        }
+
+        #bindMenu(signal) {
+          const button = this.querySelector('[data-nav-action="menu"]');
+          const details = document.getElementById('Details-menu-drawer-container');
+          if (!button || !details) return;
+
+          const sync = () => {
+            const open = details.open || details.classList.contains('menu-open');
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open) this.setAttribute('data-menu-open', 'true');
+            else this.removeAttribute('data-menu-open');
+            const nextLabel = open ? button.dataset.closeLabel : button.dataset.label;
+            if (nextLabel) button.setAttribute('aria-label', nextLabel);
+          };
+
+          button.addEventListener(
+            'click',
+            () => {
+              let summary = null;
+              for (const child of details.children) {
+                if (child.tagName === 'SUMMARY') {
+                  summary = child;
+                  break;
+                }
+              }
+              if (summary) summary.click();
+              window.requestAnimationFrame(sync);
+            },
+            { signal }
+          );
+
+          details.addEventListener('toggle', sync, { signal });
+          sync();
+        }
+
+        #bindDialogs(signal) {
+          const pairs = [
+            ['search', '#search-modal dialog'],
+            ['cart', '#cart-drawer dialog'],
+          ];
+
+          for (const [action, selector] of pairs) {
+            const button = this.querySelector('[data-nav-action="' + action + '"]');
+            const dialog = document.querySelector(selector);
+            if (!button || !(dialog instanceof HTMLDialogElement)) continue;
+
+            const sync = () => {
+              button.setAttribute('aria-expanded', dialog.open ? 'true' : 'false');
+            };
+
+            dialog.addEventListener('toggle', sync, { signal });
+            sync();
+          }
+        }
+
+        #bindOffset(signal) {
+          const media = window.matchMedia('(max-width: 749px)');
+          const apply = () => {
+            const editor = this.classList.contains('mobile-bottom-nav--editor');
+            const shown = (media.matches || editor) && this.getClientRects().length > 0;
+            const height = shown ? this.offsetHeight : 0;
+            document.documentElement.style.setProperty('--mobile-bottom-nav-offset', height + 'px');
+          };
+
+          apply();
+          media.addEventListener('change', apply, { signal });
+          window.addEventListener('resize', apply, { passive: true, signal });
+
+          if (typeof ResizeObserver === 'function') {
+            const observer = new ResizeObserver(apply);
+            observer.observe(this);
+            signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+          }
+        }
+
+        #bindScroll(signal) {
+          if (this.dataset.behavior !== 'scroll') return;
+
+          let lastY = window.scrollY || 0;
+          let frame = 0;
+
+          const show = () => {
+            this.classList.remove('is-hidden');
+            this.removeAttribute('inert');
+          };
+
+          const hide = () => {
+            if (this.contains(document.activeElement)) return;
+            this.classList.add('is-hidden');
+            this.setAttribute('inert', '');
+          };
+
+          this.addEventListener('focusin', show, { signal });
+
+          window.addEventListener(
+            'scroll',
+            () => {
+              if (frame) return;
+              frame = window.requestAnimationFrame(() => {
+                frame = 0;
+                const y = Math.max(window.scrollY || 0, 0);
+                const delta = y - lastY;
+                if (y < 32) show();
+                else if (delta > 8) hide();
+                else if (delta < -8) show();
+                lastY = y;
+              });
+            },
+            { passive: true, signal }
+          );
+        }
+      }
+
+      customElements.define('mobile-bottom-nav', MobileBottomNav);
+    })();
+  </script>
+{% endif %}
+
+{% stylesheet %}
+  mobile-bottom-nav.mobile-bottom-nav {
+    --mobile-bottom-nav-bg: #ffffff;
+    --mobile-bottom-nav-fg: #000000;
+    --mobile-bottom-nav-icon: 22px;
+
+    position: fixed;
+    z-index: var(--layer-sticky);
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    background: var(--mobile-bottom-nav-bg);
+    color: var(--mobile-bottom-nav-fg);
+    padding-top: 7px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+    min-height: calc(56px + env(safe-area-inset-bottom, 0px));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--mobile-bottom-nav-fg) 14%, transparent);
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.28s var(--ease-out-cubic);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  mobile-bottom-nav.mobile-bottom-nav.is-hidden {
+    transform: translate3d(0, calc(100% + env(safe-area-inset-bottom, 0px)), 0);
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav__item {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 2px 2px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: var(--font-body--family);
+    font-size: 0.6875rem;
+    font-weight: var(--font-body--weight);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.72;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: opacity 0.16s var(--ease-out-cubic);
+  }
+
+  .mobile-bottom-nav__item[aria-current='page'],
+  mobile-bottom-nav[data-menu-open='true'] [data-nav-action='menu'] {
+    opacity: 1;
+  }
+
+  .mobile-bottom-nav__item:focus {
+    outline: none;
+  }
+
+  .mobile-bottom-nav__item:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--mobile-bottom-nav-fg);
+    outline-offset: -4px;
+  }
+
+  @media (hover: hover) {
+    .mobile-bottom-nav__item:hover {
+      opacity: 1;
+    }
+  }
+
+  .mobile-bottom-nav__item[aria-current='page']::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    width: 18px;
+    height: 2px;
+    margin-left: -9px;
+    background: currentColor;
+  }
+
+  .mobile-bottom-nav__glyph {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--mobile-bottom-nav-icon);
+    height: var(--mobile-bottom-nav-icon);
+    flex: 0 0 auto;
+  }
+
+  .mobile-bottom-nav__icon {
+    display: flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .mobile-bottom-nav__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .mobile-bottom-nav__icon--close {
+    display: none;
+  }
+
+  mobile-bottom-nav[data-menu-open='true'] [data-nav-action='menu'] .mobile-bottom-nav__icon--open {
+    display: none;
+  }
+
+  mobile-bottom-nav[data-menu-open='true'] [data-nav-action='menu'] .mobile-bottom-nav__icon--close {
+    display: flex;
+  }
+
+  .mobile-bottom-nav__cart {
+    position: relative;
+    display: grid;
+    grid-area: 1 / 1;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .mobile-bottom-nav__item[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  .mobile-bottom-nav__label {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-bottom-nav__count {
+    position: absolute;
+    top: -6px;
+    inset-inline-end: -9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding-inline: 4px;
+    border-radius: 999px;
+    background: var(--mobile-bottom-nav-fg);
+    color: var(--mobile-bottom-nav-bg);
+    box-shadow: 0 0 0 1.5px var(--mobile-bottom-nav-bg);
+    font-family: var(--font-body--family);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0;
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav__count-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .mobile-bottom-nav__count.cart-bubble--animating .mobile-bottom-nav__count-text {
+    animation: mobile-bottom-nav-count 0.35s var(--ease-out-cubic);
+  }
+
+  @keyframes mobile-bottom-nav-count {
+    0% {
+      transform: scale(0.6);
+    }
+
+    60% {
+      transform: scale(1.12);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @media not all and (max-width: 749px) {
+    mobile-bottom-nav.mobile-bottom-nav:not(.mobile-bottom-nav--editor) {
+      display: none;
+    }
+  }
+
+  @media not all and (min-width: 750px) {
+    body:has(mobile-bottom-nav) {
+      padding-bottom: var(--mobile-bottom-nav-offset, calc(3.625rem + env(safe-area-inset-bottom, 0px)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    mobile-bottom-nav.mobile-bottom-nav,
+    .mobile-bottom-nav__item {
+      transition: none;
+    }
+
+    .mobile-bottom-nav__count.cart-bubble--animating .mobile-bottom-nav__count-text {
+      animation: none;
+    }
+  }
+
+  @media print {
+    mobile-bottom-nav.mobile-bottom-nav {
+      display: none;
+    }
+
+    body:has(mobile-bottom-nav) {
+      padding-bottom: 0;
+    }
+  }
+{% endstylesheet %}
+
+</template>
+
+<schema>
+{
+  "type": "mobile-bottom-nav",
+  "name": "Mobile bottom navigation",
+  "description": "Sticky mobile bottom navigation for Home, Menu, Search, Account and Cart.",
+  "class": "mobile-bottom-nav-section",
+  "max_blocks": 5,
+  "enabled_on": {
+    "groups": ["overlay"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "id": "note",
+      "content": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer."
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Accessibility label",
+      "default": "Mobile navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show labels",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "behavior",
+      "label": "Behavior",
+      "options": [
+        { "value": "always", "label": "Always visible" },
+        { "value": "scroll", "label": "Hide while scrolling down" }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 18,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "home",
+      "name": "Home",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Home"
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "search",
+      "name": "Search",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Search"
+        }
+      ]
+    },
+    {
+      "type": "account",
+      "name": "Account",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Account"
+        }
+      ]
+    },
+    {
+      "type": "cart",
+      "name": "Cart",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Cart"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "bag", "label": "Bag" },
+            { "value": "grid", "label": "Grid" },
+            { "value": "page", "label": "Page" },
+            { "value": "pin", "label": "Pin" }
+          ],
+          "default": "bag"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile bottom navigation",
+      "category": "Header",
+      "settings": {
+        "show_labels": true,
+        "behavior": "always",
+        "icon_size": 22,
+        "background_color": "#ffffff",
+        "text_color": "#000000"
+      },
+      "blocks": {
+        "nav_home": { "type": "home", "settings": { "label": "Home" } },
+        "nav_menu": { "type": "menu", "settings": { "label": "Menu" } },
+        "nav_search": { "type": "search", "settings": { "label": "Search" } },
+        "nav_account": { "type": "account", "settings": { "label": "Account" } },
+        "nav_cart": { "type": "cart", "settings": { "label": "Cart" } }
+      },
+      "block_order": ["nav_home", "nav_menu", "nav_search", "nav_account", "nav_cart"]
+    }
+  ],
+  "shopify": {
+    "name": "Mobile bottom navigation",
+    "class": "mobile-bottom-nav-section",
+    "max_blocks": 5,
+    "enabled_on": {
+      "groups": ["overlay"]
+    },
+    "settings": [
+      {
+        "type": "paragraph",
+        "id": "note",
+        "content": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer."
+      },
+      {
+        "type": "text",
+        "id": "nav_label",
+        "label": "Accessibility label",
+        "default": "Mobile navigation"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_labels",
+        "label": "Show labels",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "behavior",
+        "label": "Behavior",
+        "options": [
+          { "value": "always", "label": "Always visible" },
+          { "value": "scroll", "label": "Hide while scrolling down" }
+        ],
+        "default": "always"
+      },
+      {
+        "type": "range",
+        "id": "icon_size",
+        "label": "Icon size",
+        "min": 18,
+        "max": 28,
+        "step": 1,
+        "unit": "px",
+        "default": 22
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text",
+        "default": "#000000"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "home",
+        "name": "Home",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Home"
+          }
+        ]
+      },
+      {
+        "type": "menu",
+        "name": "Menu",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Menu"
+          }
+        ]
+      },
+      {
+        "type": "search",
+        "name": "Search",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Search"
+          }
+        ]
+      },
+      {
+        "type": "account",
+        "name": "Account",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Account"
+          }
+        ]
+      },
+      {
+        "type": "cart",
+        "name": "Cart",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Cart"
+          }
+        ]
+      },
+      {
+        "type": "link",
+        "name": "Link",
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Shop"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "select",
+            "id": "icon",
+            "label": "Icon",
+            "options": [
+              { "value": "bag", "label": "Bag" },
+              { "value": "grid", "label": "Grid" },
+              { "value": "page", "label": "Page" },
+              { "value": "pin", "label": "Pin" }
+            ],
+            "default": "bag"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Mobile bottom navigation",
+        "category": "Header",
+        "settings": {
+          "show_labels": true,
+          "behavior": "always",
+          "icon_size": 22,
+          "background_color": "#ffffff",
+          "text_color": "#000000"
+        },
+        "blocks": {
+          "nav_home": { "type": "home", "settings": { "label": "Home" } },
+          "nav_menu": { "type": "menu", "settings": { "label": "Menu" } },
+          "nav_search": { "type": "search", "settings": { "label": "Search" } },
+          "nav_account": { "type": "account", "settings": { "label": "Account" } },
+          "nav_cart": { "type": "cart", "settings": { "label": "Cart" } }
+        },
+        "block_order": ["nav_home", "nav_menu", "nav_search", "nav_account", "nav_cart"]
+      }
+    ]
+  }
+}
+</schema>
