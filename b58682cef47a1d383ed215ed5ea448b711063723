@@ -1,0 +1,42 @@
+**Storelib** read this push.
+
+22 files taken into the site as a draft.
+
+- `layout/password.storelib`
+- `layout/theme.storelib`
+- `shopify/assets/base.css`
+- `shopify/assets/cart-drawer.js`
+- `shopify/assets/cart-note.js`
+- `shopify/assets/product-card.js`
+- `shopify/assets/standard-actions-override.js`
+- `shopify/config/settings_schema.json`
+- `snippets/card-hover-effect-styles.storelib`
+- `snippets/cart-drawer.storelib`
+- `snippets/cart-products.storelib`
+- `snippets/cart-summary.storelib`
+- `snippets/cookie-banner-styles.storelib`
+- `snippets/format-price.storelib`
+- `snippets/meta-tags.storelib`
+- `snippets/money-code.storelib`
+- `snippets/price.storelib`
+- `snippets/resource-card.storelib`
+- `snippets/scripts.storelib`
+- `snippets/search-modal.storelib`
+- `snippets/theme-styles-variables.storelib`
+- `snippets/view-transition-opt-in.storelib`
+
+Notes:
+
+- shopify/config/settings_schema.json: `storelib_link_hover` (Colour) now shows in Theme settings › Colors, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_button_hover_effect` (Effect) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_button_hover_bg` (Background) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_button_hover_text` (Text) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_button_hover_border` (Border) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_input_border` (Border) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_input_focus` (Focus ring) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: `storelib_input_radius` (Corner radius) now shows in Theme settings › Buttons & fields, where this file puts it, and no longer in Hover and focus.
+- shopify/config/settings_schema.json: Hover and focus is no longer shown: this theme places every one of its settings.
+
+Nothing is live until the creator presses Publish.
+
+Open the builder: https://storelib.com/website-builder/editor/7a716c19-6532-480d-a2b3-1bd1fad57eea
