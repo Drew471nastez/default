@@ -22,23 +22,7 @@
     endif
   endif
   assign palette_lightest = '#ffffff'
-  assign palette_lightest_brightness = -1
   assign palette_darkest = '#000000'
-  assign palette_darkest_brightness = 256
-
-  for palette_color in settings.color_palette
-    if palette_color != blank and palette_color.alpha == 1
-      assign b = palette_color | color_brightness
-      if b > palette_lightest_brightness
-        assign palette_lightest = palette_color
-        assign palette_lightest_brightness = b
-      endif
-      if b < palette_darkest_brightness
-        assign palette_darkest = palette_color
-        assign palette_darkest_brightness = b
-      endif
-    endif
-  endfor
 %}
 
 {% comment %} Primary button effective values {% endcomment %}
@@ -186,26 +170,26 @@
     --color-background-rgb: {{ settings.page_background_color.rgb }};
     --color-foreground: {{ page_foreground }};
     --color-foreground-rgb: {{ page_foreground_rgb }};
-    --color-border: {{ page_foreground }};
-    --color-border-rgb: {{ page_foreground_rgb }};
+    --color-border: {{ settings.site_border_color }};
+    --color-border-rgb: {{ settings.site_border_color.rgb }};
     --palette-lightest: {{ palette_lightest }};
-    --palette-lightest-rgb: {{ palette_lightest.rgb }};
+    --palette-lightest-rgb: 255 255 255;
     --palette-darkest: {{ palette_darkest }};
-    --palette-darkest-rgb: {{ palette_darkest.rgb }};
+    --palette-darkest-rgb: 0 0 0;
     {% render 'brightness-opacities', background: settings.page_background_color %}
 
     --color-primary-button-text: rgb({{ settings.palette_primary_button_text.rgba }});
     --color-primary-button-background: rgb({{ settings.palette_primary_button_background.rgba }});
     --color-primary-button-border: rgb({{ settings.palette_primary_button_border.rgba }});
     --color-primary-button-focus-outline: rgb({{ effective_primary_button_focus_outline.rgb }});
-    --color-primary-button-hover-text: rgb({{ effective_primary_button_hover_text.rgba }});
+    --color-primary-button-hover-text: rgb({% if effective_primary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_primary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_primary_button_hover_text.rgba }}{% endif %});
     --color-primary-button-hover-background: {{ effective_primary_button_hover_background }};
     --color-primary-button-hover-border: {{ effective_primary_button_hover_border }};
 
     --color-secondary-button-text: rgb({{ settings.palette_secondary_button_text.rgba }});
     --color-secondary-button-background: rgb({{ settings.palette_secondary_button_background.rgba }});
     --color-secondary-button-border: rgb({{ settings.palette_secondary_button_border.rgba }});
-    --color-secondary-button-hover-text: rgb({{ effective_secondary_button_hover_text.rgba }});
+    --color-secondary-button-hover-text: rgb({% if effective_secondary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_secondary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_secondary_button_hover_text.rgba }}{% endif %});
     --color-secondary-button-hover-background: {{ effective_secondary_button_hover_background }};
     --color-secondary-button-hover-border: {{ effective_secondary_button_hover_border }};
 
@@ -219,7 +203,7 @@
     --color-variant-text: rgb({{ settings.palette_variant_text.rgba }});
     --color-variant-text-rgb: {{ settings.palette_variant_text.rgb }};
     --color-variant-hover-background: {{ effective_variant_hover_background }};
-    --color-variant-hover-text: rgb({{ effective_variant_hover_text.rgba }});
+    --color-variant-hover-text: rgb({% if effective_variant_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_variant_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_variant_hover_text.rgba }}{% endif %});
     --color-variant-hover-border: {{ effective_variant_hover_border }};
 
     --color-selected-variant-background: rgb({{ settings.palette_selected_variant_background.rgba }});
@@ -227,7 +211,7 @@
     --color-selected-variant-text: rgb({{ settings.palette_selected_variant_text.rgba }});
     --color-selected-variant-text-rgb: {{ settings.palette_selected_variant_text.rgb }};
     --color-selected-variant-hover-background: {{ effective_selected_variant_hover_background }};
-    --color-selected-variant-hover-text: rgb({{ effective_selected_variant_hover_text.rgba }});
+    --color-selected-variant-hover-text: rgb({% if effective_selected_variant_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_selected_variant_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_selected_variant_hover_text.rgba }}{% endif %});
     --color-selected-variant-hover-border: {{ effective_selected_variant_hover_border }};
 
     --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));

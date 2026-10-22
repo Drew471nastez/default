@@ -686,14 +686,14 @@
         "type": "color",
         "id": "background_color",
         "label": "Custom background",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "visible_if": "{{ block.settings.background }}"
       },
       {
         "type": "color",
         "id": "text_color",
         "label": "Custom text color",
-        "default": "{{ settings.color_palette.foreground }}"
+        "default": "{{ settings.page_text_color }}"
       },
       {
         "type": "range",

@@ -71,6 +71,12 @@
   style="{% render 'size-style', settings: block_settings %}"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
+  {% if settings.show_second_image_on_hover and product.media.size > 1 %}
+    on:pointerenter="/previewImage"
+    on:pointerleave="/resetImage"
+    on:focusin="/previewImage"
+    on:focusout="/resetImage"
+  {% endif %}
   {% if settings.transition_to_main_product %}
     data-product-transition="true"
     data-featured-media-url="{{ featured_media_url }}"

@@ -125,17 +125,22 @@
   %}
 
   {% liquid
-    assign weight_presets = 'paragraph,h1,h2,h3,h4,h5,h6' | split: ','
-    for weight_preset in weight_presets
-      assign weight_key = 'type_weight_' | append: weight_preset
-      assign requested_weight = settings[weight_key]
-      if requested_weight != blank and requested_weight != 'inherit'
-        assign font_role_key = 'type_font_' | append: weight_preset
-        assign font_role = settings[font_role_key] | default: 'body'
-        assign font_key = 'type_' | append: font_role | append: '_font'
-        assign weighted_font = settings[font_key] | font_modify: 'weight', requested_weight
-        if weighted_font != blank
-          echo weighted_font | font_face: font_display: 'swap'
+    # Load the actual selected preset weight, not only the regular and bold faces.
+    assign weighted_presets = 'paragraph,h1,h2,h3,h4,h5,h6' | split: ','
+    for weighted_preset in weighted_presets
+      assign weight_key = 'type_weight_' | append: weighted_preset
+      assign selected_weight = settings[weight_key]
+      if selected_weight != blank and selected_weight != 'inherit'
+        assign role_key = 'type_font_' | append: weighted_preset
+        assign selected_role = settings[role_key] | default: 'body'
+        assign family_key = 'type_' | append: selected_role | append: '_font'
+        assign weighted_face = settings[family_key] | font_modify: 'weight', selected_weight
+        if weighted_face != blank
+          assign weighted_face_id = weighted_face.family | append: '-' | append: weighted_face.weight | append: '-' | append: weighted_face.style | append: '|'
+          unless rendered_fonts contains weighted_face_id
+            echo weighted_face | font_face: font_display: 'swap'
+            assign rendered_fonts = rendered_fonts | append: weighted_face_id
+          endunless
         endif
       endif
     endfor
@@ -546,7 +551,8 @@
     --view-transition-new-main-content: var(--animation-speed) var(--animation-easing) both fadeIn, var(--animation-speed) var(--animation-easing) both slideInTopViewTransition;
 
     /* Focus */
-    --focus-outline-width: 0.09375rem;
+    --focus-outline-width: {{ settings.focus_ring_width | default: 2 }}px;
+    --button-hover-duration: {{ settings.button_hover_duration | default: 200 }}ms;
     --focus-outline-offset: 0.2em;
 
     /* Badges */
@@ -723,6 +729,6 @@
   preset: 'ui'
 %}
 
-{% render 'contrast-override', color_scheme: settings.product_card_color_scheme, section_id: 'theme-product-card' %}
+{% render 'contrast-override', color_scheme: settings.product_card_color_scheme, background_color: settings.product_card_background, text_color: settings.product_card_text, section_id: 'theme-product-card' %}
 
 </template>

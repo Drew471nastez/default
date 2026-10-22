@@ -216,7 +216,7 @@
         "type": "color",
         "id": "custom_button_background",
         "label": "t:settings.background",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
       },
@@ -224,7 +224,7 @@
         "type": "color",
         "id": "custom_button_text",
         "label": "t:settings.text",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
       },
@@ -232,7 +232,7 @@
         "type": "color",
         "id": "custom_button_border",
         "label": "t:settings.borders",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
       },

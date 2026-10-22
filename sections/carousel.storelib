@@ -493,47 +493,31 @@
       {
         "type": "select",
         "id": "theme_color_scheme",
-        "label": "Color scheme",
+        "label": "Colors",
         "options": [
           {
             "value": "inherit",
-            "label": "Use theme default"
-          },
-          {
-            "value": "base",
-            "label": "Page colors"
-          },
-          {
-            "value": "surface",
-            "label": "Soft surface"
-          },
-          {
-            "value": "inverse",
-            "label": "Inverse"
-          },
-          {
-            "value": "accent",
-            "label": "Accent"
+            "label": "Theme"
           },
           {
             "value": "custom",
-            "label": "Custom colors"
+            "label": "Custom"
           }
         ],
         "default": "inherit",
-        "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
+        "info": "Follow the site colors, or choose your own background and text."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "Custom background",
+        "label": "Background",
         "placeholder": "t:settings.default",
         "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {
         "type": "color",
         "id": "text_color",
-        "label": "Custom text color",
+        "label": "Text",
         "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
       },
       {

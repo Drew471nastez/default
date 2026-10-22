@@ -7,10 +7,10 @@
       "type": "header-announcements",
       "settings": {
         "speed": 5,
-        "divider_color": "{{ settings.color_palette.color2 }}",
+        "divider_color": "{{ settings.site_border_color }}",
         "divider_width": 1,
         "section_width": "page-width",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 15,
         "padding_block_start": 15
       },
@@ -49,7 +49,7 @@
         "search_position": "right",
         "localization_row": "top",
         "localization_font": "heading",
-        "background_color_top": "{{ settings.color_palette.background }}",
+        "background_color_top": "{{ settings.page_background_color }}",
         "enable_sticky_header": "scroll-up",
         "actions_display_style": "icon",
         "customer_account_menu": "main-menu",

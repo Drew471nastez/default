@@ -168,7 +168,7 @@
     </p>
 
     {% if resource_type == 'product' %}
-      {% render 'price', product_resource: resource, show_unit_price: true %}
+      {% render 'price', price_context: 'card', product_resource: resource, show_unit_price: true %}
     {% elsif resource_type == 'collection' and single_thumbnail_collection == false %}
       <p class="resource-card__subtext paragraph">
         {{- 'content.search_results_resource_products_count' | t: count: resource.all_products_count -}}
@@ -185,6 +185,10 @@
 {%- endif -%}
 
 {% stylesheet %}
+  @media (prefers-reduced-motion: reduce) {
+    .resource-card__image, .resource-card__image--secondary { transition: none; }
+  }
+
   .resource-card.resource-card--theme {
     gap: var(--product-card-gap);
     padding-block: var(--padding-block-start) var(--padding-block-end);
@@ -277,12 +281,14 @@
     object-fit: cover;
     border-radius: var(--resource-card-corner-radius);
     opacity: var(--resource-card-primary-image-opacity);
+    transition: opacity 240ms ease;
   }
 
   .resource-card__image--secondary {
     position: absolute;
     top: 0;
     opacity: var(--resource-card-secondary-image-opacity);
+    transition: opacity 240ms ease;
     border-radius: var(--resource-card-corner-radius);
   }
 
@@ -375,6 +381,17 @@
       --resource-card-secondary-image-opacity: 1;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .resource-card { opacity: 1; animation: none; }
+  }
 {% endstylesheet %}
+
+{% if request.design_mode %}
+  {% style %}
+    /* Editor section replacements should not fade content back in on each edit. */
+    body .resource-card { opacity: 1; animation: none; }
+  {% endstyle %}
+{% endif %}
 
 </template>

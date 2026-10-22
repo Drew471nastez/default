@@ -86,10 +86,6 @@
     --gallery-aspect-ratio: {{ ratio }};
   "
   data-product-id="{{ product.id }}"
-  {% if settings.show_second_image_on_hover and product.media.size > 1 %}
-    on:pointerenter="/previewImage"
-    on:pointerleave="/resetImage"
-  {% endif %}
   {% if settings.transition_to_main_product %}
     data-view-transition-to-main-product
   {% endif %}
@@ -250,6 +246,22 @@
 {% render 'product-media-container-styles' %}
 
 {% stylesheet %}
+  .card-gallery__hover-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 240ms ease;
+  }
+
+  .card-gallery__hover-image[data-visible='true'] { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-gallery__hover-image { transition: none; }
+  }
+
   .card-gallery {
     position: relative;
     overflow: hidden;

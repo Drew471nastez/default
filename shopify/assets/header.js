@@ -1,5 +1,5 @@
 import { Component } from '@theme/component';
-import { onDocumentLoaded, changeMetaThemeColor, setHeaderMenuStyle } from '@theme/utilities';
+import { onDocumentLoaded, changeMetaThemeColor, setHeaderMenuStyle, calculateHeaderGroupHeight } from '@theme/utilities';
 import {
   getScrollTop,
   getScrollEventTarget,
@@ -245,7 +245,9 @@ class HeaderComponent extends Component {
       cancelAnimationFrame(this.#scrollRafId);
       this.#scrollRafId = null;
     }
-    document.body.style.setProperty('--header-height', '0px');
+    requestAnimationFrame(() => {
+      if (!document.querySelector('header-component')) document.body.style.setProperty('--header-height', '0px');
+    });
   }
 }
 
@@ -254,59 +256,30 @@ if (!customElements.get('header-component')) {
 }
 
 onDocumentLoaded(() => {
-  const header = document.querySelector('header-component');
   const headerGroup = document.querySelector('#header-group');
-
-  // Note: Initial header heights are set via inline script in theme.liquid
-  // This ResizeObserver handles dynamic updates after page load
-
-  // Update header group height on resize of any child
-  if (headerGroup) {
-    const resizeObserver = new ResizeObserver((entries) => {
-      const headerGroupHeight = entries.reduce((totalHeight, entry) => {
-        if (
-          entry.target !== header ||
-          (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling)
-        ) {
-          return totalHeight + (entry.borderBoxSize[0]?.blockSize ?? 0);
-        }
-        return totalHeight;
-      }, 0);
-      // The initial height is calculated using the .offsetHeight property, which returns an integer.
-      // We round to the nearest integer to avoid unnecessaary reflows.
-      const roundedHeaderGroupHeight = Math.round(headerGroupHeight);
-      document.body.style.setProperty('--header-group-height', `${roundedHeaderGroupHeight}px`);
-    });
-
-    if (header instanceof HTMLElement) {
-      resizeObserver.observe(header);
-    }
-
-    // Observe all children of the header group
-    const children = headerGroup.children;
-    for (let i = 0; i < children.length; i++) {
-      const element = children[i];
-      if (element instanceof HTMLElement) {
-        resizeObserver.observe(element);
-      }
-    }
-
-    // Also observe the header group itself for child changes
-    const mutationObserver = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.type === 'childList') {
-          // Re-observe all children when the list changes
-          const children = headerGroup.children;
-          for (let i = 0; i < children.length; i++) {
-            const element = children[i];
-            if (element instanceof HTMLElement) {
-              resizeObserver.observe(element);
-            }
-          }
-        }
+  if (!headerGroup) return;
+  const targets = new Set();
+  let frame;
+  const measure = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = undefined;
+      const header = document.querySelector('header-component');
+      const height = Math.round(calculateHeaderGroupHeight(header, headerGroup)) + 'px';
+      if (document.body.style.getPropertyValue('--header-group-height') !== height) {
+        document.body.style.setProperty('--header-group-height', height);
       }
     });
-
-    mutationObserver.observe(headerGroup, { childList: true });
-  }
+  };
+  const resizeObserver = new ResizeObserver(measure);
+  const reconcile = () => {
+    const next = new Set([...headerGroup.children, document.querySelector('header-component')].filter(Boolean));
+    for (const target of targets) if (!next.has(target)) { resizeObserver.unobserve(target); targets.delete(target); }
+    for (const target of next) if (!targets.has(target)) { resizeObserver.observe(target); targets.add(target); }
+    measure();
+  };
+  // Measure every child, not only the entries which happened to resize this frame.
+  new MutationObserver(reconcile).observe(headerGroup, { childList: true, subtree: true });
+  document.fonts?.addEventListener('loadingdone', measure);
+  reconcile();
 });

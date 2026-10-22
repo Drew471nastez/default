@@ -54,7 +54,7 @@
     {% render 'variant-swatches', product_resource: product, has_option_selected: true %}
 
     <product-price>
-      {% render 'price', product_resource: product, show_unit_price: true %}
+      {% render 'price', price_context: 'card', product_resource: product, show_unit_price: true %}
     </product-price>
 
     <product-sku-component

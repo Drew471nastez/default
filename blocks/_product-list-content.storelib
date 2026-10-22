@@ -798,40 +798,24 @@
       {
         "type": "select",
         "id": "theme_color_scheme",
-        "label": "Color scheme",
+        "label": "Colors",
         "options": [
           {
             "value": "inherit",
-            "label": "Follow parent section"
-          },
-          {
-            "value": "base",
-            "label": "Page colors"
-          },
-          {
-            "value": "surface",
-            "label": "Soft surface"
-          },
-          {
-            "value": "inverse",
-            "label": "Inverse"
-          },
-          {
-            "value": "accent",
-            "label": "Accent"
+            "label": "Parent"
           },
           {
             "value": "custom",
-            "label": "Custom colors"
+            "label": "Custom"
           }
         ],
         "default": "inherit",
-        "info": "Follow the parent section or choose a shared scheme. Custom uses this block’s background and text colors."
+        "info": "Follow the parent section, or choose your own background and text."
       },
       {
         "type": "color",
         "id": "background_color",
-        "label": "Custom background",
+        "label": "Background",
         "placeholder": "t:settings.default",
         "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
       },
@@ -987,7 +971,7 @@
       {
         "type": "color",
         "id": "text_color",
-        "label": "Custom text color",
+        "label": "Text",
         "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
       }
     ],

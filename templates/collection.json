@@ -15,7 +15,7 @@
         "border_opacity": 100,
         "toggle_overlay": false,
         "video_position": "cover",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "background_media": "none",
         "content_direction": "column",
         "padding_block_end": 48,
@@ -85,7 +85,7 @@
       "type": "main-collection",
       "settings": {
         "layout_type": "grid",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 32,
         "product_card_size": "medium",
         "padding_inline_end": 0,

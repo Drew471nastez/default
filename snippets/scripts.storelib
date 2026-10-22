@@ -10,6 +10,7 @@
     "imports": {
       "@theme/overflow-list": "{{ 'overflow-list.js' | asset_url }}",
       "@theme/component": "{{ 'component.js' | asset_url }}",
+      "@theme/card-image-preview": "{{ 'card-image-preview.js' | asset_url }}",
       "@theme/dialog": "{{ 'dialog.js' | asset_url }}",
       "@theme/events": "{{ 'events.js' | asset_url }}",
       "@shopify/events": "https://cdn.shopify.com/storefront/standard-events.js",

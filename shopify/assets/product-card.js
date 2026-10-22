@@ -5,6 +5,7 @@ import { debounce, isDesktopBreakpoint, mediaQueryLarge, yieldToMainThread } fro
 import { SlideshowSelectEvent } from '@theme/events';
 import { morph } from '@theme/morph';
 import { StandardEvents, ProductSelectEvent } from '@shopify/events';
+import { previewCardImage, resetCardImage, disposeCardImagePreview } from '@theme/card-image-preview';
 
 /**
  * @typedef {object} ProductCardLinkRefs
@@ -214,6 +215,13 @@ export class ProductCard extends ProductCardLink {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this.navigateToProduct);
+    this.removeEventListener(StandardEvents.productSelect, this.#handleProductSelect);
+    this.removeEventListener(SlideshowSelectEvent.eventName, this.#handleSlideshowSelect);
+    mediaQueryLarge.removeEventListener('change', this.#handleQuickAdd);
+    this.removeEventListener('pointerenter', this.#fetchProductPageHandler);
+    this.removeEventListener('focusin', this.#fetchProductPageHandler);
+    this.resetVariant.cancel();
+    disposeCardImagePreview(this);
   }
 
   #preloadNextPreviewImage() {
@@ -239,6 +247,7 @@ export class ProductCard extends ProductCardLink {
    * @param {ProductSelectEvent} event - The product select event.
    */
   #handleProductSelect = (event) => {
+    disposeCardImagePreview(this);
     // Update variant picker when variant:selected event fires
     const { optionValueId, variantId, connectedProductUrl } = event.detail ?? {};
     if (optionValueId && event.target !== this.variantPicker) {
@@ -308,11 +317,14 @@ export class ProductCard extends ProductCardLink {
    * @param {Document} html - The parsed HTML document with updated variant data.
    */
   updatePrice(html) {
-    const priceContainer = this.querySelectorAll(`product-price [ref='priceContainer']`)[1];
-    const newPriceElement = html.querySelector(`product-price [ref='priceContainer']`);
-
-    if (newPriceElement && priceContainer) {
-      morph(priceContainer, newPriceElement);
+    for (const price of this.querySelectorAll('product-price')) {
+      const blockId = price.dataset.blockId;
+      const replacement = [...html.querySelectorAll('product-price')].find(
+        (candidate) => candidate.dataset.blockId === blockId
+      );
+      const priceContainer = price.querySelector('[ref="priceContainer"]');
+      const newPriceElement = replacement?.querySelector('[ref="priceContainer"]');
+      if (newPriceElement && priceContainer) morph(priceContainer, newPriceElement);
     }
   }
 
@@ -477,20 +489,9 @@ export class ProductCard extends ProductCardLink {
    * @param {PointerEvent} event - The pointer event.
    */
   previewImage(event) {
-    if (event.pointerType !== 'mouse') return;
-
-    const { slideshow } = this.refs;
-
-    if (!slideshow) return;
-
+    if (event.type !== 'focusin' && event.pointerType !== 'mouse') return;
     this.resetVariant.cancel();
-
-    if (this.#previousSlideIndex != null && this.#previousSlideIndex > 0) {
-      slideshow.select(this.#previousSlideIndex, undefined, { animate: false });
-    } else {
-      slideshow.next(undefined, { animate: false });
-      setTimeout(() => this.#preloadNextPreviewImage());
-    }
+    previewCardImage(this);
   }
 
   /**
@@ -498,16 +499,9 @@ export class ProductCard extends ProductCardLink {
    * @param {PointerEvent} event - The pointer event.
    */
   resetImage(event) {
-    if (event.pointerType !== 'mouse') return;
-
-    const { slideshow } = this.refs;
-
-    if (!this.variantPicker) {
-      if (!slideshow) return;
-      slideshow.previous(undefined, { animate: false });
-    } else {
-      this.#resetVariant();
-    }
+    if (event.type === 'focusout' && this.contains(event.relatedTarget)) return;
+    if (event.type !== 'focusout' && event.pointerType !== 'mouse') return;
+    resetCardImage(this);
   }
 
   /**

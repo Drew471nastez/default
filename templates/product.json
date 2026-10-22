@@ -7,7 +7,7 @@
         "gap": 48,
         "content_width": "content-center-aligned",
         "equal_columns": false,
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 0,
         "limit_details_width": false,
         "padding_block_start": 0,
@@ -163,7 +163,7 @@
               "settings": {
                 "thickness": 1,
                 "corner_radius": "square",
-                "divider_color": "{{ settings.color_palette.color2 }}",
+                "divider_color": "{{ settings.site_border_color }}",
                 "width_percent": 100,
                 "padding_block_end": 0,
                 "padding_block_start": 0
@@ -177,17 +177,17 @@
                 "variant_style": "buttons",
                 "padding_block_end": 0,
                 "padding_inline_end": 0,
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_text": "{{ settings.page_text_color }}",
                 "padding_block_start": 0,
                 "variant_style_class": "default",
                 "padding_inline_start": 0,
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.page_text_color }}",
                 "option_label_text_color": "",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_variant_background": "{{ settings.page_background_color }}",
+                "custom_selected_variant_text": "{{ settings.page_background_color }}",
                 "selected_variant_style_class": "default",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}"
+                "custom_selected_variant_border": "{{ settings.page_text_color }}",
+                "custom_selected_variant_background": "{{ settings.page_text_color }}"
               }
             },
             "buy_buttons_eYQEYi": {
@@ -199,22 +199,22 @@
                 "border_width": 1,
                 "border_radius": 0,
                 "gift_card_form": true,
-                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_text_color": "{{ settings.page_text_color }}",
                 "padding_block_end": 0,
-                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.page_text_color }}",
                 "padding_inline_end": 0,
                 "padding_block_start": 0,
                 "padding_inline_start": 0,
-                "recipient_button_text": "{{ settings.color_palette.foreground }}",
-                "input_background_color": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.page_text_color }}",
+                "input_background_color": "{{ settings.page_background_color }}",
                 "recipient_button_style": "default",
-                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.page_text_color }}",
                 "show_pickup_availability": false,
-                "recipient_button_background": "{{ settings.color_palette.background }}",
-                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "recipient_button_background": "{{ settings.page_background_color }}",
+                "selected_recipient_button_text": "{{ settings.page_background_color }}",
                 "selected_recipient_button_style": "default",
-                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
-                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}"
+                "selected_recipient_button_border": "{{ settings.page_text_color }}",
+                "selected_recipient_button_background": "{{ settings.page_text_color }}"
               },
               "blocks": {
                 "quantity": {
@@ -224,9 +224,9 @@
                     "input_style": "default",
                     "border_width": 1,
                     "border_radius": 0,
-                    "input_text_color": "{{ settings.color_palette.foreground }}",
-                    "input_border_color": "{{ settings.color_palette.foreground }}",
-                    "input_background_color": "{{ settings.color_palette.background }}"
+                    "input_text_color": "{{ settings.page_text_color }}",
+                    "input_border_color": "{{ settings.page_text_color }}",
+                    "input_background_color": "{{ settings.page_background_color }}"
                   }
                 },
                 "add-to-cart": {
@@ -234,9 +234,9 @@
                   "static": true,
                   "settings": {
                     "style_class": "button",
-                    "custom_button_text": "{{ settings.color_palette.background }}",
-                    "custom_button_border": "{{ settings.color_palette.background }}",
-                    "custom_button_background": "{{ settings.color_palette.foreground }}"
+                    "custom_button_text": "{{ settings.page_background_color }}",
+                    "custom_button_border": "{{ settings.page_background_color }}",
+                    "custom_button_background": "{{ settings.page_text_color }}"
                   }
                 },
                 "accelerated-checkout": {
@@ -278,7 +278,7 @@
                 "heading": "Disclosures",
                 "dividers": true,
                 "text_color": "",
-                "divider_color": "{{ settings.color_palette.color2 }}",
+                "divider_color": "{{ settings.site_border_color }}",
                 "heading_preset": "h5",
                 "open_by_default": false,
                 "padding_block_end": 0,
@@ -316,7 +316,7 @@
         "max_products": 4,
         "section_width": "page-width",
         "mobile_columns": "2",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 48,
         "carousel_on_mobile": false,
         "padding_block_start": 48,

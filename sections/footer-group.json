@@ -8,7 +8,7 @@
       "settings": {
         "gap": 20,
         "section_width": "page-width",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 30,
         "padding_block_start": 30
       },
@@ -113,16 +113,16 @@
             "display_type": "arrow",
             "border_radius": 100,
             "heading_preset": "h3",
-            "input_text_color": "{{ settings.color_palette.color1 }}",
+            "input_text_color": "{{ settings.palette_input_text }}",
             "input_type_preset": "paragraph",
             "integrated_button": true,
             "padding_block_end": 0,
             "button_type_preset": "paragraph",
-            "input_border_color": "{{ settings.color_palette.color2 }}",
+            "input_border_color": "{{ settings.site_border_color }}",
             "padding_inline_end": 0,
             "padding_block_start": 0,
             "padding_inline_start": 0,
-            "input_background_color": "{{ settings.color_palette.background }}"
+            "input_background_color": "{{ settings.page_background_color }}"
           }
         }
       },
@@ -136,9 +136,9 @@
       "type": "footer-utilities",
       "settings": {
         "gap": 24,
-        "divider_color": "{{ settings.color_palette.color2 }}",
+        "divider_color": "{{ settings.site_border_color }}",
         "section_width": "page-width",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "divider_thickness": 1,
         "padding_block_end": 48,
         "padding_block_start": 20

@@ -15,7 +15,7 @@
         "section_width": "page-width",
         "mobile_columns": "2",
         "max_collections": 4,
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 48,
         "carousel_on_mobile": false,
         "padding_block_start": 48

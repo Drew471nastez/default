@@ -69,9 +69,9 @@
             "custom_width": 100,
             "width_mobile": "fit-content",
             "open_in_new_tab": false,
-            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_text": "{{ settings.page_background_color }}",
             "custom_width_mobile": 100,
-            "custom_button_border": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.page_background_color }}",
             "custom_button_background": "#292929"
           }
         }

@@ -5,7 +5,7 @@
       "type": "search-header",
       "settings": {
         "alignment": "flex-start",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 0,
         "padding_block_start": 40
       },
@@ -45,7 +45,7 @@
       "type": "search-results",
       "settings": {
         "layout_type": "grid",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 40,
         "product_card_size": "medium",
         "padding_inline_end": 0,

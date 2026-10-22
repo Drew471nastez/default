@@ -710,7 +710,7 @@
         "type": "color",
         "id": "recipient_button_background",
         "label": "t:settings.background",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.recipient_button_style == \"custom\" }}"
       },
@@ -718,7 +718,7 @@
         "type": "color",
         "id": "recipient_button_text",
         "label": "t:settings.text",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.recipient_button_style == \"custom\" }}"
       },
@@ -726,7 +726,7 @@
         "type": "color",
         "id": "recipient_button_border",
         "label": "t:settings.borders",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.recipient_button_style == \"custom\" }}"
       },
@@ -751,7 +751,7 @@
         "type": "color",
         "id": "selected_recipient_button_background",
         "label": "t:settings.background",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.selected_recipient_button_style == \"custom\" }}"
       },
@@ -759,7 +759,7 @@
         "type": "color",
         "id": "selected_recipient_button_text",
         "label": "t:settings.text",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.selected_recipient_button_style == \"custom\" }}"
       },
@@ -767,7 +767,7 @@
         "type": "color",
         "id": "selected_recipient_button_border",
         "label": "t:settings.borders",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "alpha": true,
         "visible_if": "{{ block.settings.gift_card_form and block.settings.selected_recipient_button_style == \"custom\" }}"
       },
@@ -793,21 +793,21 @@
         "type": "color",
         "id": "input_background_color",
         "label": "t:settings.background",
-        "default": "{{ settings.color_palette.background }}",
+        "default": "{{ settings.page_background_color }}",
         "visible_if": "{{ block.settings.gift_card_form and block.settings.input_style == \"custom\" }}"
       },
       {
         "type": "color",
         "id": "input_text_color",
         "label": "t:settings.text",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "visible_if": "{{ block.settings.gift_card_form and block.settings.input_style == \"custom\" }}"
       },
       {
         "type": "color",
         "id": "input_border_color",
         "label": "t:settings.borders",
-        "default": "{{ settings.color_palette.foreground }}",
+        "default": "{{ settings.page_text_color }}",
         "visible_if": "{{ block.settings.gift_card_form and block.settings.input_style == \"custom\" }}"
       },
       {

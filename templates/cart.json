@@ -5,7 +5,7 @@
       "type": "main-cart",
       "settings": {
         "section_width": "page-width",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 0,
         "padding_block_start": 24
       },
@@ -47,7 +47,7 @@
             "border_radius": 0,
             "border_opacity": 100,
             "extend_summary": true,
-            "background_color": "{{ settings.color_palette.color2 }}"
+            "background_color": "#292929"
           }
         }
       },
@@ -68,7 +68,7 @@
         "max_products": 4,
         "section_width": "page-width",
         "mobile_columns": "2",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "{{ settings.page_background_color }}",
         "mobile_card_size": "60cqw",
         "padding_block_end": 48,
         "carousel_on_mobile": false,

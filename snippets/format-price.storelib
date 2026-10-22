@@ -1,37 +1,37 @@
 <template compat="shopify">
 {%- doc -%}
-  Formats a price value with or without currency code based on settings
-
-  @param {number} price - The price to format (defaults to 0 if not provided)
-  @param {string} [type] - Type of price formatting (defaults to 'regular', only 'per_item' has special behavior)
-
-  @example
-  {% render 'format-price', price: variant.price %}
-  {% render 'format-price', price: variant.price, type: 'per_item' %}
-  {% render 'format-price', price: variant.compare_at_price %}
+  Formats product prices by default. Cart and card callers can select a currency context.
+  Existing price/type callers retain bidirectional markup and per-item text.
+  @param {number} [price] - Price in the platform's minor units.
+  @param {number} [value] - Alias for price when an explicit context is supplied.
+  @param {string} [context] - product, card, cart_item or cart_total.
+  @param {string} [type] - per_item appends the localized per-item label.
 {%- enddoc -%}
-
-{% liquid
-  assign price_value = price | default: 0
-  assign price_type = type | default: 'regular'
-
+{%- liquid
+  assign value = value | default: price | default: 0
   assign show_currency = settings.currency_code_enabled_product_pages
-
+  case context
+    when 'cart_item'
+      assign show_currency = settings.currency_code_enabled_cart_items
+    when 'cart_total'
+      assign show_currency = settings.currency_code_enabled_cart_total
+    when 'product'
+      assign show_currency = settings.currency_code_enabled_product_pages
+    when 'card'
+      assign show_currency = settings.currency_code_enabled_product_cards
+  endcase
   if show_currency
-    assign formatted_price = price_value | money_with_currency
+    assign formatted_price = value | money_with_currency
   else
-    assign formatted_price = price_value | money
+    assign formatted_price = value | money
   endif
-
-  # callers using this in attributes strip the bdi via strip_html
-  assign formatted_price = '<bdi>__PRICE__</bdi>' | replace: '__PRICE__', formatted_price
-
-  if price_type == 'per_item'
+  if context == blank
+    assign formatted_price = '<bdi>__PRICE__</bdi>' | replace: '__PRICE__', formatted_price
+  endif
+  if type == 'per_item'
     assign per_item_text = 'content.quantity_per_item' | t
     assign formatted_price = formatted_price | append: per_item_text
   endif
-%}
-
-{{- formatted_price -}}
-
+  echo formatted_price
+-%}
 </template>

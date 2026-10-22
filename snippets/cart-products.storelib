@@ -101,7 +101,7 @@
           >
             {{ 'content.cart_total' | t }}
             <span
-              ><bdi>{{ cart.total_price | money_with_currency }}</bdi></span
+              ><bdi>{% render 'format-price', value: cart.total_price, context: 'cart_total' %}</bdi></span
             >
           </caption>
 
@@ -306,14 +306,14 @@
                       {% if item.original_price != item.final_price %}
                         <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
                         <span
-                          ><bdi>{{ item.final_price | money }}</bdi></span
+                          ><bdi>{% render 'format-price', value: item.final_price, context: 'cart_item' %}</bdi></span
                         >
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                         <s class="compare-at-price">
                           {% if item.variant.compare_at_price > item.original_price %}
-                            <bdi>{{ item.variant.compare_at_price | money }}</bdi>
+                            <bdi>{% render 'format-price', value: item.variant.compare_at_price, context: 'cart_item' %}</bdi>
                           {% else %}
-                            <bdi>{{ item.original_price | money }}</bdi>
+                            <bdi>{% render 'format-price', value: item.original_price, context: 'cart_item' %}</bdi>
                           {% endif %}
                         </s>
                       {% else %}
@@ -324,13 +324,13 @@
                         {% endif %}
 
                         <span
-                          ><bdi>{{ item.original_price | money }}</bdi></span
+                          ><bdi>{% render 'format-price', value: item.original_price, context: 'cart_item' %}</bdi></span
                         >
 
                         {% if item.variant.compare_at_price > item.original_price %}
                           <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                           <s class="compare-at-price"
-                            ><bdi>{{ item.variant.compare_at_price | money }}</bdi></s
+                            ><bdi>{% render 'format-price', value: item.variant.compare_at_price, context: 'cart_item' %}</bdi></s
                           >
                         {% endif %}
                       {% endif %}

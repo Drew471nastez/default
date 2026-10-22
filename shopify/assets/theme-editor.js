@@ -130,19 +130,19 @@ document.addEventListener('shopify:block:deselect', function (event) {
   }
 });
 
-document.addEventListener('shopify:section:load', function (event) {
-  if (event.target instanceof HTMLElement && event.target.classList.contains('shopify-section-group-header-group')) {
+// Reconcile once per frame, after section replacement has finished.
+let headerFrame;
+function scheduleHeaderUpdate() {
+  if (headerFrame) return;
+  headerFrame = requestAnimationFrame(() => {
+    headerFrame = undefined;
     updateAllHeaderCustomProperties();
-  }
-});
-
-document.addEventListener('shopify:section:unload', function (event) {
-  if (event.target instanceof HTMLElement && event.target.classList.contains('shopify-section-group-header-group')) {
-    setTimeout(() => {
-      updateAllHeaderCustomProperties();
-    }, 500);
-  }
-});
+  });
+}
+for (const name of ['load', 'unload', 'reorder']) {
+  document.addEventListener('shopify:section:' + name, scheduleHeaderUpdate);
+}
+document.fonts?.addEventListener('loadingdone', scheduleHeaderUpdate);
 
 /**
  * When in the theme editor, it can be frustrating to be tweaking the design of features that are implemented as a dialog
@@ -156,7 +156,7 @@ document.addEventListener('shopify:section:unload', function (event) {
 // and actual navigation (which does trigger beforeunload)
 window.addEventListener('beforeunload', function (_event) {
   // Set a flag to indicate that an actual unload is happening (not just a refresh)
-  sessionStorage.setItem('editor-page-unloading', 'true');
+  try { sessionStorage.setItem('editor-page-unloading', 'true'); } catch { /* Storage can be blocked in an embedded editor. */ }
 });
 
 // Check if the device is iOS as Safari on iOS doesn't support the beforeunload event
@@ -166,16 +166,23 @@ if (window.Shopify?.designMode && !isIOS) {
   // Skip editor state management on iOS devices
   (function editorStateManager() {
     const EDITOR_PREFIX = 'editor-save-state';
+    // A blocked storage area must not break the rest of the theme editor.
+    const storage = {
+      get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
+      set(key, value) { try { if (sessionStorage.getItem(key) !== value) sessionStorage.setItem(key, value); } catch {} },
+      remove(key) { try { sessionStorage.removeItem(key); } catch {} },
+      keys() { try { return Object.keys(sessionStorage); } catch { return []; } },
+    };
 
     /**
      * Check if the page just unloaded (actual navigation) vs a refresh
      * @returns {boolean}
      */
     function wasPageUnloading() {
-      const unloading = sessionStorage.getItem('editor-page-unloading') === 'true';
+      const unloading = storage.get('editor-page-unloading') === 'true';
       // Clear the flag after checking
       if (unloading) {
-        sessionStorage.removeItem('editor-page-unloading');
+        storage.remove('editor-page-unloading');
       }
       return unloading;
     }
@@ -184,10 +191,10 @@ if (window.Shopify?.designMode && !isIOS) {
      * Clear all saved editor states
      */
     function clearAllEditorStates() {
-      const keys = Object.keys(sessionStorage);
+      const keys = storage.keys();
       keys.forEach((key) => {
         if (key.startsWith(EDITOR_PREFIX)) {
-          sessionStorage.removeItem(key);
+          storage.remove(key);
         }
       });
     }
@@ -196,8 +203,8 @@ if (window.Shopify?.designMode && !isIOS) {
      * @param {string} name
      */
     function getEditorState(name) {
-      const state = sessionStorage.getItem(`${EDITOR_PREFIX}-${name}`);
-      return state ? JSON.parse(state) : null;
+      const state = storage.get(`${EDITOR_PREFIX}-${name}`);
+      try { return state ? JSON.parse(state) : null; } catch { return null; }
     }
 
     /**
@@ -206,7 +213,7 @@ if (window.Shopify?.designMode && !isIOS) {
      * @param {string | undefined} instanceId
      */
     function saveEditorState(name, isOpen, instanceId) {
-      sessionStorage.setItem(`${EDITOR_PREFIX}-${name}`, JSON.stringify({ isOpen, instanceId }));
+      storage.set(`${EDITOR_PREFIX}-${name}`, JSON.stringify({ isOpen, instanceId }));
     }
 
     /** @type {{name: string, selector: string, matches: (el: Element) => boolean, isOpen: (el: Element) => boolean, open: (el: Element, instanceId?: string) => void, getInstanceId?: (el: Element) => string | undefined}[]} */
@@ -368,6 +375,8 @@ if (window.Shopify?.designMode && !isIOS) {
     const trackedAttributes = ['open', 'aria-expanded'];
 
     // Track state changes via attribute changes
+    const pending = new Set();
+    let stateFrame;
     const observer = new MutationObserver((list) => {
       for (const mutation of list) {
         if (
@@ -376,13 +385,17 @@ if (window.Shopify?.designMode && !isIOS) {
           trackedAttributes.includes(mutation.attributeName)
         ) {
           const element = /** @type {Element} */ (mutation.target);
-          update(element);
+          pending.add(element);
         }
       }
+      if (!stateFrame && pending.size) stateFrame = requestAnimationFrame(() => {
+        stateFrame = undefined;
+        for (const element of pending) if (element.isConnected) update(element);
+        pending.clear();
+      });
     });
 
     observer.observe(document.body, {
-      childList: true,
       attributes: true,
       attributeFilter: trackedAttributes,
       subtree: true,

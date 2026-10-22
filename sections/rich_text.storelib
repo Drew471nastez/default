@@ -1,5 +1,5 @@
 <template compat="shopify">
-{% render 'contrast-override', color_scheme: section.settings.color_scheme, use_theme_default: true, section_id: section.id %}
+{% render 'contrast-override', color_scheme: section.settings.color_scheme, background_color: section.settings.background_color, text_color: section.settings.text_color, use_theme_default: true, section_id: section.id %}
 <div class="section-background color-custom-{{ section.id }}"></div>
 <section
   class="section section--page-width color-custom-{{ section.id }} policy-rich-text"
@@ -234,26 +234,31 @@
       {
         "type": "select",
         "id": "color_scheme",
-        "label": "Color scheme",
+        "label": "Colors",
         "default": "white",
         "options": [
           {
             "value": "white",
-            "label": "Default"
+            "label": "Theme"
           },
           {
-            "value": "surface",
-            "label": "Soft surface"
-          },
-          {
-            "value": "inverse",
-            "label": "Inverse"
-          },
-          {
-            "value": "accent",
-            "label": "Accent"
+            "value": "custom",
+            "label": "Custom"
           }
-        ]
+        ],
+        "info": "Follow the site colors, or choose your own background and text."
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text",
+        "visible_if": "{{ section.settings.color_scheme == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background",
+        "visible_if": "{{ section.settings.color_scheme == 'custom' }}"
       },
       {
         "type": "select",

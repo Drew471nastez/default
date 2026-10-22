@@ -5,6 +5,73 @@ const path = require('node:path');
 const postcss = require('postcss');
 const {root, source, body, schema, settings, color, engine, render} = require('./theme-test-runtime.cjs');
 
+test('settings use simple names, independent heading controls and Theme/Custom colors', () => {
+  assert(schema.some(group => group.name === 'Fonts'));
+  const buttons = schema.find(group => group.name === 'Buttons');
+  assert(buttons.settings.some(setting => setting.content === 'Hover & focus'));
+  for (let heading=1; heading<=6; heading++) for (const control of ['font','size','weight','line_height','letter_spacing','case']) {
+    assert(schema.find(group=>group.name==='Fonts').settings.some(setting=>setting.id===`type_${control}_h${heading}`));
+  }
+  for (const group of schema) for (const setting of group.settings || []) {
+    if (setting.id?.endsWith('color_scheme') && !setting.visible_if) assert.deepEqual(setting.options.map(o=>o.value),['inherit','custom']);
+  }
+  const site=schema.find(group=>group.name==='Site colors');
+  assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Borders','Field text']);
+});
+
+test('price contexts choose currency independently, including absent handles and related cards on product pages', async () => {
+  const product={id:'p1',price_min:1200,price_max:1200,selected_or_first_available_variant:{price:1200}};
+  for (const cards of [false,true]) for (const products of [false,true]) {
+    const values=settings({currency_code_enabled_product_cards:cards,currency_code_enabled_product_pages:products});
+    const liquid=engine({settings:values});
+    // These filters intentionally expose which platform money filter was selected.
+    liquid.registerFilter('money',value=>`MONEY:${value}`);
+    liquid.registerFilter('money_with_currency',value=>`CURRENCY:${value}`);
+    for (const [globals,expected] of [
+      [{template:{name:'collection'},product_resource:product},cards],
+      [{template:{name:'product'},product,product_resource:product},products],
+      [{template:{name:'product'},product:{id:'other'},product_resource:product},cards],
+      [{template:{name:'product'},product,product_resource:product,price_context:'card'},cards],
+    ]) {
+      const html=await liquid.parseAndRender(body(source('snippets/price.storelib')),globals);
+      assert(html.includes(`${expected?'CURRENCY':'MONEY'}:1200`));
+    }
+  }
+});
+
+test('cart formatting preserves legacy product price callers, zero and per-item labels', async () => {
+  const values=settings({currency_code_enabled_product_pages:true,currency_code_enabled_cart_total:true,currency_code_enabled_cart_items:false});
+  const liquid=engine({settings:values});
+  liquid.registerFilter('money',value=>`MONEY:${value}`);
+  liquid.registerFilter('money_with_currency',value=>`CURRENCY:${value}`);
+  const format=body(source('snippets/format-price.storelib'));
+  assert.equal((await liquid.parseAndRender(format,{price:100,type:'per_item'})).trim(),'<bdi>CURRENCY:100</bdi>content.quantity_per_item');
+  assert.equal((await liquid.parseAndRender(format,{value:0,context:'cart_total'})).trim(),'CURRENCY:0');
+  assert.equal((await liquid.parseAndRender(format,{value:100,context:'cart_item'})).trim(),'MONEY:100');
+});
+
+test('custom card/account colors, border color, focus outline and hover speed reach real CSS', async () => {
+  const values=settings({site_border_color:'#123456',focus_ring_width:3,button_hover_duration:0,product_card_color_scheme:'custom',product_card_background:'#abcdef',product_card_text:'#000000',account_color_scheme:'custom',account_background:'#fedcba',account_text:'#000000'});
+  const global=await render('snippets/theme-styles-variables.storelib',{settings:values});
+  assert(global.includes('--focus-outline-width: 3px'));
+  assert(global.includes('--button-hover-duration: 0ms'));
+  assert(global.includes('--color-background: #abcdef'));
+  const account=await render('sections/customer-access.storelib',{settings:values,section:{id:'account-custom',settings:sectionSettings('sections/customer-access.storelib')},shop:{customer_accounts_enabled:false}});
+  assert(account.includes('--color-background: #fedcba'));
+  const palette=await render('snippets/color-palette.storelib',{settings:values});
+  assert(palette.includes('--color-border: #123456'));
+  assert(palette.includes('--palette-darkest-rgb: 0 0 0'));
+  assert(!palette.includes('rgb()'));
+});
+
+test('preset weights load their font face and editor cards do not replay entry animation', async () => {
+  const global=await render('snippets/theme-styles-variables.storelib',{settings:settings({type_weight_h1:'500',type_font_h1:'heading',type_heading_font:{family:'Fixture Heading',fallback_families:'sans-serif',weight:400,style:'normal'}})});
+  assert(global.includes('loaded Fixture Heading 500'));
+  assert.equal((global.match(/loaded Fixture Heading 500/g)||[]).length,1);
+  const card=await render('snippets/resource-card.storelib',{request:{design_mode:true},resource_type:'product',resource:{id:'p1',title:'Example',url:'/products/example',selected_or_first_available_variant:{price:100}}});
+  assert(card.includes('body .resource-card { opacity: 1; animation: none; }'));
+});
+
 function sectionSettings(file, overrides = {}) {
   const data = JSON.parse(source(file).match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]);
   return {...Object.fromEntries(((data.shopify || data).settings || []).filter(s => s.id && s.default !== undefined).map(s => [s.id, s.default])), ...overrides};

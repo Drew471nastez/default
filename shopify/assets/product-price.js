@@ -18,18 +18,20 @@ import { StandardEvents, ProductSelectEvent } from '@shopify/events';
  * @extends {Component<ProductPriceRefs>}
  */
 class ProductPrice extends Component {
+  #eventTarget;
+
   connectedCallback() {
     super.connectedCallback();
     const closestSection = this.closest('.shopify-section, dialog');
     if (!closestSection) return;
+    this.#eventTarget = closestSection;
     closestSection.addEventListener(StandardEvents.productSelect, this.#handleProductSelect);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    const closestSection = this.closest('.shopify-section, dialog');
-    if (!closestSection) return;
-    closestSection.removeEventListener(StandardEvents.productSelect, this.#handleProductSelect);
+    this.#eventTarget?.removeEventListener(StandardEvents.productSelect, this.#handleProductSelect);
+    this.#eventTarget = undefined;
   }
 
   /**

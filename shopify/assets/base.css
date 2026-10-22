@@ -820,9 +820,9 @@ button.shopify-payment-button__button--unbranded {
   font-size: var(--font-paragraph--size);
   line-height: var(--font-paragraph--line-height);
   margin-block: 0;
-  transition: color var(--animation-speed) var(--animation-easing),
-    box-shadow var(--animation-speed) var(--animation-easing),
-    background-color var(--animation-speed) var(--animation-easing);
+  transition: color var(--button-hover-duration, 200ms) var(--animation-easing),
+    box-shadow var(--button-hover-duration, 200ms) var(--animation-easing),
+    background-color var(--button-hover-duration, 200ms) var(--animation-easing);
   cursor: pointer;
   width: fit-content;
   box-shadow: inset 0 0 0 var(--button-border-width) var(--button-border-color);
@@ -835,6 +835,12 @@ button.shopify-payment-button__button--unbranded {
   font-weight: var(--button-font-weight-primary);
   text-transform: var(--button-text-case-primary);
   border-radius: var(--style-border-radius-buttons-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.button, .button-secondary, .button-custom, button.shopify-payment-button__button--unbranded) {
+    transition: none;
+  }
 }
 
 .button:not(.button-secondary, .button-unstyled) {

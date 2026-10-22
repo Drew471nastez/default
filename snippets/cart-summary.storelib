@@ -19,7 +19,7 @@
           class="cart-totals__original-value cart-secondary-typography"
           data-testid="cart-subtotal-value"
         >
-          <bdi>{{- cart.items_subtotal_price | money -}}</bdi>
+          <bdi>{% render 'format-price', value: cart.items_subtotal_price, context: 'cart_total' %}</bdi>
         </span>
       </span>
       <ul
@@ -34,7 +34,7 @@
               <bdi>{{ discount.title | escape }}</bdi>
             </span>
             <span class="cart-discounts__value cart-secondary-typography"
-              ><bdi>-{{ discount.total_allocated_amount | money }}</bdi>
+              ><bdi>-{% render 'format-price', value: discount.total_allocated_amount, context: 'cart_total' %}</bdi>
             </span>
           </li>
         {%- endfor -%}
