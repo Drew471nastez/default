@@ -624,6 +624,81 @@
       transform: translateY(0);
     }
   }
+
+  /*
+    Phones: a bottom sheet that slides up from the edge, with rounded top corners, a grab
+    handle, its own scroll and a comfortable close target. Popups & dialogs set its colors.
+  */
+  @media screen and (max-width: 749px) {
+    .quick-add-modal.quick-add-modal {
+      border: 0;
+      border-start-start-radius: max(16px, var(--style-border-radius-popover));
+      border-start-end-radius: max(16px, var(--style-border-radius-popover));
+      max-height: 88svh;
+      box-shadow: 0 -8px 32px rgb(0 0 0 / 0.12);
+    }
+
+    .quick-add-modal[open] {
+      animation: quickAddSheetUp 320ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .quick-add-modal.dialog-closing {
+      animation: quickAddSheetDown 220ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    .quick-add-modal::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 36px;
+      height: 4px;
+      margin-left: -18px;
+      border-radius: 2px;
+      background: rgb(var(--color-foreground-rgb) / 0.2);
+      z-index: var(--layer-raised);
+    }
+
+    .quick-add-modal__content.quick-add-modal__content {
+      max-height: 88svh;
+      padding-block-start: calc(var(--padding-xl) + 8px);
+      overscroll-behavior: contain;
+    }
+
+    .quick-add-modal__close.quick-add-modal__close {
+      top: 12px;
+      inset-inline-end: 12px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  @media screen and (max-width: 749px) and (prefers-reduced-motion: reduce) {
+    .quick-add-modal[open],
+    .quick-add-modal.dialog-closing {
+      animation: none;
+    }
+  }
+
+  @keyframes quickAddSheetUp {
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes quickAddSheetDown {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(100%);
+    }
+  }
 {% endstylesheet %}
 
 </template>

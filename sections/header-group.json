@@ -54,7 +54,7 @@
         "actions_display_style": "icon",
         "customer_account_menu": "main-menu",
         "localization_position": "right",
-        "country_selector_style": false,
+        "country_selector_style": true,
         "localization_font_size": "0.875rem",
         "enable_transparent_header_home": false,
         "enable_transparent_header_product": false,

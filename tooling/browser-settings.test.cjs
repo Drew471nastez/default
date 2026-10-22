@@ -514,7 +514,7 @@ test('sections below the first screen come in on scroll, never the first screen,
     const css=[...(await render('snippets/theme-styles-variables.storelib',{settings:settings({section_animation:'rise',section_animation_speed:300})})).matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match=>match[1]).join('\n');
     const html=`<!doctype html><style>${css}</style><main id="MainContent">${[0,1,2,3].map(i=>`<div class="shopify-section" id="s${i}" style="height:900px">Section ${i}</div>`).join('')}</main>`;
     for (const reduced of [false,true]) {
-      const context=await browser.newContext({viewport:{width:1000,height:800},reducedMotion:reduced?'reduce':'no-preference'});
+      const context=await browser.newContext({viewport:{width:1000,height:1000},reducedMotion:reduced?'reduce':'no-preference'});
       const page=await context.newPage();
       await page.route('http://site.test/**',route=>{
         const url=new URL(route.request().url());
@@ -534,7 +534,13 @@ test('sections below the first screen come in on scroll, never the first screen,
       const after=await state();
       assert.equal(after[2].opacity,'1');
       assert.equal(after[2].reveal,null,'nothing is left on a section once it is in place');
-      // The builder's live preview: a new animation plays once on what is in view.
+      // Dragging a control (live) or changing the speed never replays: nothing in view jumps.
+      for (const detail of [{settings:{section_animation:'zoom'},live:true},{settings:{section_animation_speed:900},live:false}]) {
+        await page.evaluate(detail=>document.dispatchEvent(new CustomEvent('storelib:settings-change',{detail})),detail);
+        await page.waitForTimeout(60);
+        assert.equal(await page.evaluate(()=>document.getElementById('s2').dataset.reveal||null),null,JSON.stringify(detail));
+      }
+      // A new animation, once chosen, plays once on what is wholly in view.
       await page.evaluate(()=>document.dispatchEvent(new CustomEvent('storelib:settings-change',{detail:{settings:{section_animation:'zoom'},live:false}})));
       await page.waitForTimeout(30);
       const replay=await page.evaluate(()=>document.getElementById('s2').dataset.reveal||null);

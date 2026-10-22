@@ -164,6 +164,12 @@
     --normal-page-width: {{ settings.content_max_width | default: 1440 | times: 1.333333 | round: 0 }}px;
     --wide-page-width: {{ settings.content_max_width | default: 1440 | times: 1.666667 | round: 0 }}px;
     --theme-page-content-width: var(--{{ settings.page_width | default: 'normal' }}-page-width);
+    /* Logo > Text */
+    --logo-text-family: var(--font-{{ settings.logo_text_font | default: 'heading' }}--family);
+    --logo-text-style: var(--font-{{ settings.logo_text_font | default: 'heading' }}--style);
+    --logo-text-weight: {{ settings.logo_text_weight | default: '600' }};
+    --logo-text-size: {{ settings.logo_text_size | default: 22 }}px;
+    --logo-text-size-mobile: {{ settings.logo_text_size_mobile | default: 18 }}px;
     /* Read by the theme's scripts, so these settings never change the page's markup */
     --theme-cart-drawer: {% if settings.cart_type == 'drawer' %}1{% else %}0{% endif %};
     --theme-cart-auto-open: {% if settings.cart_type == 'drawer' and settings.auto_open_cart_drawer %}1{% else %}0{% endif %};
@@ -803,7 +809,7 @@
   {%- if reveal != 'none' %}
   @media (prefers-reduced-motion: no-preference) {
     .shopify-section[data-reveal] {
-      transition: opacity {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1), transform {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition: opacity {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1), transform {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1), filter {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     .shopify-section[data-reveal='pending'] {
@@ -814,10 +820,56 @@
       transform: translateY(32px);
         {%- when 'zoom' %}
       transform: scale(0.96);
+        {%- when 'slide_left' %}
+      transform: translateX(-48px);
+        {%- when 'slide_right' %}
+      transform: translateX(48px);
+        {%- when 'blur' %}
+      filter: blur(12px);
       {%- endcase %}
     }
   }
   {%- endif %}
+  {%- comment -%} Product cards > Quick add: its own font, weight and colors, never the primary button's {%- endcomment -%}
+  {%- liquid
+    assign qa_font = settings.quick_add_font | default: 'body'
+    assign qa_weight = settings.quick_add_font_weight | default: '500'
+  -%}
+  button.quick-add__button.quick-add__button {
+    font-family: var(--font-{{ qa_font }}--family);
+    font-style: var(--font-{{ qa_font }}--style);
+    font-weight: {{ qa_weight }};
+    font-size: var(--font-size--sm, 0.875rem);
+    letter-spacing: normal;
+    text-transform: none;
+    border-color: {{ settings.quick_add_border | default: 'rgb(0 0 0 / 0.12)' }};
+    box-shadow: none;
+  }
+
+  button.quick-add__button.quick-add__button:is(:hover, :focus-visible) {
+    {%- if settings.quick_add_hover_background != blank %}
+    background: linear-gradient({{ settings.quick_add_hover_background }} 0 100%) padding-box;
+    {%- endif %}
+    color: {{ settings.quick_add_hover_text | default: 'var(--quick-add-foreground, var(--color-foreground))' }};
+    border-color: {{ settings.quick_add_border | default: 'rgb(0 0 0 / 0.12)' }};
+    box-shadow: none;
+  }
+
+  {%- comment -%} Product cards > Image arrows {%- endcomment -%}
+  .card-gallery {
+    --card-arrow-background: {{ settings.product_card_arrow_background | default: 'var(--color-background)' }};
+    --card-arrow-color: {{ settings.product_card_arrow_color | default: 'var(--color-foreground)' }};
+    {%- case settings.product_card_arrow_shape %}
+      {%- when 'square' %}
+    --card-arrow-radius: 10px;
+      {%- when 'plain' %}
+    --card-arrow-radius: 50%;
+    --card-arrow-background: transparent;
+    --card-arrow-shadow: none;
+      {%- else %}
+    --card-arrow-radius: 50%;
+    {%- endcase %}
+  }
 {% endstyle %}
 
 {% render 'contrast-override',

@@ -1285,6 +1285,39 @@
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
   }
+
+  /*
+    Phones (drawer navigation): the search sits on the right with the account and cart, the logo
+    stays centred between the two sides. Used when the header has a search on its right side.
+  */
+  #header-component[data-menu-style='drawer'] .header__columns:has(.header__column--right .search-action) {
+    /* The right side never shrinks under its icons: a wide logo moves left rather than under them. */
+    --header-template-columns: minmax(0, 1fr) auto minmax(max-content, 1fr);
+
+    grid-template-areas: 'leftA center rightB';
+  }
+
+  #header-component[data-menu-style='drawer']
+    .header__columns:has(.header__column--right .search-action)
+    .header__column--left
+    .search-action {
+    display: none;
+  }
+
+  #header-component[data-menu-style='drawer']
+    .header__columns:has(.header__column--right .search-action)
+    .header__column--right {
+    display: flex;
+    grid-area: rightB;
+    justify-self: end;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  #header-component[data-menu-style='drawer'] .header__column--right .search-action.search-action {
+    display: flex;
+    margin-inline: 0;
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}

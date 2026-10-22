@@ -45,30 +45,20 @@
   assign slot_width_mobile = logo_height_mobile | times: slot_ratio | ceil
 %}
 
-{% comment %}
-  Output all logo variants, use CSS to hide/show the appropriate one
-  based on the .header[transparent] selector
-{% endcomment %}
-<a
-  {% if template.name == 'index' and block_settings.hide_logo_on_home_page %}
-    data-hidden-on-home-page
-  {% endif %}
-  href="{{ routes.root_url }}"
-  class="size-style spacing-style header-logo"
-  {% if settings.logo != blank or inverse_logo != blank %}data-image-logo{% endif %}
-  style="
-    {% render 'size-style', settings: block_settings %}
-    {% render 'spacing-style', settings: block_settings %}
-    --font-family: var(--font-body--family);
-    --font-style: var(--font-body--style);
-    --font-weight: 600;
-    --header-logo-width: {{ slot_width }}px;
-    --header-logo-width-mobile: {{ slot_width_mobile }}px;
-    --header-logo-height: {{ logo_height }}px;
-    --header-logo-height-mobile: {{ logo_height_mobile }}px;
-  "
-  {{ block.shopify_attributes }}
->
+{% liquid
+  # Logo > Logo: a picture, text, or both (text left or right of the picture).
+  assign logo_style = settings.logo_style | default: 'image'
+  assign logo_text = settings.logo_text | default: shop.name
+  assign has_picture = false
+  if settings.logo != blank or inverse_logo != blank
+    assign has_picture = true
+  endif
+  if logo_style == 'image_text' and has_picture == false
+    assign logo_style = 'text'
+  endif
+%}
+
+{% capture logo_pictures %}
   <span
     {% if use_inverse_logo %}
       class="header-logo__solid-header-image-container"
@@ -80,7 +70,7 @@
       class: 'header-logo__image',
       height: logo_height,
       alt_text_fallback: alt_text_fallback,
-      text_fallback: shop.name
+      text_fallback: logo_text
     %}
   </span>
 
@@ -94,10 +84,46 @@
         class: 'header-logo__image',
         height: logo_height,
         alt_text_fallback: alt_text_fallback,
-        text_fallback: shop.name
+        text_fallback: logo_text
       %}
     </span>
   {% endif %}
+{% endcapture %}
+
+{% comment %}
+  Output all logo variants, use CSS to hide/show the appropriate one
+  based on the .header[transparent] selector
+{% endcomment %}
+<a
+  {% if template.name == 'index' and block_settings.hide_logo_on_home_page %}
+    data-hidden-on-home-page
+  {% endif %}
+  href="{{ routes.root_url }}"
+  class="size-style spacing-style header-logo{% if logo_style == 'text' %} header-logo--text{% elsif logo_style == 'image_text' %} header-logo--with-text header-logo--text-{{ settings.logo_text_position | default: 'right' }}{% endif %}"
+  {% if logo_style == 'image' and has_picture %}data-image-logo{% endif %}
+  {% if logo_style != 'image' %}aria-label="{{ logo_text | escape }}"{% endif %}
+  style="
+    {% render 'size-style', settings: block_settings %}
+    {% render 'spacing-style', settings: block_settings %}
+    --font-family: var(--font-body--family);
+    --font-style: var(--font-body--style);
+    --font-weight: 600;
+    --header-logo-width: {{ slot_width }}px;
+    --header-logo-width-mobile: {{ slot_width_mobile }}px;
+    --header-logo-height: {{ logo_height }}px;
+    --header-logo-height-mobile: {{ logo_height_mobile }}px;
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- case logo_style -%}
+    {%- when 'text' -%}
+      <span class="header-logo__text">{{ logo_text }}</span>
+    {%- when 'image_text' -%}
+      <span class="header-logo__mark" aria-hidden="true">{{ logo_pictures }}</span>
+      <span class="header-logo__text">{{ logo_text }}</span>
+    {%- else -%}
+      {{ logo_pictures }}
+  {%- endcase -%}
 </a>
 
 {% stylesheet %}
@@ -177,6 +203,52 @@
 
   .header-logo__transparent-header-image-container {
     display: var(--header-logo-inverse-display, none);
+  }
+
+  /* Logo > Text: font, weight and sizes come from the theme's CSS (--logo-text-*). */
+  .header-logo__text {
+    font-family: var(--logo-text-family, var(--font-heading--family));
+    font-style: var(--logo-text-style, normal);
+    font-weight: var(--logo-text-weight, 600);
+    font-size: var(--logo-text-size-mobile, 18px);
+    line-height: 1.1;
+    letter-spacing: var(--logo-text-tracking, normal);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+
+    @media screen and (min-width: 750px) {
+      font-size: var(--logo-text-size, 22px);
+    }
+  }
+
+  .header-logo--with-text {
+    display: flex;
+    align-items: center;
+    gap: var(--logo-text-gap, 10px);
+  }
+
+  .header-logo--text-left {
+    flex-direction: row-reverse;
+  }
+
+  .header-logo__mark {
+    display: grid;
+    flex-shrink: 0;
+    width: var(--header-logo-width-mobile);
+    height: var(--header-logo-height-mobile);
+
+    @media screen and (min-width: 750px) {
+      width: var(--header-logo-width);
+      height: var(--header-logo-height);
+    }
+  }
+
+  .header-logo__mark > span {
+    grid-area: 1 / 1;
+    min-width: 0;
+    height: 100%;
   }
 {% endstylesheet %}
 

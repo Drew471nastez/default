@@ -452,6 +452,65 @@
     display: block;
   }
 
+  /*
+    Product cards > Image arrows: two buttons centred on the picture's sides, clear of quick add,
+    shown on hover. Shape and colours come from the theme's CSS (theme-styles-variables).
+  */
+  .card-gallery slideshow-arrows {
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--padding-sm);
+    mix-blend-mode: normal;
+  }
+
+  .card-gallery slideshow-arrows .slideshow-control.slideshow-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border-radius: var(--card-arrow-radius, 50%);
+    background: var(--card-arrow-background, var(--color-background));
+    color: var(--card-arrow-color, var(--color-foreground));
+    box-shadow: var(--card-arrow-shadow, 0 1px 6px rgb(0 0 0 / 0.12));
+    opacity: 0;
+    animation: none;
+    transition: opacity var(--animation-speed) var(--animation-easing), scale var(--animation-speed) var(--animation-easing);
+  }
+
+  .card-gallery slideshow-arrows .slideshow-control .svg-wrapper {
+    width: 14px;
+    height: 14px;
+  }
+
+  .card-gallery:is(:hover, :focus-within) slideshow-arrows .slideshow-control.slideshow-control {
+    opacity: 1;
+  }
+
+  /* Horizon's slide-in keyframes for arrows would hold them at their first frame; these fade instead. */
+  .card-gallery slideshow-container slideshow-arrows .slideshow-control.slideshow-control {
+    animation: none;
+  }
+
+  .card-gallery slideshow-arrows .slideshow-control.slideshow-control:hover {
+    scale: 1.06;
+  }
+
+  .card-gallery slideshow-arrows .slideshow-control.slideshow-control:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--card-arrow-color, var(--color-foreground));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-gallery slideshow-arrows .slideshow-control.slideshow-control {
+      transition: none;
+    }
+  }
+
   .card-gallery slideshow-arrows .slideshow-control {
     /* Align icons with quick-add button */
     padding-inline: var(--padding-xl);

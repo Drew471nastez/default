@@ -8,19 +8,22 @@
 {% capture media_gallery %}
   {% content_for 'block',
     type: '_featured-product-information-carousel',
-    id: 'media-gallery'
+    id: 'media-gallery',
+    closest.product: section.settings.product
   %}
 {% endcapture %}
 
 {% capture product_details %}
   {% content_for 'block',
     type: '_product-details',
-    id: 'product-details'
+    id: 'product-details',
+    closest.product: section.settings.product
   %}
 {% endcapture %}
 
+{%- comment -%} The chosen product reaches every block inside (Storelib does not infer closest.product from the setting). {%- endcomment -%}
 {% capture additional_blocks %}
-  {% content_for 'blocks' %}
+  {% content_for 'blocks', closest.product: section.settings.product %}
 {% endcapture %}
 
 {% render 'deferred-media-product-model-styles' %}

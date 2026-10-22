@@ -198,11 +198,8 @@
       box-shadow var(--animation-speed-medium) var(--animation-timing-bounce),
       transform var(--animation-speed-medium) var(--animation-timing-bounce);
     margin: 2px;
-
-    &:hover {
-      transform: scale(1.03);
-      box-shadow: 0 2px 5px rgb(0 0 0 / var(--opacity-8));
-    }
+    background-color: transparent;
+    border: var(--border-width-sm, 1px) solid rgb(var(--color-foreground-rgb) / var(--opacity-15, 0.15));
   }
 
   .predictive-search-results__pill mark {
@@ -211,14 +208,13 @@
     color: var(--color-foreground-subdued);
   }
 
+  /* A suggestion is outlined, never filled: hover and keyboard focus only darken the outline. */
   .predictive-search-results__pill:focus,
   .predictive-search-results__pill:hover,
   .predictive-search-results__card--query:is([aria-selected='true'], :focus-within) .predictive-search-results__pill {
-    --pill-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8));
-
-    background-color: var(--pill-background-color);
-    outline: var(--border-width-sm) solid var(--color-border);
-    border: var(--border-width-sm);
+    background-color: transparent;
+    border-color: rgb(var(--color-foreground-rgb) / var(--opacity-50, 0.5));
+    outline: none;
     text-decoration: none;
   }
 
@@ -244,10 +240,6 @@
       scroll-snap-align: end;
     }
 
-    &:active {
-      transform: scale(0.97);
-      transition: transform 100ms var(--animation-timing-active);
-    }
   }
 
   .recently-viewed-wrapper .predictive-search-results__card {
@@ -264,25 +256,22 @@
 
   .predictive-search-results__card--product,
   .recently-viewed-wrapper .predictive-search-results__card--product {
-    &:active {
-      transform: scale(0.97);
-      transition: transform 100ms var(--animation-timing-active);
+    /* No grey box on hover: the picture lifts a little, the card itself stays still. */
+    .resource-card__media {
+      transition: transform var(--animation-speed-medium) var(--animation-timing-hover), opacity var(--animation-speed-medium) var(--animation-timing-hover);
     }
 
-    &:hover {
-      background-color: var(--card-bg-hover);
-      border-radius: var(--product-corner-radius);
-      padding: calc(var(--padding-2xs) + 2px);
-      margin: calc((var(--padding-2xs) + 2px) * -1);
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      &:hover .resource-card__media {
+        transform: translateY(-2px);
+        opacity: 0.94;
+      }
     }
 
     &:is([aria-selected='true'].keyboard-focus, &:focus-visible, &:has(.resource-card:focus-visible)) {
-      background-color: var(--card-bg-hover);
-      padding: calc(var(--padding-2xs) + 1px);
-      margin: calc((var(--padding-2xs) + 1px) * -1);
-      outline: var(--border-width-sm) solid var(--color-border);
-      border-radius: calc(var(--product-corner-radius) + 1px);
-      border-color: var(--card-border-focus);
+      outline: var(--border-width-sm) solid rgb(var(--color-foreground-rgb) / var(--opacity-50, 0.5));
+      outline-offset: 4px;
+      border-radius: calc(var(--product-corner-radius) + 4px);
     }
   }
 
@@ -297,19 +286,9 @@
       width: 27.5cqi;
     }
 
-    &:hover {
-      border-color: var(--card-border-hover);
-      background-color: var(--card-bg-hover);
-    }
-
+    &:hover,
     &[aria-selected='true'].keyboard-focus {
       border-color: var(--card-border-hover);
-      background-color: var(--card-bg-hover);
-    }
-
-    &:active {
-      transform: scale(0.97);
-      transition: transform var(--animation-speed-medium) var(--animation-timing-active);
     }
   }
 

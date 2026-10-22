@@ -162,7 +162,12 @@
                   <span class="svg-wrapper icon-checkmark">
                     {{- 'icon-checkmark.svg' | inline_asset_content -}}
                   </span>
-                  <span class="country">{{- country.name }}</span>
+                  <span
+                  class="localization-form__flag"
+                  aria-hidden="true"
+                  style="background-image: url({{- country | image_url: width: 32 }});"
+                ></span>
+                <span class="country">{{- country.name }}</span>
                   <span
                     class="localization-form__currency"
                     {% unless show_currencies %}
@@ -217,6 +222,11 @@
                 <span class="svg-wrapper icon-checkmark">
                   {{- 'icon-checkmark.svg' | inline_asset_content -}}
                 </span>
+                <span
+                  class="localization-form__flag"
+                  aria-hidden="true"
+                  style="background-image: url({{- country | image_url: width: 32 }});"
+                ></span>
                 <span class="country">{{- country.name }}</span>
                 <span
                   class="localization-form__currency"
@@ -326,6 +336,17 @@
 
   .localization-form__list-item-disabled {
     pointer-events: none;
+  }
+
+  /* Each country with its flag, a small round mark before the name. */
+  .localization-form__flag {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / var(--opacity-10, 0.1));
   }
 
   .localization-form__list-item:focus-visible {

@@ -208,7 +208,8 @@ for (const name of ['surface', 'inverse', 'accent']) test(`${name} scheme render
 
 test('inherited block colors emit no override; Custom keeps explicit colors', async () => {
   const inherited = await render('snippets/contrast-override.storelib', {color_scheme:'inherit', section_id:'test'});
-  assert(!inherited.includes('<style>'));
+  // One empty block stays (the builder patches its text); it overrides nothing.
+  assert(!/--color|color-custom-test/.test(inherited));
   const custom = await render('snippets/contrast-override.storelib', {color_scheme:'custom', background_color:color('#aabbcc'),text_color:color('#112233'),section_id:'test'});
   assert(custom.includes('--color-background: #aabbcc'));
   assert(custom.includes('--color-foreground: #112233'));
@@ -548,4 +549,61 @@ test('sections animate on scroll as a CSS choice, with the page transitions besi
   const none=await css({section_animation:'none'});
   assert.match(none,/--theme-section-animation: 0;/);
   assert.doesNotMatch(none,/data-reveal/);
+});
+
+test('a featured product reaches every block inside it, and recently viewed finds Storelib ids', async () => {
+  const section=source('sections/featured-product-information.storelib');
+  assert.equal((section.match(/closest\.product: section\.settings\.product/g)||[]).length,3);
+  const list=source('snippets/predictive-search-products-list.storelib');
+  assert.match(list,/assign product = products \| find: 'id', _id %}/,'text ids are looked up as they are');
+  assert.match(list,/if product == blank %}\s*{% continue %}/,'a product not found is left out, never drawn empty');
+});
+
+test('the logo is a picture, text, or both, with the text on either side', async () => {
+  const logo=schema.find(group=>group.name==='Logo').settings;
+  const ids=logo.map(setting=>setting.id).filter(Boolean);
+  for (const id of ['logo_style','logo','logo_inverse','logo_height','logo_height_mobile','logo_text','logo_text_position','logo_text_font','logo_text_weight','logo_text_size','logo_text_size_mobile','favicon']) assert(ids.includes(id),id);
+  assert(!logo.some(setting=>/Default logo|Mobile/i.test(setting.label||'')),'no "Default logo" or "Mobile" labels');
+  const block=source('blocks/_header-logo.storelib');
+  assert.match(block,/{%- when 'text' -%}\s*<span class="header-logo__text">{{ logo_text }}<\/span>/);
+  assert.match(block,/header-logo--text-{{ settings.logo_text_position \| default: 'right' }}/);
+  const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({logo_text_font:'accent',logo_text_weight:'700',logo_text_size:30,logo_text_size_mobile:20})});
+  assert.match(css,/--logo-text-family: var\(--font-accent--family\);/);
+  assert.match(css,/--logo-text-weight: 700;/);
+  assert.match(css,/--logo-text-size: 30px;/);
+  assert.match(css,/--logo-text-size-mobile: 20px;/);
+});
+
+test('quick add and the image arrows follow Product cards settings, never the primary button', async () => {
+  const cards=schema.find(group=>group.name==='Product cards').settings;
+  assert.equal(cards.find(setting=>setting.id==='product_card_alignment').label,'Content text alignment');
+  for (const id of ['quick_add_border','quick_add_hover_background','quick_add_hover_text','quick_add_font','quick_add_font_weight','product_card_arrow_shape','product_card_arrow_background','product_card_arrow_color']) assert(cards.some(setting=>setting.id===id),id);
+  const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({quick_add_font:'heading',quick_add_font_weight:'400',quick_add_border:'#123456',quick_add_hover_background:'#222222',product_card_arrow_shape:'square',product_card_arrow_background:'#eeeeee',product_card_arrow_color:'#111111'})});
+  assert.match(css,/button\.quick-add__button\.quick-add__button \{[^}]*font-family: var\(--font-heading--family\);[^}]*font-weight: 400;[^}]*border-color: #123456;[^}]*box-shadow: none;/);
+  assert.match(css,/:is\(:hover, :focus-visible\) \{[^}]*linear-gradient\(#222222/);
+  assert.match(css,/--card-arrow-background: #eeeeee;[\s\S]*--card-arrow-color: #111111;[\s\S]*--card-arrow-radius: 10px;/);
+  const gallery=source('snippets/card-gallery.storelib');
+  assert.match(gallery,/\.card-gallery slideshow-arrows \{\s*align-items: center;\s*justify-content: space-between;/,'arrows sit on the picture\'s sides, clear of quick add');
+});
+
+test('phones keep search on the right with the account and cart', () => {
+  const header=source('sections/theme-header.storelib');
+  assert.match(header,/\[data-menu-style='drawer'\] \.header__columns:has\(\.header__column--right \.search-action\) \{[\s\S]*?grid-template-areas: 'leftA center rightB';/);
+  assert.match(header,/\.header__column--left\s*\.search-action \{\s*display: none;/);
+  for (const file of ['shopify/assets/utilities.js','shopify/assets/header.js','layout/theme.storelib']) assert.match(source(file),/max-width: 749px/,file);
+});
+
+test('seven scroll animations, the page sections only, and no replay while a control moves', () => {
+  const options=schema.find(group=>group.name==='Animations').settings.find(setting=>setting.id==='section_animation').options.map(option=>option.value);
+  assert.deepEqual(options,['none','fade','rise','zoom','slide_left','slide_right','blur']);
+  const script=source('shopify/assets/section-reveal.js');
+  assert.match(script,/const SELECTOR = '#MainContent > \.shopify-section';/);
+  assert.match(script,/if \(detail\.live \|\| !\('section_animation' in/);
+});
+
+test('the colour helper draws one style block whether a colour is set or not', async () => {
+  for (const values of [{background_color:'',text_color:''},{background_color:color('#ffffff'),text_color:''},{background_color:'',text_color:color('#222222')}]) {
+    const out=await render('snippets/contrast-override.storelib',{settings:settings({}),...values,section_id:'x'});
+    assert.equal((out.match(/<style>/g)||[]).length,1,JSON.stringify(values));
+  }
 });

@@ -48,8 +48,15 @@
         {% endcomment %}
         {% if order_ids != blank %}
           {% for _id in order_ids %}
-            {% assign int_id = _id | times: 1 %}
-            {% assign product = products | find: 'id', int_id %}
+            {%- comment -%} Storelib ids are text; Shopify's were numbers. A product not found is left out, never drawn empty. {%- endcomment -%}
+            {% assign product = products | find: 'id', _id %}
+            {% if product == blank %}
+              {% assign int_id = _id | times: 1 %}
+              {% assign product = products | find: 'id', int_id %}
+            {% endif %}
+            {% if product == blank %}
+              {% continue %}
+            {% endif %}
             <li
               class="predictive-search-results__card predictive-search-results__card--product"
               ref="recentlyViewedItems[]"

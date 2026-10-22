@@ -11,43 +11,168 @@
     "name": "Logo",
     "settings": [
       {
-        "type": "paragraph",
-        "content": "[Manage store name](/admin/settings/general?edit=storeName)"
+        "type": "select",
+        "id": "logo_style",
+        "label": "Logo",
+        "options": [
+          {
+            "value": "image",
+            "label": "Picture"
+          },
+          {
+            "value": "text",
+            "label": "Text"
+          },
+          {
+            "value": "image_text",
+            "label": "Picture and text"
+          }
+        ],
+        "default": "image",
+        "info": "Without a picture the store name is shown."
+      },
+      {
+        "type": "header",
+        "content": "Picture"
       },
       {
         "type": "image_picker",
         "id": "logo",
-        "label": "Default logo"
+        "label": "Picture",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "image_picker",
         "id": "logo_inverse",
-        "label": "Inverse logo",
-        "info": "Used when transparent header background is set to Inverse"
+        "label": "Picture on a transparent header",
+        "info": "Used where the header sits over the first section. Leave empty to use the picture.",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "range",
         "id": "logo_height",
-        "label": "Desktop height",
+        "label": "Picture height on desktop",
         "min": 12,
         "max": 100,
         "step": 1,
         "unit": "px",
         "default": 36,
-        "visible_if": "{{ settings.logo != blank or settings.logo_inverse != blank }}",
-        "info": "Only affects header logo"
+        "visible_if": "{{ settings.logo_style != 'text' and settings.logo != blank }}"
       },
       {
         "type": "range",
         "id": "logo_height_mobile",
-        "label": "Mobile height",
+        "label": "Picture height on phones",
         "min": 12,
         "max": 100,
         "step": 1,
         "unit": "px",
         "default": 28,
-        "visible_if": "{{ settings.logo != blank or settings.logo_inverse != blank }}",
-        "info": "Only affects header logo"
+        "visible_if": "{{ settings.logo_style != 'text' and settings.logo != blank }}"
+      },
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "logo_text",
+        "label": "Text",
+        "info": "Leave empty to use the store name.",
+        "visible_if": "{{ settings.logo_style != 'image' }}"
+      },
+      {
+        "type": "select",
+        "id": "logo_text_position",
+        "label": "Text position",
+        "options": [
+          {
+            "value": "right",
+            "label": "Right of the picture"
+          },
+          {
+            "value": "left",
+            "label": "Left of the picture"
+          }
+        ],
+        "default": "right",
+        "visible_if": "{{ settings.logo_style == 'image_text' }}"
+      },
+      {
+        "type": "select",
+        "id": "logo_text_font",
+        "label": "Font",
+        "options": [
+          {
+            "value": "heading",
+            "label": "Heading"
+          },
+          {
+            "value": "subheading",
+            "label": "Subheading"
+          },
+          {
+            "value": "body",
+            "label": "Body"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "heading",
+        "visible_if": "{{ settings.logo_style != 'image' }}"
+      },
+      {
+        "type": "select",
+        "id": "logo_text_weight",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "600",
+        "visible_if": "{{ settings.logo_style != 'image' }}"
+      },
+      {
+        "type": "range",
+        "id": "logo_text_size",
+        "label": "Size on desktop",
+        "min": 12,
+        "max": 48,
+        "step": 1,
+        "unit": "px",
+        "default": 22,
+        "visible_if": "{{ settings.logo_style != 'image' }}"
+      },
+      {
+        "type": "range",
+        "id": "logo_text_size_mobile",
+        "label": "Size on phones",
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px",
+        "default": 18,
+        "visible_if": "{{ settings.logo_style != 'image' }}"
+      },
+      {
+        "type": "header",
+        "content": "Browser tab"
       },
       {
         "type": "image_picker",
@@ -1552,10 +1677,22 @@
           {
             "value": "zoom",
             "label": "Zoom in"
+          },
+          {
+            "value": "slide_left",
+            "label": "Slide in from the left"
+          },
+          {
+            "value": "slide_right",
+            "label": "Slide in from the right"
+          },
+          {
+            "value": "blur",
+            "label": "Blur in"
           }
         ],
         "default": "rise",
-        "info": "Sections below the first screen come in as visitors scroll to them. Off for visitors who ask for reduced motion."
+        "info": "Each section of the page comes in as visitors scroll to it. The header, the footer and the first screen stay still. Off for visitors who ask for reduced motion."
       },
       {
         "type": "range",
@@ -2093,7 +2230,7 @@
       {
         "type": "select",
         "id": "product_card_alignment",
-        "label": "Text alignment",
+        "label": "Content text alignment",
         "options": [
           {
             "value": "start",
@@ -2104,7 +2241,8 @@
             "label": "Center"
           }
         ],
-        "default": "start"
+        "default": "start",
+        "info": "Aligns the title, price and the rest of the card content."
       },
       {
         "type": "header",
@@ -2248,14 +2386,83 @@
         "id": "quick_add_background",
         "label": "Quick add background",
         "default": "{{ settings.page_background_color }}",
-        "visible_if": "{{ settings.quick_add == true }}"
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
       },
       {
         "type": "color",
         "id": "quick_add_text",
         "label": "Quick add text",
         "default": "{{ settings.page_text_color }}",
-        "visible_if": "{{ settings.quick_add == true }}"
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
+      },
+      {
+        "type": "color",
+        "id": "quick_add_border",
+        "label": "Quick add border",
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}",
+        "info": "Leave empty for a soft outline."
+      },
+      {
+        "type": "color",
+        "id": "quick_add_hover_background",
+        "label": "Quick add hover background",
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
+      },
+      {
+        "type": "color",
+        "id": "quick_add_hover_text",
+        "label": "Quick add hover text",
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
+      },
+      {
+        "type": "select",
+        "id": "quick_add_font",
+        "label": "Quick add font",
+        "options": [
+          {
+            "value": "body",
+            "label": "Body"
+          },
+          {
+            "value": "subheading",
+            "label": "Subheading"
+          },
+          {
+            "value": "heading",
+            "label": "Heading"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "body",
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
+      },
+      {
+        "type": "select",
+        "id": "quick_add_font_weight",
+        "label": "Quick add text weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "500",
+        "visible_if": "{{ settings.quick_add == true or settings.mobile_quick_add == true }}"
       },
       {
         "type": "header",
@@ -2272,6 +2479,42 @@
         "id": "product_card_carousel",
         "label": "Image carousel",
         "default": true
+      },
+      {
+        "type": "select",
+        "id": "product_card_arrow_shape",
+        "label": "Image arrows",
+        "options": [
+          {
+            "value": "circle",
+            "label": "Circle"
+          },
+          {
+            "value": "square",
+            "label": "Rounded square"
+          },
+          {
+            "value": "plain",
+            "label": "Icon only"
+          }
+        ],
+        "default": "circle",
+        "visible_if": "{{ settings.product_card_carousel == true }}",
+        "info": "Shown on hover when a product has three or more images. Phones swipe instead."
+      },
+      {
+        "type": "color",
+        "id": "product_card_arrow_background",
+        "label": "Arrow background",
+        "visible_if": "{{ settings.product_card_carousel == true and settings.product_card_arrow_shape != 'plain' }}",
+        "info": "Leave empty to use the page background."
+      },
+      {
+        "type": "color",
+        "id": "product_card_arrow_color",
+        "label": "Arrow icon",
+        "visible_if": "{{ settings.product_card_carousel == true }}",
+        "info": "Leave empty to use the text color."
       },
       {
         "type": "select",

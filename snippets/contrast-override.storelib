@@ -177,8 +177,9 @@
     endif
   endif
 %}
+{%- comment -%} One style block whatever the colors: a block that came and went with a setting made the builder load the page again. {%- endcomment -%}
+{% style %}
 {% if has_background %}
-  {% style %}
     .color-custom-{{ section_id }},
     .color-custom-{{ section_id }} .text-block {
       {% if uses_shared_scheme %}
@@ -240,7 +241,6 @@
       color: var(--color, var(--color-foreground));
       background-color: var(--color-background);
     }
-  {% endstyle %}
 {% elsif text_color != blank %}
   {% liquid
     if border_color != blank
@@ -251,7 +251,6 @@
       assign effective_no_bg_border_rgb = text_color.rgb
     endif
   %}
-  {% style %}
     .color-custom-{{ section_id }},
     .color-custom-{{ section_id }} .text-block {
       --heading-color: initial;
@@ -295,7 +294,7 @@
         color: var(--color, var(--color-foreground));
       }
     {% endif %}
-  {% endstyle %}
 {% endif %}
+{% endstyle %}
 
 </template>
