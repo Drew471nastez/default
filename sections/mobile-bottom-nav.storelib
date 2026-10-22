@@ -41,7 +41,8 @@
 {% if has_items %}
   <mobile-bottom-nav
     id="MobileBottomNav-{{ section.id }}"
-    class="mobile-bottom-nav"
+    class="mobile-bottom-nav{% if request.design_mode %} mobile-bottom-nav--editor{% endif %}"
+    data-storelib-bottom-bar
     role="navigation"
     aria-label="{{ nav_label | escape }}"
     data-behavior="{{ section.settings.behavior | default: 'always' | escape }}"
@@ -326,7 +327,8 @@
         #bindOffset(signal) {
           const media = window.matchMedia('(max-width: 749px)');
           const apply = () => {
-            const shown = media.matches && this.getClientRects().length > 0;
+            const editor = this.classList.contains('mobile-bottom-nav--editor');
+            const shown = (media.matches || editor) && this.getClientRects().length > 0;
             const height = shown ? this.offsetHeight : 0;
             document.documentElement.style.setProperty('--mobile-bottom-nav-offset', height + 'px');
           };
@@ -585,13 +587,13 @@
     }
   }
 
-  @media screen and (min-width: 750px) {
-    mobile-bottom-nav.mobile-bottom-nav {
+  @media not all and (max-width: 749px) {
+    mobile-bottom-nav.mobile-bottom-nav:not(.mobile-bottom-nav--editor) {
       display: none;
     }
   }
 
-  @media screen and (max-width: 749px) {
+  @media not all and (min-width: 750px) {
     body:has(mobile-bottom-nav) {
       padding-bottom: var(--mobile-bottom-nav-offset, calc(3.625rem + env(safe-area-inset-bottom, 0px)));
     }
@@ -625,14 +627,16 @@
 {
   "type": "mobile-bottom-nav",
   "name": "Mobile bottom navigation",
+  "description": "Sticky mobile bottom navigation for Home, Menu, Search, Account and Cart.",
   "class": "mobile-bottom-nav-section",
   "max_blocks": 5,
   "enabled_on": {
-    "groups": ["custom.overlay"]
+    "groups": ["overlay"]
   },
   "settings": [
     {
       "type": "paragraph",
+      "id": "note",
       "content": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer."
     },
     {
@@ -802,11 +806,12 @@
     "class": "mobile-bottom-nav-section",
     "max_blocks": 5,
     "enabled_on": {
-      "groups": ["custom.overlay"]
+      "groups": ["overlay"]
     },
     "settings": [
       {
         "type": "paragraph",
+        "id": "note",
         "content": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer."
       },
       {

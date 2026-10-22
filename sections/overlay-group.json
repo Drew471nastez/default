@@ -1,5 +1,5 @@
 {
-  "type": "custom.overlay",
+  "type": "overlay",
   "name": "Overlay group",
   "sections": {
     "mobile_bottom_nav": {
