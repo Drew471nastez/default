@@ -459,11 +459,115 @@
         }
       },
       "block_order": []
+    },
+    "featured-product-information-1792675731914": {
+      "name": "Featured product",
+      "type": "featured-product-information",
+      "hidden": false,
+      "settings": {
+        "gap": 48,
+        "product": "/products/black-sleeves",
+        "equal_columns": true,
+        "padding_block_end": 40,
+        "padding_block_start": 40
+      },
+      "blocks": {
+        "media-gallery": {
+          "type": "_featured-product-information-carousel",
+          "static": true,
+          "settings": {
+            "media_fit": "contain",
+            "extend_media": false,
+            "media_radius": 0,
+            "hide_variants": true,
+            "thumbnail_width": 44,
+            "thumbnail_position": "bottom",
+            "constrain_to_viewport": true,
+            "slideshow_controls_style": "counter",
+            "slideshow_mobile_controls_style": "dots"
+          }
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "gap": 28,
+            "padding_block_end": 24,
+            "padding_block_start": 24,
+            "sticky_details_desktop": true
+          },
+          "blocks": {
+            "block-mvjkufgq-1-ktogj": {
+              "type": "group",
+              "settings": {
+                "gap": 12
+              },
+              "blocks": {
+                "block-mvjkufgq-2-8qv0g": {
+                  "type": "product-title",
+                  "settings": {
+                    "type_preset": "rte"
+                  }
+                },
+                "block-mvjkufgq-3-645zh": {
+                  "type": "price",
+                  "settings": {
+                    "show_tax_info": true,
+                    "show_installments": true
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjkufgq-2-8qv0g",
+                "block-mvjkufgq-3-645zh"
+              ]
+            },
+            "block-mvjkufgq-4-ye5cn": {
+              "type": "review",
+              "settings": {}
+            },
+            "block-mvjkufgq-5-iehqb": {
+              "type": "variant-picker",
+              "settings": {}
+            },
+            "block-mvjkufgq-6-gyf1o": {
+              "type": "buy-buttons",
+              "settings": {},
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {}
+                }
+              },
+              "block_order": []
+            }
+          },
+          "block_order": [
+            "block-mvjkufgq-1-ktogj",
+            "block-mvjkufgq-4-ye5cn",
+            "block-mvjkufgq-5-iehqb",
+            "block-mvjkufgq-6-gyf1o"
+          ]
+        }
+      },
+      "block_order": []
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
-    "carousel-1792665996057"
+    "carousel-1792665996057",
+    "featured-product-information-1792675731914"
   ]
 }
