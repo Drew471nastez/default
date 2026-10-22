@@ -8,7 +8,12 @@ const {root, source, body, schema, settings, color, engine, render} = require('.
 test('settings use simple names, independent heading controls and Theme/Custom colors', () => {
   assert(schema.some(group => group.name === 'Fonts'));
   const buttons = schema.find(group => group.name === 'Buttons');
-  assert(buttons.settings.some(setting => setting.content === 'Hover & focus'));
+  assert(!schema.some(group => /hover.*focus/i.test(group.name)));
+  assert(!schema.some(group => (group.settings||[]).some(setting => setting.type==='header' && /hover.*focus/i.test(setting.content))));
+  for (const id of ['button_hover_duration','focus_ring_width']) {
+    assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1);
+    assert(buttons.settings.findIndex(setting=>setting.id===id)<buttons.settings.findIndex(setting=>setting.type==='header'));
+  }
   for (let heading=1; heading<=6; heading++) for (const control of ['font','size','weight','line_height','letter_spacing','case']) {
     assert(schema.find(group=>group.name==='Fonts').settings.some(setting=>setting.id===`type_${control}_h${heading}`));
   }
