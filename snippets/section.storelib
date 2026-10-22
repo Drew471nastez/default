@@ -15,6 +15,7 @@
   endif
 %}
 {% render 'contrast-override',
+  color_scheme: section.settings.theme_color_scheme,
   background_color: background_color,
   section_id: section_id,
   skip_contrast: skip_contrast

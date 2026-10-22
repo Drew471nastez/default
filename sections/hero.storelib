@@ -452,8 +452,8 @@
 {% endcapture %}
 
 {%- liquid
-  if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
+  if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank
+    render 'contrast-override', color_scheme: section.settings.theme_color_scheme, background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
   endif
 -%}
 
@@ -462,7 +462,7 @@
 
 <div
   id="Hero-{{ section.id }}"
-  class="hero{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
   style="
     --hero-border-style: {{ section.settings.border }};
     --hero-border-width: {{ section.settings.border_width }}px;
@@ -1922,6 +1922,31 @@
       {
         "type": "header",
         "content": "t:content.appearance"
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
       },
       {
         "type": "color",

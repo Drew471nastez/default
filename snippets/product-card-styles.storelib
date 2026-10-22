@@ -8,6 +8,44 @@
 {%- enddoc -%}
 
 {% stylesheet %}
+  .product-card--theme .product-card__content {
+    text-align: var(--product-card-text-align);
+  }
+
+  .product-card--theme .product-title-block,
+  .product-card--theme .product-title-block > * {
+    font-family: var(--card-title-family);
+    font-size: var(--card-title-size);
+    font-weight: var(--card-title-weight);
+    font-style: var(--card-title-style);
+    letter-spacing: var(--card-title-tracking);
+    line-height: var(--card-title-line-height);
+    text-transform: var(--card-title-case);
+    text-align: var(--product-card-text-align);
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .product-card--theme .product-title-block > * {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--card-title-lines);
+    overflow: hidden;
+  }
+
+  .product-card--theme product-price,
+  .product-card--theme product-price .price,
+  .product-card--theme product-price .compare-at-price {
+    font-family: var(--card-price-family);
+    font-weight: var(--card-price-weight);
+    font-size: var(--card-price-size);
+    text-align: var(--product-card-text-align);
+  }
+
+  .product-card--theme product-price {
+    width: 100%;
+  }
+
   .product-grid__card.product-grid__card {
     display: flex;
     flex-flow: column nowrap;
@@ -43,7 +81,7 @@
 
   /* Product card title truncation - applied on mobile regardless of view */
   @media screen and (max-width: 749px) {
-    :is(.product-card, .product-grid__card) :is(h4, .h4) {
+    :is(.product-card, .product-grid__card):not(.product-card--theme):not(.product-card--theme *) :is(h4, .h4) {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       overflow: hidden;

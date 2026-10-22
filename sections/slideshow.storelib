@@ -63,20 +63,20 @@
 %}
 
 {% liquid
-  if section.settings.background_color != blank
+  if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank
     assign skip_section_contrast = false
     if section.settings.content_position == 'on-media'
       assign skip_section_contrast = true
     endif
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
+    render 'contrast-override', color_scheme: section.settings.theme_color_scheme, background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
   endif
 %}
 
 <div
-  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="section-background{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
 ></div>
 <div
-  class="slideshow-section spacing-style section {{ section_width_class }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %} disable-section-top-offset"
+  class="slideshow-section spacing-style section {{ section_width_class }}{% if section.settings.theme_color_scheme == 'surface' or section.settings.theme_color_scheme == 'inverse' or section.settings.theme_color_scheme == 'accent' or section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %} disable-section-top-offset"
   style="{% render 'spacing-padding', settings: section.settings %}; --slideshow-gap: {{ section.settings.slideshow_gap }}px;{% if rounded_slide_corners %} --corner-radius: {{ section.settings.corner_radius }}px;{% endif %}"
 >
   <h2 class="visually-hidden">{{ 'accessibility.slideshow' | t }}</h2>
@@ -728,6 +728,31 @@
           }
         ],
         "default": "on-media"
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
       },
       {
         "type": "color",

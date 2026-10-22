@@ -361,8 +361,18 @@
     data-header-rows="single"
   {% endif %}
   style="
-    --color-background-top-row: rgba({{ section.settings.background_color_top.rgba | default: settings.page_background_color.rgba }});
-    --color-background-bottom-row: rgba({{ section.settings.background_color_bottom.rgba | default: settings.page_background_color.rgba }});
+    {% if section.settings.theme_color_scheme_top == 'surface' or section.settings.theme_color_scheme_top == 'inverse' or section.settings.theme_color_scheme_top == 'accent' %}
+      {% assign top_scheme_background_key = 'scheme_' | append: section.settings.theme_color_scheme_top | append: '_background' %}
+      --color-background-top-row: {{ settings[top_scheme_background_key] }};
+    {% else %}
+      --color-background-top-row: rgba({{ section.settings.background_color_top.rgba | default: settings.page_background_color.rgba }});
+    {% endif %}
+    {% if section.settings.theme_color_scheme_bottom == 'surface' or section.settings.theme_color_scheme_bottom == 'inverse' or section.settings.theme_color_scheme_bottom == 'accent' %}
+      {% assign bottom_scheme_background_key = 'scheme_' | append: section.settings.theme_color_scheme_bottom | append: '_background' %}
+      --color-background-bottom-row: {{ settings[bottom_scheme_background_key] }};
+    {% else %}
+      --color-background-bottom-row: rgba({{ section.settings.background_color_bottom.rgba | default: settings.page_background_color.rgba }});
+    {% endif %}
     {% if transparent and text_color_transparent != blank %}
       --color-transparent-text: {{ text_color_transparent }};
       --color-transparent-text-rgb: {{ text_color_transparent.rgb }};
@@ -391,6 +401,7 @@
     {% liquid
       assign background = 'background_color_' | append: row
       assign row_setting = 'background_color_' | append: row
+      assign row_scheme_setting = 'theme_color_scheme_' | append: row
       assign text_setting = 'text_color_' | append: row
       assign row_class_id = row | append: '-' | append: section.id
       assign row_class = ' color-custom-' | append: row_class_id
@@ -443,7 +454,7 @@
 
     {% capture content %}
       {% if custom_color_styles %}
-        {% render 'contrast-override', background_color: section.settings[row_setting], text_color: section.settings[text_setting], section_id: row_class_id %}
+        {% render 'contrast-override', color_scheme: section.settings[row_scheme_setting], background_color: section.settings[row_setting], text_color: section.settings[text_setting], section_id: row_class_id %}
       {% endif %}
       {% render 'header-row',
         row: row,
@@ -2309,6 +2320,31 @@
         "content": "t:content.colors"
       },
       {
+        "type": "select",
+        "id": "theme_color_scheme_top",
+        "label": "Top row color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+      },
+      {
         "type": "color",
         "id": "background_color_top",
         "label": "t:settings.top_row_background",
@@ -2319,6 +2355,31 @@
         "id": "text_color_top",
         "label": "t:settings.top_row_text",
         "placeholder": "t:settings.default"
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme_bottom",
+        "label": "Bottom row color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
       },
       {
         "type": "color",

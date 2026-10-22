@@ -46,6 +46,15 @@
 {% enddoc %}
 
 {% liquid
+  assign uses_shared_scheme = false
+  if color_scheme == 'surface' or color_scheme == 'inverse' or color_scheme == 'accent'
+    assign uses_shared_scheme = true
+    assign scheme_background_key = 'scheme_' | append: color_scheme | append: '_background'
+    assign scheme_text_key = 'scheme_' | append: color_scheme | append: '_text'
+    assign background_color = settings[scheme_background_key]
+    assign text_color = settings[scheme_text_key]
+    assign skip_contrast = false
+  endif
   assign skip_contrast = skip_contrast | default: false, allow_false: true
   assign preset = preset | default: 'content'
 
@@ -106,6 +115,25 @@
   {% style %}
     .color-custom-{{ section_id }},
     .color-custom-{{ section_id }} .text-block {
+      {% if uses_shared_scheme %}
+        --color-primary-button-background: {{ text_color }};
+        --color-primary-button-text: {{ background_color }};
+        --color-primary-button-border: {{ text_color }};
+        --color-primary-button-hover-background: {{ background_color }};
+        --color-primary-button-hover-text: {{ text_color }};
+        --color-primary-button-hover-border: {{ text_color }};
+        --color-primary-button-focus-outline: {{ text_color }};
+        --color-secondary-button-background: {{ background_color }};
+        --color-secondary-button-text: {{ text_color }};
+        --color-secondary-button-border: {{ text_color }};
+        --color-secondary-button-hover-background: {{ text_color }};
+        --color-secondary-button-hover-text: {{ background_color }};
+        --color-secondary-button-hover-border: {{ text_color }};
+        --color-input-background: {{ background_color }};
+        --color-input-text: {{ text_color }};
+        --color-input-text-rgb: {{ text_color.rgb }};
+        --color-input-border: {{ text_color }};
+      {% endif %}
       /* Background */
       --color-background: {{ background_color }};
       --color-background-rgb: {{ background_color.rgb }};

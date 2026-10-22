@@ -66,6 +66,58 @@
           "background": "#ffffff",
           "foreground": "#000000"
         }
+      },
+      {
+        "type": "paragraph",
+        "content": "Use shared schemes across sections. Default preserves existing section colors; selecting a shared scheme replaces the section background and text together."
+      },
+      {
+        "type": "header",
+        "content": "Soft surface"
+      },
+      {
+        "type": "color",
+        "id": "scheme_surface_background",
+        "label": "Background",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "scheme_surface_text",
+        "label": "Text",
+        "default": "#171717"
+      },
+      {
+        "type": "header",
+        "content": "Inverse"
+      },
+      {
+        "type": "color",
+        "id": "scheme_inverse_background",
+        "label": "Background",
+        "default": "#171717"
+      },
+      {
+        "type": "color",
+        "id": "scheme_inverse_text",
+        "label": "Text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Accent"
+      },
+      {
+        "type": "color",
+        "id": "scheme_accent_background",
+        "label": "Background",
+        "default": "#e8e8e8"
+      },
+      {
+        "type": "color",
+        "id": "scheme_accent_text",
+        "label": "Text",
+        "default": "#171717"
       }
     ]
   },
@@ -95,25 +147,29 @@
         "type": "font_picker",
         "id": "type_body_font",
         "default": "work_sans_n4",
-        "label": "t:options.body"
+        "label": "t:options.body",
+        "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
       },
       {
         "type": "font_picker",
         "id": "type_subheading_font",
         "default": "work_sans_n5",
-        "label": "t:options.subheading"
+        "label": "t:options.subheading",
+        "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
       },
       {
         "type": "font_picker",
         "id": "type_heading_font",
         "default": "anonymous_pro_n4",
-        "label": "t:options.heading"
+        "label": "t:options.heading",
+        "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
       },
       {
         "type": "font_picker",
         "id": "type_accent_font",
         "default": "anonymous_pro_n4",
-        "label": "t:options.accent"
+        "label": "t:options.accent",
+        "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
       },
       {
         "type": "header",
@@ -154,6 +210,38 @@
           }
         ],
         "default": "14"
+      },
+      {
+        "type": "select",
+        "id": "type_weight_paragraph",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
       },
       {
         "type": "select",
@@ -266,6 +354,38 @@
           }
         ],
         "default": "72"
+      },
+      {
+        "type": "select",
+        "id": "type_weight_h1",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
       },
       {
         "type": "select",
@@ -414,6 +534,38 @@
           }
         ],
         "default": "48"
+      },
+      {
+        "type": "select",
+        "id": "type_weight_h2",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
       },
       {
         "type": "select",
@@ -573,6 +725,38 @@
       },
       {
         "type": "select",
+        "id": "type_weight_h3",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
+      },
+      {
+        "type": "select",
         "id": "type_line_height_h3",
         "label": "t:settings.line_height",
         "options": [
@@ -726,6 +910,38 @@
           }
         ],
         "default": "24"
+      },
+      {
+        "type": "select",
+        "id": "type_weight_h4",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
       },
       {
         "type": "select",
@@ -885,6 +1101,38 @@
       },
       {
         "type": "select",
+        "id": "type_weight_h5",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
+      },
+      {
+        "type": "select",
         "id": "type_line_height_h5",
         "label": "t:settings.line_height",
         "options": [
@@ -1038,6 +1286,38 @@
           }
         ],
         "default": "16"
+      },
+      {
+        "type": "select",
+        "id": "type_weight_h6",
+        "label": "Weight",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "From selected font"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ],
+        "default": "inherit"
       },
       {
         "type": "select",
@@ -1642,6 +1922,19 @@
         "label": "t:settings.border_color",
         "default": "{{ settings.color_palette.foreground }}",
         "alpha": true
+      },
+      {
+        "type": "checkbox",
+        "id": "drawer_drop_shadow",
+        "label": "Show shadow",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "drawer_shadow_color",
+        "label": "Shadow color",
+        "default": "#000000",
+        "visible_if": "{{ settings.drawer_drop_shadow }}"
       }
     ]
   },
@@ -1847,6 +2140,215 @@
   {
     "name": "t:names.product_cards",
     "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shared card styling applies wherever a product-card block uses Theme settings. Switch an individual card to Custom to keep its local spacing, borders and typography."
+      },
+      {
+        "type": "header",
+        "content": "Shared appearance"
+      },
+      {
+        "type": "select",
+        "id": "product_card_color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+      },
+      {
+        "type": "range",
+        "id": "product_card_radius",
+        "label": "Corner radius",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "product_card_padding",
+        "label": "Inner spacing",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "product_card_gap",
+        "label": "Content gap",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "product_card_border_width",
+        "label": "Border width",
+        "min": 0,
+        "max": 4,
+        "step": 1,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "product_card_alignment",
+        "label": "Text alignment",
+        "options": [
+          {
+            "value": "start",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ],
+        "default": "start"
+      },
+      {
+        "type": "header",
+        "content": "Product title"
+      },
+      {
+        "type": "select",
+        "id": "product_card_title_preset",
+        "label": "Typography",
+        "options": [
+          {
+            "value": "paragraph",
+            "label": "Body"
+          },
+          {
+            "value": "h4",
+            "label": "Heading 4"
+          },
+          {
+            "value": "h5",
+            "label": "Heading 5"
+          },
+          {
+            "value": "h6",
+            "label": "Heading 6"
+          }
+        ],
+        "default": "h5"
+      },
+      {
+        "type": "range",
+        "id": "product_card_title_lines",
+        "label": "Maximum title lines",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "unit": "lines",
+        "default": 3
+      },
+      {
+        "type": "header",
+        "content": "Product price"
+      },
+      {
+        "type": "select",
+        "id": "product_card_price_font",
+        "label": "Font",
+        "options": [
+          {
+            "value": "body",
+            "label": "Body"
+          },
+          {
+            "value": "subheading",
+            "label": "Subheading"
+          },
+          {
+            "value": "heading",
+            "label": "Heading"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "body"
+      },
+      {
+        "type": "range",
+        "id": "product_card_price_size",
+        "label": "Price size",
+        "min": 10,
+        "max": 30,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      },
+      {
+        "type": "header",
+        "content": "Product image"
+      },
+      {
+        "type": "select",
+        "id": "product_card_image_ratio",
+        "label": "Aspect ratio",
+        "options": [
+          {
+            "value": "custom",
+            "label": "Use image block setting"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait"
+          },
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "landscape",
+            "label": "Landscape"
+          }
+        ],
+        "default": "custom"
+      },
+      {
+        "type": "select",
+        "id": "product_card_image_fit",
+        "label": "Image fit",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill"
+          },
+          {
+            "value": "contain",
+            "label": "Fit"
+          }
+        ],
+        "default": "cover"
+      },
       {
         "type": "checkbox",
         "id": "quick_add",
@@ -2114,6 +2616,45 @@
           }
         ],
         "default": "equal-width-buttons"
+      }
+    ]
+  },
+  {
+    "name": "Cookie banner",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "These settings style Shopify’s customer privacy banner when the platform renders it. Enable the consent banner and manage its text, regions and consent behavior in the platform privacy settings. Theme styling does not create or record consent."
+      },
+      {
+        "type": "checkbox",
+        "id": "cookie_banner_theme_style",
+        "label": "Use theme styling",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "cookie_banner_radius",
+        "label": "Corner radius",
+        "min": 0,
+        "max": 32,
+        "step": 1,
+        "unit": "px",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "cookie_banner_width",
+        "label": "Maximum width",
+        "min": 320,
+        "max": 800,
+        "step": 10,
+        "unit": "px",
+        "default": 480
+      },
+      {
+        "type": "paragraph",
+        "content": "The banner uses the global body font, page colors and primary button colors."
       }
     ]
   }

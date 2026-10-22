@@ -11,7 +11,13 @@
   @param {string} [product_view_context] - The context in which the product card is being rendered. Used for standard events.
 {%- enddoc -%}
 
-{% assign block_settings = block.settings %}
+{% liquid
+  assign block_settings = block.settings
+  assign use_theme_card_style = true
+  if block_settings.card_style_source == 'custom'
+    assign use_theme_card_style = false
+  endif
+%}
 
 {% if request.visual_preview_mode %}
   {% style %}
@@ -29,7 +35,7 @@
   endif
 
   assign has_mobile_quick_add = false
-  if has_quick_add and settings.mobile_quick_add
+  if settings.mobile_quick_add and product.available
     assign has_mobile_quick_add = true
   endif
 
@@ -55,13 +61,13 @@
     assign onboarding = true
   endif
 
-  if block_settings.background_color != blank
+  if use_theme_card_style == false and block_settings.background_color != blank
     render 'contrast-override', background_color: block_settings.background_color, text_color: block_settings.text_color, section_id: block.id
   endif
 %}
 
 <product-card
-  class="product-card size-style"
+  class="product-card size-style{% if use_theme_card_style %} product-card--theme{% endif %}"
   style="{% render 'size-style', settings: block_settings %}"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
@@ -97,13 +103,37 @@
       spacing-style
       border-style
       gap-style
-      {% if block_settings.background_color != blank %} color-custom-{{ block.id }}{% endif %}
+      {% if use_theme_card_style %} color-custom-theme-product-card{% elsif block_settings.background_color != blank %} color-custom-{{ block.id }}{% endif %}
     "
     style="
       {% render 'border-override', settings: block_settings %}
       {% render 'layout-panel-style', settings: block_settings %}
       {% render 'spacing-style', settings: block_settings %}
       {% render 'gap-style', value: product_card_gap_value, name: 'product-card-gap' %}
+      {% if use_theme_card_style %}
+        --border-width: {{ settings.product_card_border_width | default: 0 }}px;
+        --border-style: solid;
+        --border-color: rgb(var(--color-border-rgb) / 0.2);
+        --border-radius: {{ settings.product_card_radius | default: 0 }}px;
+        --padding-block-start: {{ settings.product_card_padding | default: 0 }}px;
+        --padding-block-end: {{ settings.product_card_padding | default: 0 }}px;
+        --padding-inline-start: {{ settings.product_card_padding | default: 0 }}px;
+        --padding-inline-end: {{ settings.product_card_padding | default: 0 }}px;
+        --product-card-gap: {{ settings.product_card_gap | default: 16 }}px;
+        --product-card-text-align: {{ settings.product_card_alignment | default: 'start' }};
+        --product-card-alignment: stretch;
+        --card-title-lines: {{ settings.product_card_title_lines | default: 3 }};
+        --card-title-size: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--size);
+        --card-title-family: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--family);
+        --card-title-weight: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--weight);
+        --card-title-style: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--style);
+        --card-title-tracking: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--letter-spacing, normal);
+        --card-title-line-height: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--line-height);
+        --card-title-case: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--case);
+        --card-price-family: var(--font-{{ settings.product_card_price_font | default: 'body' }}--family);
+        --card-price-weight: var(--font-{{ settings.product_card_price_font | default: 'body' }}--weight);
+        --card-price-size: {{ settings.product_card_price_size | default: 14 }}px;
+      {% endif %}
       --quick-add-display: {% if has_quick_add %}flex{% else %}none{% endif %};
       --quick-add-mobile-display: {% if has_mobile_quick_add %}flex{% else %}none{% endif %};
       --quick-add-mobile-opacity: {% if has_mobile_quick_add %}1{% else %}0{% endif %};

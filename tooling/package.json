@@ -1,0 +1,13 @@
+{
+  "name": "horizon-theme-validation",
+  "private": true,
+  "scripts": {
+    "test": "node --test theme-settings.test.cjs",
+    "test:browser": "node --test browser-settings.test.cjs"
+  },
+  "devDependencies": {
+    "liquidjs": "10.30.0",
+    "postcss": "8.5.31",
+    "playwright": "1.62.1"
+  }
+}

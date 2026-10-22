@@ -9,7 +9,7 @@
   ></script>
 {% endif %}
 
-{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+{% render 'contrast-override', color_scheme: section.settings.theme_color_scheme, background_color: section.settings.background_color, section_id: section.id %}
 
 <div class="section-background color-custom-{{ section.id }}"></div>
 <aside
@@ -278,6 +278,31 @@
           }
         ],
         "default": "page-width"
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
       },
       {
         "type": "color",

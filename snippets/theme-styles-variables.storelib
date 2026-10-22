@@ -124,6 +124,23 @@
     endunless
   %}
 
+  {% liquid
+    assign weight_presets = 'paragraph,h1,h2,h3,h4,h5,h6' | split: ','
+    for weight_preset in weight_presets
+      assign weight_key = 'type_weight_' | append: weight_preset
+      assign requested_weight = settings[weight_key]
+      if requested_weight != blank and requested_weight != 'inherit'
+        assign font_role_key = 'type_font_' | append: weight_preset
+        assign font_role = settings[font_role_key] | default: 'body'
+        assign font_key = 'type_' | append: font_role | append: '_font'
+        assign weighted_font = settings[font_key] | font_modify: 'weight', requested_weight
+        if weighted_font != blank
+          echo weighted_font | font_face: font_display: 'swap'
+        endif
+      endif
+    endfor
+  %}
+
   :root {
     /* Safe area insets — non-zero on notched devices because meta-tags.liquid sets viewport-fit=cover */
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
@@ -324,8 +341,8 @@
         if preset_name == 'paragraph'
           assign preset_font = '--font-body--family'
           assign preset_style = '--font-body--style'
-          assign preset_weight = '400'
-          assign preset_case = '--font-body--case'
+          assign preset_weight = 'var(--font-body--weight)'
+          assign preset_case = 'type_case_paragraph'
 
           echo '--font-[preset_name]--weight: [preset_weight];' | replace: '[preset_name]', preset_name | replace: '[preset_weight]', preset_weight
         else
@@ -340,10 +357,16 @@
           echo '--font-[preset_name]--letter-spacing: var(--letter-spacing--[preset_letter_spacing]);' | replace: '[preset_name]', preset_name | replace: '[preset_letter_spacing]', settings[preset_letter_spacing]
         endif
 
+        assign preset_weight_id = 'type_weight_' | append: preset_name
+        if settings[preset_weight_id] != blank and settings[preset_weight_id] != 'inherit'
+          echo '--font-[preset_name]--weight: [weight];' | replace: '[preset_name]', preset_name | replace: '[weight]', settings[preset_weight_id]
+        endif
+
         echo '--font-[preset_name]--size: var([preset_size]);' | replace: '[preset_name]', preset_name | replace: '[preset_size]', preset_size
         echo '--font-[preset_name]--family: var([preset_font]);' | replace: '[preset_name]', preset_name | replace: '[preset_font]', preset_font
         echo '--font-[preset_name]--style: var([preset_style]);' | replace: '[preset_name]', preset_name | replace: '[preset_style]', preset_style
-        echo '--font-[preset_name]--case: [preset_case];' | replace: '[preset_name]', preset_name | replace: '[preset_case]', settings[preset_case]
+        assign preset_case_value = settings[preset_case] | default: 'none'
+        echo '--font-[preset_name]--case: [preset_case];' | replace: '[preset_name]', preset_name | replace: '[preset_case]', preset_case_value
         echo '--font-[preset_name]--line-height: var(--line-height--[preset_line_height]);' | replace: '[preset_name]', preset_name | replace: '[preset_line_height]', settings[preset_line_height]
       endfor
     %}
@@ -569,6 +592,8 @@
     /* Button font-family */
     --button-font-family-primary: var(--font-{{ settings.type_font_button_primary }}--family);
     --button-font-family-secondary: var(--font-{{ settings.type_font_button_secondary }}--family);
+    --button-font-weight-primary: var(--font-{{ settings.type_font_button_primary }}--weight);
+    --button-font-weight-secondary: var(--font-{{ settings.type_font_button_secondary }}--weight);
 
     /* Button text case */
     --button-text-case-primary: {{ settings.button_text_case_primary }};
@@ -686,5 +711,7 @@
   section_id: 'badge-sold-out',
   preset: 'ui'
 %}
+
+{% render 'contrast-override', color_scheme: settings.product_card_color_scheme, section_id: 'theme-product-card' %}
 
 </template>

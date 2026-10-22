@@ -9,8 +9,8 @@
     assign image = settings.logo_inverse
   endif
 
-  if section_settings.background_color != blank
-    render 'contrast-override', background_color: section_settings.background_color, section_id: section.id
+  if section_settings.theme_color_scheme == 'surface' or section_settings.theme_color_scheme == 'inverse' or section_settings.theme_color_scheme == 'accent' or section_settings.background_color != blank
+    render 'contrast-override', color_scheme: section_settings.theme_color_scheme, background_color: section_settings.background_color, section_id: section.id
   endif
 %}
 
@@ -31,10 +31,10 @@
 {%- endif -%}
 
 <div
-  class="section-background{% if section_settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="section-background{% if section_settings.theme_color_scheme == 'surface' or section_settings.theme_color_scheme == 'inverse' or section_settings.theme_color_scheme == 'accent' or section_settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
 ></div>
 <div
-  class="section section--{{ section_settings.section_width }}{% if section_settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="section section--{{ section_settings.section_width }}{% if section_settings.theme_color_scheme == 'surface' or section_settings.theme_color_scheme == 'inverse' or section_settings.theme_color_scheme == 'accent' or section_settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
 >
   <div
     class="
@@ -527,6 +527,31 @@
           }
         ],
         "default": "center"
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Default / custom colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "inherit",
+        "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
       },
       {
         "type": "color",

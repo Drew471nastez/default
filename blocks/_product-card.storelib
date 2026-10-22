@@ -13,7 +13,7 @@
   {% content_for 'blocks', closest.product: product %}
 {% endcapture %}
 
-{% render 'product-card', children: children, product: product, product_view_context: product_view_context %}
+{% render 'product-card', children: children, product: product, block: block, product_view_context: product_view_context %}
 {% render 'quantity-selector-styles' %}
 {% render 'buy-buttons-styles' %}
 {% render 'gift-card-recipient-form-styles' %}
@@ -242,6 +242,23 @@
     "tag": null,
     "settings": [
       {
+        "type": "select",
+        "id": "card_style_source",
+        "label": "Card styling",
+        "options": [
+          {
+            "value": "theme",
+            "label": "Theme settings"
+          },
+          {
+            "value": "custom",
+            "label": "Custom block settings"
+          }
+        ],
+        "default": "theme",
+        "info": "Theme settings keep product cards consistent across the site. Custom keeps this block’s individual appearance."
+      },
+      {
         "type": "paragraph",
         "content": "t:content.resource_reference_product_card"
       },
@@ -253,7 +270,8 @@
         "max": 50,
         "step": 1,
         "unit": "px",
-        "default": 16
+        "default": 16,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "header",
@@ -263,7 +281,8 @@
         "type": "color",
         "id": "background_color",
         "label": "t:settings.background_color",
-        "placeholder": "t:settings.default"
+        "placeholder": "t:settings.default",
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "header",
@@ -283,7 +302,8 @@
             "label": "t:options.solid"
           }
         ],
-        "default": "none"
+        "default": "none",
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "range",
@@ -294,7 +314,7 @@
         "unit": "px",
         "label": "t:settings.thickness",
         "default": 1,
-        "visible_if": "{{ block.settings.border != 'none' }}"
+        "visible_if": "{{ block.settings.card_style_source == 'custom' and block.settings.border != 'none' }}"
       },
       {
         "type": "range",
@@ -305,7 +325,7 @@
         "unit": "%",
         "label": "t:settings.opacity",
         "default": 100,
-        "visible_if": "{{ block.settings.border != 'none' }}"
+        "visible_if": "{{ block.settings.card_style_source == 'custom' and block.settings.border != 'none' }}"
       },
       {
         "type": "color",
@@ -322,7 +342,8 @@
         "max": 32,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "header",
@@ -336,7 +357,8 @@
         "max": 50,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "range",
@@ -346,7 +368,8 @@
         "max": 50,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "range",
@@ -356,7 +379,8 @@
         "max": 50,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       },
       {
         "type": "range",
@@ -366,7 +390,8 @@
         "max": 50,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
       }
     ]
   }

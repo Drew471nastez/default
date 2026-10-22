@@ -49,8 +49,16 @@
     assign image_sizes = sizes_attribute | strip
   endif
 
+  assign image_ratio = block_settings.image_ratio
+  if block_settings.use_theme_image_style != false and settings.product_card_image_ratio != blank and settings.product_card_image_ratio != 'custom'
+    assign image_ratio = settings.product_card_image_ratio
+  endif
+  assign media_fit = 'cover'
+  if block_settings.use_theme_image_style != false
+    assign media_fit = settings.product_card_image_fit | default: 'cover'
+  endif
   assign ratio = '1'
-  case block_settings.image_ratio
+  case image_ratio
     when 'landscape'
       assign ratio = '16 / 9'
     when 'portrait'
@@ -61,7 +69,7 @@
       assign ratio = product.featured_media.preview_image.aspect_ratio | default: '1'
   endcase
 
-  if block_settings.image_ratio == 'adapt' and block_settings.constrain_to_viewport
+  if image_ratio == 'adapt' and block_settings.constrain_to_viewport
     if block_settings.constrain_to_viewport != ''
       assign constrain_to_viewport = true
       assign media_fit = block_settings.constrain_to_viewport
@@ -85,7 +93,7 @@
   {% if settings.transition_to_main_product %}
     data-view-transition-to-main-product
   {% endif %}
-  data-image-ratio="{{ block_settings.image_ratio }}"
+  data-image-ratio="{{ image_ratio }}"
   {{ block.shopify_attributes }}
 >
   {%- if product.media.size > 0 -%}
