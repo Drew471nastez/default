@@ -43,7 +43,15 @@
   }
 
   .product-card--theme product-price {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    --text-align: var(--product-card-text-align);
+  }
+
+  .product-card--theme product-price [ref='priceContainer'],
+  .product-card--theme product-price :is(.unit-price, .tax-note, .installments, .volume-pricing-note) {
+    text-align: var(--product-card-text-align);
   }
 
   .product-grid__card.product-grid__card {

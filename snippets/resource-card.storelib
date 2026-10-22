@@ -67,7 +67,7 @@
 <div
   class="resource-card{% if resource_type == 'product' %} resource-card--theme color-custom-theme-product-card{% endif %}{% if style == 'overlay' %} resource-card--overlay{% endif %}"
   data-resource-type="{{ resource_type }}"
-  {% if resource_type == 'product' %}style="{% render 'product-card-theme-style' %} --resource-card-image-fit: {{ settings.product_card_image_fit | default: 'cover' }};"{% endif %}
+  {% if resource_type == 'product' %}style="{% render 'product-card-theme-style' %} --resource-card-image-fit: var(--theme-product-card-image-fit, cover);"{% endif %}
 >
   <a
     class="resource-card__link"

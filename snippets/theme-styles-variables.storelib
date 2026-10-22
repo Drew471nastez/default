@@ -147,6 +147,8 @@
   %}
 
   :root {
+    {% render 'product-card-theme-style', emit_globals: true %}
+
     /* Safe area insets — non-zero on notched devices because meta-tags.liquid sets viewport-fit=cover */
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-right: env(safe-area-inset-right, 0px);

@@ -14,6 +14,63 @@ async function openBrowser() {
   return chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH || (fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined)});
 }
 
+test('shared style changes update existing grid/search cards and price alignment without navigation or scroll reset', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    const product={id:'p1',title:'Example',url:'/products/example',available:true,selected_or_first_available_variant:{price:1000,compare_at_price:2000}};
+    const before=settings({product_card_radius:4,product_card_padding:8,product_card_gap:10,product_card_alignment:'start',product_card_price_size:14});
+    const after=settings({product_card_radius:28,product_card_padding:20,product_card_gap:24,product_card_alignment:'center',product_card_price_size:22,product_card_border_width:2});
+    const price=await render('blocks/price.storelib',{settings:before,closest:{product},template:{name:'collection'},block:{id:'price',settings:{width:'fit-content',alignment:'left',type_preset:'h6',show_sale_price_first:true}}});
+    const title=await render('blocks/product-title.storelib',{settings:before,closest:{product},block:{id:'title',settings:{width:'fit-content',type_preset:'h5',alignment:'left'}}});
+    const children=title+price;
+    const card=await render('snippets/product-card.storelib',{settings:before,product,block:{id:'shared-card',settings:{}},children});
+    const custom=await render('snippets/product-card.storelib',{settings:before,product,block:{id:'custom-card',settings:{card_style_source:'custom',border:'solid',border_width:1,border_radius:3,product_card_gap:5}},children});
+    const resource=await render('snippets/resource-card.storelib',{settings:before,resource_type:'product',resource:product});
+    const css=html=>[...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match=>match[1]).join('\n');
+    const initialCSS=css(await render('snippets/theme-styles-variables.storelib',{settings:before}));
+    const updatedCSS=css(await render('snippets/theme-styles-variables.storelib',{settings:after}));
+    for (const width of [375,768,1440]) {
+      await page.setViewportSize({width,height:800});
+      await page.setContent(`<style>${source('shopify/assets/base.css')}</style><style id="shared-settings">${initialCSS}</style><div class="page-wrapper"><div style="height:900px;flex:none"></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">${card}${custom}${resource}</div><div style="height:1500px;flex:none"></div></div>`);
+      let navigations=0;const onNavigate=()=>navigations++;page.on('framenavigated',onNavigate);
+      await page.evaluate(()=>{
+        window.existingCard=document.querySelector('#product-card-shared-card');
+        window.existingPrice=window.existingCard.querySelector('product-price');
+        window.fixtureScroller=innerWidth>=990?document.querySelector('.page-wrapper'):document.scrollingElement;
+        window.fixtureScroller.scrollTo({top:700,behavior:'instant'});
+      });
+      await page.evaluate(css=>document.querySelector('#shared-settings').textContent=css,updatedCSS);
+      const result=await page.evaluate(()=>{
+        const card=document.querySelector('#product-card-shared-card');
+        const content=card.querySelector('.product-card__content');
+        const price=card.querySelector('product-price');
+        const container=price.querySelector('[ref="priceContainer"]');
+        const spans=[...container.querySelectorAll('.price-item__group')].map(el=>el.getBoundingClientRect());
+        const bounds=container.getBoundingClientRect();
+        return {
+          sameCard:card===window.existingCard,samePrice:price===window.existingPrice,scroll:window.fixtureScroller.scrollTop,
+          radius:getComputedStyle(content).borderRadius,padding:getComputedStyle(content).paddingTop,gap:getComputedStyle(content).rowGap,
+          titleAlign:getComputedStyle(card.querySelector('.product-title-block')).textAlign,priceAlign:getComputedStyle(container).textAlign,
+          priceFont:getComputedStyle(price.querySelector('.price')).fontSize,
+          centered:Math.abs((Math.min(...spans.map(r=>r.left))+Math.max(...spans.map(r=>r.right)))/2-(bounds.left+bounds.right)/2)<2,
+          fullPriceWidth:Math.abs(price.getBoundingClientRect().width-content.clientWidth+parseFloat(getComputedStyle(content).paddingLeft)+parseFloat(getComputedStyle(content).paddingRight))<2,
+          searchRadius:getComputedStyle(document.querySelector('.resource-card--theme')).borderRadius,
+          customRadius:getComputedStyle(document.querySelector('#product-card-custom-card .product-card__content')).borderRadius,
+        };
+      });
+      assert(result.sameCard&&result.samePrice,'style changes must not replace card or price nodes');
+      assert.equal(navigations,0);assert.equal(result.scroll,700);
+      assert.equal(result.radius,'28px');assert.equal(result.searchRadius,'28px');assert.equal(result.customRadius,'3px');
+      assert.equal(result.padding,'20px');assert.equal(result.gap,'24px');assert.equal(result.priceFont,'22px');
+      assert.equal(result.titleAlign,'center');assert.equal(result.priceAlign,'center');assert(result.centered&&result.fullPriceWidth);
+      page.off('framenavigated',onNavigate);
+    }
+    // This test supplies a stylesheet update explicitly. It does not emulate
+    // Storelib's sidebar transport or assert that the hosted editor sends one.
+  } finally { await browser.close(); }
+});
+
 async function renderHeaderLogo(overrides, sectionOverrides = {}) {
   const values=settings(overrides);
   const liquid=engine({settings:values});

@@ -1,24 +1,48 @@
 <template compat="shopify">
---border-width: {{ settings.product_card_border_width | default: 0 }}px;
+{% comment %}
+  Emit shared values once at :root. Card markup keeps only variable references,
+  so updating the global stylesheet does not require replacing every card.
+{% endcomment %}
+{% if emit_globals %}
+--theme-product-card-border-width: {{ settings.product_card_border_width | default: 0 }}px;
+--theme-product-card-radius: {{ settings.product_card_radius | default: 0 }}px;
+--theme-product-card-padding: {{ settings.product_card_padding | default: 0 }}px;
+--theme-product-card-gap: {{ settings.product_card_gap | default: 16 }}px;
+--theme-product-card-text-align: {{ settings.product_card_alignment | default: 'start' }};
+--theme-product-card-title-lines: {{ settings.product_card_title_lines | default: 3 }};
+--theme-product-card-title-size: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--size);
+--theme-product-card-title-family: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--family);
+--theme-product-card-title-weight: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--weight);
+--theme-product-card-title-style: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--style);
+--theme-product-card-title-tracking: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--letter-spacing, normal);
+--theme-product-card-title-line-height: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--line-height);
+--theme-product-card-title-case: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--case);
+--theme-product-card-price-family: var(--font-{{ settings.product_card_price_font | default: 'body' }}--family);
+--theme-product-card-price-weight: var(--font-{{ settings.product_card_price_font | default: 'body' }}--weight);
+--theme-product-card-price-size: {{ settings.product_card_price_size | default: 14 }}px;
+--theme-product-card-image-fit: {{ settings.product_card_image_fit | default: 'cover' }};
+{% else %}
+--border-width: var(--theme-product-card-border-width, 0px);
 --border-style: solid;
 --border-color: rgb(var(--color-border-rgb) / 0.2);
---border-radius: {{ settings.product_card_radius | default: 0 }}px;
---padding-block-start: {{ settings.product_card_padding | default: 0 }}px;
---padding-block-end: {{ settings.product_card_padding | default: 0 }}px;
---padding-inline-start: {{ settings.product_card_padding | default: 0 }}px;
---padding-inline-end: {{ settings.product_card_padding | default: 0 }}px;
---product-card-gap: {{ settings.product_card_gap | default: 16 }}px;
---product-card-text-align: {{ settings.product_card_alignment | default: 'start' }};
+--border-radius: var(--theme-product-card-radius, 0px);
+--padding-block-start: var(--theme-product-card-padding, 0px);
+--padding-block-end: var(--theme-product-card-padding, 0px);
+--padding-inline-start: var(--theme-product-card-padding, 0px);
+--padding-inline-end: var(--theme-product-card-padding, 0px);
+--product-card-gap: var(--theme-product-card-gap, 16px);
+--product-card-text-align: var(--theme-product-card-text-align, start);
 --product-card-alignment: stretch;
---card-title-lines: {{ settings.product_card_title_lines | default: 3 }};
---card-title-size: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--size);
---card-title-family: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--family);
---card-title-weight: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--weight);
---card-title-style: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--style);
---card-title-tracking: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--letter-spacing, normal);
---card-title-line-height: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--line-height);
---card-title-case: var(--font-{{ settings.product_card_title_preset | default: 'h5' }}--case);
---card-price-family: var(--font-{{ settings.product_card_price_font | default: 'body' }}--family);
---card-price-weight: var(--font-{{ settings.product_card_price_font | default: 'body' }}--weight);
---card-price-size: {{ settings.product_card_price_size | default: 14 }}px;
+--card-title-lines: var(--theme-product-card-title-lines, 3);
+--card-title-size: var(--theme-product-card-title-size);
+--card-title-family: var(--theme-product-card-title-family);
+--card-title-weight: var(--theme-product-card-title-weight);
+--card-title-style: var(--theme-product-card-title-style);
+--card-title-tracking: var(--theme-product-card-title-tracking);
+--card-title-line-height: var(--theme-product-card-title-line-height);
+--card-title-case: var(--theme-product-card-title-case);
+--card-price-family: var(--theme-product-card-price-family);
+--card-price-weight: var(--theme-product-card-price-weight);
+--card-price-size: var(--theme-product-card-price-size, 14px);
+{% endif %}
 </template>

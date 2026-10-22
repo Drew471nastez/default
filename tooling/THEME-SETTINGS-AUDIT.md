@@ -35,3 +35,11 @@ All 182 declared global setting IDs have source-consumer coverage, including dyn
 - GitHub's commit-status endpoint has returned HTTP 403 in this environment. A successful Git push is not proof that Storelib accepted every changed file. Check the Storelib import result before publishing.
 
 Run `npm test` and `npm run test:browser` from `tooling/`. No storefront was published by this work.
+
+## Follow-up: live product-card settings
+
+Shared card appearance values were embedded as literals in every card's inline style. They now live once in the global stylesheet; grid and search cards reference those variables. Shared price blocks explicitly fill the card width, so the title, regular/sale price pair and supporting price text follow the same alignment. Custom card styles remain independent.
+
+The browser regression changes only that stylesheet after rendering the cards. Radius, padding, gap, price size and title/price alignment update on the existing nodes while preserving scroll position on both the document and desktop page-wrapper scroller. It tests the theme's response to a style update, not delivery of updates from Storelib's sidebar.
+
+The requested end-to-end live preview is **not resolved by this theme patch**. This checkout has no sidebar-settings event transport, preview reload scheduling or five-second reload call. The parent editor must deliver updated global styles and re-render server-formatted currency markup without replacing the preview document. Currency context tests verify which money filter is selected; they do not emulate Storelib's editor, money formatter or save pipeline. The Storelib editor/app repository or documented integration contract is needed to finish that work. No undocumented message protocol, repeated polling or navigation interception was added.
