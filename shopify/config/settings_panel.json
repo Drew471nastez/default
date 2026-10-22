@@ -1491,6 +1491,41 @@
     "unit": "px"
    },
    {
+    "type": "select",
+    "id": "storelib_button_hover_effect",
+    "label": "Hover color",
+    "options": [
+     {
+      "value": "theme",
+      "label": "Automatic"
+     },
+     {
+      "value": "custom",
+      "label": "Custom"
+     },
+     {
+      "value": "none",
+      "label": "No change"
+     }
+    ],
+    "default": "theme",
+    "info": "Automatic shifts each button's own colors and keeps the text readable."
+   },
+   {
+    "type": "color",
+    "id": "storelib_button_hover_bg",
+    "label": "Hover background",
+    "default": "#3e3e3e",
+    "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
+   },
+   {
+    "type": "color",
+    "id": "storelib_button_hover_text",
+    "label": "Hover text",
+    "default": "#ffffff",
+    "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
+   },
+   {
     "type": "range",
     "id": "button_hover_duration",
     "label": "Hover speed",
@@ -1499,7 +1534,8 @@
     "step": 20,
     "unit": "ms",
     "default": 200,
-    "info": "Button color-transition duration. Set 0 ms for an instant change."
+    "info": "Set 0 ms for an instant change.",
+    "visible_if": "{{ settings.storelib_button_hover_effect != 'none' }}"
    },
    {
     "type": "range",
@@ -1520,7 +1556,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_5",
+    "id": "hdr_8",
     "label": "Primary button"
    },
    {
@@ -1595,7 +1631,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_13",
+    "id": "hdr_16",
     "label": "Secondary button"
    },
    {
@@ -1670,12 +1706,12 @@
    },
    {
     "type": "header",
-    "id": "hdr_21",
+    "id": "hdr_24",
     "label": "Pills"
    },
    {
     "type": "paragraph",
-    "id": "para_22",
+    "id": "para_25",
     "label": "Used for applied filters, discount codes, and search suggestions",
     "content": "Used for applied filters, discount codes, and search suggestions"
    },
