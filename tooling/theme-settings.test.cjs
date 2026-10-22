@@ -6,21 +6,21 @@ const postcss = require('postcss');
 const {root, source, body, schema, settings, color, engine, render} = require('./theme-test-runtime.cjs');
 
 test('settings use simple names, independent heading controls and Theme/Custom colors', () => {
-  assert(schema.some(group => group.name === 'Fonts'));
-  const buttons = schema.find(group => group.name === 'Buttons');
+  assert(schema.some(group => group.name === 'Typography'));
+  const buttons = schema.find(group => group.name === 'Buttons & fields');
   assert(!schema.some(group => /hover.*focus/i.test(group.name)));
   assert(!schema.some(group => (group.settings||[]).some(setting => setting.type==='header' && /hover.*focus/i.test(setting.content))));
   for (const id of ['button_hover_duration','focus_ring_width']) {
     assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1);
-    assert(buttons.settings.findIndex(setting=>setting.id===id)<buttons.settings.findIndex(setting=>setting.type==='header'));
+    assert(buttons.settings.findIndex(setting=>setting.id===id)<buttons.settings.findIndex(setting=>setting.type==='header'&&setting.content==='Primary button'));
   }
   for (let heading=1; heading<=6; heading++) for (const control of ['font','size','weight','line_height','letter_spacing','case']) {
-    assert(schema.find(group=>group.name==='Fonts').settings.some(setting=>setting.id===`type_${control}_h${heading}`));
+    assert(schema.find(group=>group.name==='Typography').settings.some(setting=>setting.id===`type_${control}_h${heading}`));
   }
   for (const group of schema) for (const setting of group.settings || []) {
     if (setting.id?.endsWith('color_scheme') && !setting.visible_if) assert.deepEqual(setting.options.map(o=>o.value),['inherit','custom']);
   }
-  const site=schema.find(group=>group.name==='Site colors');
+  const site=schema.find(group=>group.name==='Colors');
   assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Borders','Link hover','Field text']);
 });
 
@@ -112,7 +112,7 @@ test('block libraries use explicit supported types and preserve configured and p
 });
 
 test('site colors cannot expand the retired Color 1/Color 2 widget and retain saved palette data', () => {
-  const colors=schema.find(group=>group.name==='Site colors');
+  const colors=schema.find(group=>group.name==='Colors');
   assert(!colors.settings.some(setting=>setting.type==='color_palette'));
   assert.equal(colors.settings.find(setting=>setting.id==='color_palette').type,'paragraph');
   const saved=JSON.parse(source('config/settings.json')).shopify.color_palette;
@@ -265,7 +265,8 @@ test('cookie appearance is opt-out, width/radius are connected, and consent beha
   assert(!enabled.includes('<script'));
   postcss.parse(css(enabled));
   const disabled = await render('snippets/cookie-banner-styles.storelib',{settings:settings({cookie_banner_theme_style:false})});
-  assert(!disabled.includes('<style>'));
+  // The style block stays (the builder patches its text in place); it holds no banner rules.
+  assert(!disabled.includes('#shopify-pc__banner'));
 });
 
 test('mobile quick add can be enabled independently and stays off for sold-out products', async () => {
@@ -445,9 +446,9 @@ test('explicit media-section text controls take effect even when automatic media
 });
 
 test('hover color lives in Buttons and Automatic, Custom and No change reach both buttons and shared schemes', async () => {
-  const buttons=schema.find(group=>group.name==='Buttons').settings;
+  const buttons=schema.find(group=>group.name==='Buttons & fields').settings;
   const ids=buttons.map(setting=>setting.id);
-  const firstHeader=buttons.findIndex(setting=>setting.type==='header');
+  const firstHeader=buttons.findIndex(setting=>setting.type==='header'&&setting.content==='Primary button');
   for (const id of ['storelib_button_hover_effect','storelib_button_hover_bg','storelib_button_hover_text']) {
     assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1,id);
     assert(ids.indexOf(id)>=0&&ids.indexOf(id)<firstHeader,id);
@@ -489,8 +490,8 @@ test('store, 404 and password sections offer only blocks that belong in them', (
 test('every Storelib platform setting is declared in a theme group and reaches CSS', async () => {
   const platform=JSON.parse(source('config/storelib_settings_schema.json')).panels.flatMap(panel=>panel.settings).filter(setting=>setting.type!=='header');
   const placed=Object.fromEntries(schema.flatMap(group=>(group.settings||[]).map(setting=>[setting.id,group.name])));
-  const expected={storelib_button_hover_bg:'Buttons',storelib_button_hover_text:'Buttons',storelib_button_hover_border:'Buttons',storelib_button_hover_effect:'Buttons',
-    storelib_link_hover:'Site colors',storelib_input_border:'Form fields',storelib_input_focus:'Form fields',storelib_input_radius:'Form fields'};
+  const expected={storelib_button_hover_bg:'Buttons & fields',storelib_button_hover_text:'Buttons & fields',storelib_button_hover_border:'Buttons & fields',storelib_button_hover_effect:'Buttons & fields',
+    storelib_link_hover:'Colors',storelib_input_border:'Buttons & fields',storelib_input_focus:'Buttons & fields',storelib_input_radius:'Buttons & fields'};
   for (const setting of platform) assert.equal(placed[setting.id],expected[setting.id],setting.id);
   const saved=JSON.parse(source('config/settings.json')).shopify;
   for (const setting of platform) assert(setting.id in saved,`${setting.id} keeps its value`);
@@ -509,4 +510,37 @@ test('every Storelib platform setting is declared in a theme group and reaches C
   assert.match(palette,/--color-secondary-button-hover-border:\s*#111111/);
   const fallback=await render('snippets/color-palette.storelib',{settings:settings({storelib_button_hover_effect:'custom',storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd',storelib_button_hover_border:''})});
   assert.match(fallback,/--color-primary-button-hover-border:\s*#9b95c1/);
+});
+
+test('theme settings change only CSS or sections, never the layout around them, so the builder patches in place', async () => {
+  // The builder reloads the whole canvas when the body tag, the markup outside sections, the head's
+  // scripts or the number of <style> blocks change. Keep each of those free of settings.
+  const layout=source('layout/theme.storelib');
+  assert.match(layout,/<body class="page-width-theme">/);
+  assert.doesNotMatch(layout.match(/<main[\s\S]*?>/)[0],/settings\./);
+  assert.doesNotMatch(layout,/{%\s*if settings\.quick_add/);
+  assert.doesNotMatch(source('snippets/scripts.storelib'),/{%\s*if settings\.(quick_add|show_add_discount_code|transition_to_main_product)/);
+  for (const file of ['snippets/card-hover-effect-styles.storelib','snippets/cookie-banner-styles.storelib','snippets/view-transition-opt-in.storelib']) {
+    assert.doesNotMatch(source(file),/{%-?\s*(if|unless) settings\.[\s\S]*?%}\s*{%\s*style\s*%}/,file);
+  }
+  assert.doesNotMatch(source('snippets/cart-drawer.storelib'),/settings\.(cart_type|auto_open_cart_drawer)/);
+  assert.doesNotMatch(source('snippets/search-modal.storelib'),/settings\./);
+  assert.match(source('snippets/cart-summary.storelib'),/{% form 'cart', cart, id: 'cart-installments-form' %}/);
+
+  const product={id:'p1',title:'Example',url:'/products/example',available:true,selected_or_first_available_variant:{price:2439,compare_at_price:3752}};
+  const price=async values=>render('blocks/price.storelib',{settings:settings(values),closest:{product},template:{name:'collection'},block:{id:'price',settings:{width:'fit-content',alignment:'left',type_preset:'h6',show_sale_price_first:true}}});
+  const off=await price({currency_code_enabled_product_cards:false});
+  const on=await price({currency_code_enabled_product_cards:true});
+  assert.equal(on,off,'a currency code toggle does not change the price markup');
+  assert.match(off,/€24\.39<span class="price-currency-code" data-currency-context="card"> EUR<\/span>/);
+  const css=async values=>render('snippets/theme-styles-variables.storelib',{settings:settings(values)});
+  assert.match(await css({currency_code_enabled_product_cards:true}),/\[data-currency-context='card'\] \{ display: inline; \}/);
+  assert.doesNotMatch(await css({currency_code_enabled_product_cards:false}),/\[data-currency-context='card'\]/);
+  const flags=await css({cart_type:'drawer',auto_open_cart_drawer:true,transition_to_main_product:false,product_card_image_ratio:'portrait',page_width:'wide'});
+  assert.match(flags,/--theme-cart-drawer: 1;/);
+  assert.match(flags,/--theme-cart-auto-open: 1;/);
+  assert.match(flags,/--theme-product-transition: 0;/);
+  assert.match(flags,/--theme-product-card-ratio: 4 \/ 5;/);
+  assert.match(flags,/--theme-page-content-width: var\(--wide-page-width\);/);
+  assert.match(await css({cart_type:'page',auto_open_cart_drawer:true}),/--theme-cart-drawer: 0;[\s\S]*--theme-cart-auto-open: 0;/);
 });

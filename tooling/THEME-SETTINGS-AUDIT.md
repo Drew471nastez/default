@@ -53,3 +53,11 @@ This does not stop the reload or shorten the delay before it. Those are the buil
 ## Follow-up: hover and focus inside Buttons
 
 Storelib saved three hover settings for a Hover & focus panel of its own, and the theme used none of them. They are now declared in Buttons, ahead of Primary button, beside Hover speed and Focus outline, with their IDs and saved values kept. Hover color is Automatic (the theme's shift with readable text, the saved value), Custom (one hover background and text for primary and secondary buttons, including Surface, Inverse and Accent sections) or No change. The custom colors and Hover speed only show when they apply. Custom-colored sections keep their own button hovers.
+
+## Theme settings regrouped and drawn in place
+
+Theme settings are ten groups: Logo, Colors, Typography, Layout, Buttons & fields, Product cards, Products & prices, Cart & popups, Search and Customer accounts. Every setting id, value and condition is kept; only groups, headings and labels changed. Installments and accelerated checkout buttons are hidden: Storelib draws neither (its `payment_terms` is empty and `additional_checkout_buttons` is false), so they controlled nothing.
+
+The builder's canvas (the platform's `planPatch`) loads the whole page again when a change alters the `<body>` tag, the markup outside sections, the head's scripts or the number of `<style>` blocks. Each of those is now free of settings: page width and card hover are CSS; quick add, discount and view-transition scripts always load; the cart drawer, quick-add dialog and search popover never change with a setting (cart type, auto open, note open and product transition are read by the theme's scripts from CSS flags); currency codes are drawn beside every price and shown by CSS; the cart's installments form has a fixed id (the engine numbered it per drawing).
+
+Checked with the platform's own drawing code (`drawPage`) and its patch rule on the home, product, collection and cart pages: 426 setting changes, with an empty cart and with an item in it. None loads the page again except the hidden installments setting with items in the cart. The drawn pages are pixel-identical to before at 1440 and 375 pixels.

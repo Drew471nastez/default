@@ -181,14 +181,6 @@ p:empty {
     pointer-events: none;
   }
 
-  html:active-view-transition-type(page-navigation) main[data-page-transition-enabled='true'] {
-    view-transition-name: main-content;
-  }
-
-  html:active-view-transition-type(page-navigation) main[data-product-transition='true'][data-template*='product'] {
-    view-transition-name: none;
-  }
-
   ::view-transition-old(main-content) {
     animation: var(--view-transition-old-main-content);
   }
@@ -262,6 +254,7 @@ p:empty {
 /* Set up page widths & margins. Gutters grow to the device safe-area insets (viewport-fit=cover)
    so section backgrounds bleed edge-to-edge while content stays clear of the notch; taking the
    larger of both insets keeps the centered page grid symmetric. */
+.page-width-theme,
 .page-width-wide,
 .page-width-normal,
 .page-width-narrow,
@@ -270,12 +263,19 @@ p:empty {
 }
 
 @media screen and (min-width: 750px) {
+  .page-width-theme,
   .page-width-wide,
   .page-width-normal,
   .page-width-narrow,
   .page-width-content {
     --page-margin: max(40px, var(--safe-area-inset-left, 0px), var(--safe-area-inset-right, 0px));
   }
+}
+
+/* Layout > Page width, as --theme-page-content-width (snippets/theme-styles-variables): a change is a stylesheet edit, never a new body class. */
+.page-width-theme {
+  --page-content-width: var(--theme-page-content-width, var(--normal-page-width));
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
 }
 
 .page-width-wide {

@@ -65,18 +65,24 @@
     assign use_currency = true
   endif
 
-  # Format all prices
-  if use_currency
-    assign price = price | money_with_currency
-    assign compare_at_price = compare_at_price | money_with_currency
-    assign price_min = price_min | money_with_currency
-    assign price_max = price_max | money_with_currency
+  # Format all prices. The currency code is drawn with each and shown by the theme's CSS.
+  if is_product_card
+    assign currency_context = 'card'
   else
-    assign price = price | money
-    assign compare_at_price = compare_at_price | money
-    assign price_min = price_min | money
-    assign price_max = price_max | money
+    assign currency_context = 'product'
   endif
+  capture price
+    render 'money-code', value: price, context: currency_context, show: use_currency
+  endcapture
+  capture compare_at_price
+    render 'money-code', value: compare_at_price, context: currency_context, show: use_currency
+  endcapture
+  capture price_min
+    render 'money-code', value: price_min, context: currency_context, show: use_currency
+  endcapture
+  capture price_max
+    render 'money-code', value: price_max, context: currency_context, show: use_currency
+  endcapture
 -%}
 
 <div ref="priceContainer">
@@ -122,11 +128,9 @@
   {% endif %}
   {%- if selected_variant.unit_price and show_unit_price %}
     {%- liquid
-      if use_currency
-        assign unit_price = selected_variant.unit_price | money_with_currency
-      else
-        assign unit_price = selected_variant.unit_price | money
-      endif
+      capture unit_price
+        render 'money-code', value: selected_variant.unit_price, context: currency_context, show: use_currency
+      endcapture
     -%}
     {% render 'unit-price', price: unit_price, measurement: selected_variant.unit_price_measurement %}
   {%- endif -%}

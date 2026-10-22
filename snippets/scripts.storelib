@@ -60,14 +60,14 @@
 ></script>
 
 {% unless request.design_mode %}
-{% if settings.transition_to_main_product or settings.page_transition_enabled %}
   {%- comment -%}
-    Inlined to avoid a network round trip for a render blocking asset.
+    Inlined to avoid a network round trip for a render blocking asset. Always present:
+    without the opt-in in view-transition-opt-in nothing transitions, and a script that
+    came and went with a setting made the builder load the whole page again.
   {%- endcomment -%}
   <script>
     {{- 'view-transitions.js' | inline_asset_content -}}
 {% comment %}{% endcomment %}  </script>
-{% endif %}
 {% endunless %}
 
 <link
@@ -134,20 +134,17 @@
   type="module"
   fetchpriority="low"
 ></script>
-{% if settings.quick_add or settings.mobile_quick_add %}
-  <script
-    src="{{ 'quick-add.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
-{% if settings.show_add_discount_code %}
-  <script
-    src="{{ 'cart-discount.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
+{%- comment -%} Loaded whatever the settings: they only define elements, which appear when the settings draw them. {%- endcomment -%}
+<script
+  src="{{ 'quick-add.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'cart-discount.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
 
 <script
   src="{{ 'dialog.js' | asset_url }}"

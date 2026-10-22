@@ -1,6 +1,6 @@
 <template compat="shopify">
-{% if settings.cookie_banner_theme_style %}
-  {% style %}
+{% style %}
+  {%- if settings.cookie_banner_theme_style %}
     #shopify-pc__banner {
       box-sizing: border-box;
       width: min(calc(100% - 2rem), {{ settings.cookie_banner_width | default: 480 }}px);
@@ -50,6 +50,6 @@
       outline: 2px solid currentColor;
       outline-offset: 3px;
     }
-  {% endstyle %}
-{% endif %}
+  {%- endif %}
+{% endstyle %}
 </template>

@@ -82,7 +82,9 @@ class CartDrawerComponent extends Component {
    * @param {import('@shopify/events').CartLinesUpdateEvent} event
    */
   #handleCartLinesUpdate = (event) => {
-    const shouldAutoOpen = this.hasAttribute('auto-open') && event.action === 'add' && !this.#themeDrawer?.isOpen;
+    // Cart > "Add to cart" auto-opens drawer, read from the theme's CSS so the setting never changes this markup.
+    const autoOpen = getComputedStyle(document.documentElement).getPropertyValue('--theme-cart-auto-open').trim() === '1';
+    const shouldAutoOpen = autoOpen && event.action === 'add' && !this.#themeDrawer?.isOpen;
 
     // When the event originates inside an open MODAL <dialog> (e.g. quick-add),
     // defer the auto-open until that dialog's native `close` fires so its focus
@@ -146,6 +148,12 @@ class CartDrawerComponent extends Component {
     dialog.setAttribute('cart-summary-sticky', ratio > this.#summaryThreshold ? 'false' : 'true');
   }
 }
+
+document.addEventListener('click', (event) => {
+  const link = event.target instanceof Element ? event.target.closest('a[data-theme-empty-cart-link]') : null;
+  const url = document.querySelector('meta[name="theme-empty-cart-url"]')?.getAttribute('content');
+  if (link instanceof HTMLAnchorElement && url) link.href = url;
+});
 
 if (!customElements.get('cart-drawer-component')) {
   customElements.define('cart-drawer-component', CartDrawerComponent);

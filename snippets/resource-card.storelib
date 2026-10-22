@@ -21,14 +21,6 @@
   endif
   if resource_type == 'product'
     assign image_hover = settings.show_second_image_on_hover
-    case settings.product_card_image_ratio
-      when 'square'
-        assign ratio = '1'
-      when 'portrait'
-        assign ratio = '4 / 5'
-      when 'landscape'
-        assign ratio = '16 / 9'
-    endcase
   endif
   assign image_width = image_width | default: 1200
   assign widths = '240, 352, 832, 1200'
@@ -39,13 +31,11 @@
   endif
 
   if resource_type == 'product'
-    assign product_wrapper_tag = 'product-component'
-    if settings.transition_to_main_product
-      assign product_wrapper_tag = 'product-card-link'
-      assign featured_media_url = resource.selected_or_first_available_variant.featured_image | image_url: width: image_width
-      if featured_media_url == blank
-        assign featured_media_url = resource.featured_media.preview_image | image_url: width: image_width
-      endif
+    # Product card transition is read from the theme's CSS (--theme-product-transition) when clicked.
+    assign product_wrapper_tag = 'product-card-link'
+    assign featured_media_url = resource.selected_or_first_available_variant.featured_image | image_url: width: image_width
+    if featured_media_url == blank
+      assign featured_media_url = resource.featured_media.preview_image | image_url: width: image_width
     endif
   endif
 %}
@@ -53,12 +43,10 @@
 {%- if resource_type == 'product' -%}
   <{{ product_wrapper_tag }}
     class="resource-card__wrapper"
-    {% if settings.transition_to_main_product %}
-      data-product-id="{{ resource.id }}"
-      data-featured-media-url="{{ featured_media_url }}"
-      data-product-transition="true"
-      on:click="/handleViewTransition"
-    {% endif %}
+    data-product-id="{{ resource.id }}"
+    data-featured-media-url="{{ featured_media_url }}"
+    data-product-transition="true"
+    on:click="/handleViewTransition"
     {% if resource.id != blank %}
       view-event-payload="{{ resource | standard_event_data: 'view', context: product_view_context | escape }}"
     {% endif %}
@@ -79,8 +67,12 @@
   </a>
   <div
     class="resource-card__media"
-    style="--resource-card-aspect-ratio: {{ ratio }};"
-    {% if resource_type == 'product' and settings.transition_to_main_product %}
+    {%- if resource_type == 'product' %}
+      style="--resource-card-own-ratio: {{ ratio }}; --resource-card-aspect-ratio: var(--theme-product-card-ratio, var(--resource-card-own-ratio));"
+    {%- else %}
+      style="--resource-card-aspect-ratio: {{ ratio }};"
+    {%- endif %}
+    {% if resource_type == 'product' %}
       ref="cardGallery"
       data-view-transition-to-main-product
     {% endif %}

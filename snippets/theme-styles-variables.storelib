@@ -163,6 +163,20 @@
     --narrow-page-width: {{ settings.content_max_width | default: 1440 }}px;
     --normal-page-width: {{ settings.content_max_width | default: 1440 | times: 1.333333 | round: 0 }}px;
     --wide-page-width: {{ settings.content_max_width | default: 1440 | times: 1.666667 | round: 0 }}px;
+    --theme-page-content-width: var(--{{ settings.page_width | default: 'normal' }}-page-width);
+    /* Read by the theme's scripts, so these settings never change the page's markup */
+    --theme-cart-drawer: {% if settings.cart_type == 'drawer' %}1{% else %}0{% endif %};
+    --theme-cart-auto-open: {% if settings.cart_type == 'drawer' and settings.auto_open_cart_drawer %}1{% else %}0{% endif %};
+    --theme-product-transition: {% if settings.transition_to_main_product %}1{% else %}0{% endif %};
+    --theme-cart-note-open: {% if settings.cart_note_open_by_default %}1{% else %}0{% endif %};
+    {%- case settings.product_card_image_ratio %}
+      {%- when 'square' %}
+    --theme-product-card-ratio: 1;
+      {%- when 'portrait' %}
+    --theme-product-card-ratio: 4 / 5;
+      {%- when 'landscape' %}
+    --theme-product-card-ratio: 16 / 9;
+    {%- endcase %}
 
     /* Section Heights */
     --section-height-small: 15rem;
@@ -724,6 +738,62 @@
     outline-offset: var(--focus-outline-offset);
   }
   {%- endif %}
+  {%- comment -%} Prices & currency: the code drawn beside every price, shown where it is turned on {%- endcomment -%}
+  .price-currency-code {
+    display: none;
+  }
+  {%- if settings.currency_code_enabled_product_pages %}
+  .price-currency-code[data-currency-context='product'] { display: inline; }
+  {%- endif %}
+  {%- if settings.currency_code_enabled_product_cards %}
+  .price-currency-code[data-currency-context='card'] { display: inline; }
+  {%- endif %}
+  {%- if settings.currency_code_enabled_cart_items %}
+  .price-currency-code[data-currency-context='cart_item'] { display: inline; }
+  {%- endif %}
+  {%- if settings.currency_code_enabled_cart_total %}
+  .price-currency-code[data-currency-context='cart_total'] { display: inline; }
+  {%- endif %}
+  {%- comment -%} Search > popover cards; Cart > product title capitalization {%- endcomment -%}
+  .predictive-search {
+    --product-corner-radius: {{ settings.product_corner_radius | default: 8 }}px;
+    --card-corner-radius: {{ settings.card_corner_radius | default: 8 }}px;
+    {%- if settings.card_title_case == 'uppercase' %}
+    --title-case: uppercase;
+    {%- endif %}
+  }
+  {%- if settings.product_title_case == 'uppercase' %}
+  .cart-items__wrapper {
+    --product-title-case: uppercase;
+  }
+  {%- endif %}
+  {%- comment -%} Cart > Cart options: the note and discount are always drawn and shown here {%- endcomment -%}
+  {%- unless settings.show_cart_note %}
+  .cart-actions cart-note,
+  .cart-actions__divider {
+    display: none !important;
+  }
+  {%- endunless %}
+  {%- unless settings.show_add_discount_code %}
+  .cart-actions .cart-discount,
+  .cart-actions__divider {
+    display: none !important;
+  }
+  {%- endunless %}
+  [data-tax-note-discounts='{% if settings.show_add_discount_code %}false{% else %}true{% endif %}'] {
+    display: none;
+  }
+  {%- unless settings.show_cart_note or settings.show_add_discount_code %}
+  .cart-actions {
+    display: none !important;
+  }
+
+  .cart-totals.cart-totals {
+    margin-block-start: var(--margin-3xs);
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+    padding-block-start: var(--margin-xl);
+  }
+  {%- endunless %}
 {% endstyle %}
 
 {% render 'contrast-override',

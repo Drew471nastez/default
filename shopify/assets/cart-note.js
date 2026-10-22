@@ -10,6 +10,34 @@ class CartNote extends Component {
   /** @type {AbortController | null} */
   #activeFetch = null;
 
+  connectedCallback() {
+    super.connectedCallback();
+    // Cart > Open note to seller by default, read from the theme's CSS so the setting never changes this markup.
+    const open = getComputedStyle(document.documentElement).getPropertyValue('--theme-cart-note-open').trim() === '1';
+    if (open) this.#setOpen(true);
+    document.addEventListener('storelib:settings-change', this.#onSettingsChange);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('storelib:settings-change', this.#onSettingsChange);
+  }
+
+  /** @param {boolean} open */
+  #setOpen(open) {
+    const details = this.querySelector('details');
+    if (details) details.open = open;
+  }
+
+  /**
+   * The builder's live preview: the setting turned on or off is shown at once.
+   * @param {Event} event
+   */
+  #onSettingsChange = (event) => {
+    const value = /** @type {CustomEvent} */ (event).detail?.settings?.cart_note_open_by_default;
+    if (typeof value === 'boolean') this.#setOpen(value);
+  };
+
   /**
    * Handles updates to the cart note.
    * @param {InputEvent} event - The input event in our text-area.

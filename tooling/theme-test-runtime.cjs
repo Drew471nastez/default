@@ -96,6 +96,10 @@ function engine(globals = {}) {
   liquid.registerFilter('font_modify', (font, property, value) => font ? {...font, [property]: value === 'bold' ? 700 : value} : null);
   liquid.registerFilter('font_face', font => font ? `/* loaded ${font.family} ${font.weight} */` : '');
   liquid.registerFilter('standard_event_data', () => '{}');
+  // Money as Storelib formats a euro shop: the code follows the amount.
+  const amount = value => (Number(value || 0) / 100).toFixed(2);
+  liquid.registerFilter('money', value => `€${amount(value)}`);
+  liquid.registerFilter('money_with_currency', value => `€${amount(value)} EUR`);
   liquid.registerFilter('md5', value => require('node:crypto').createHash('md5').update(String(value)).digest('hex'));
   liquid.registerFilter('t', value => value);
   return liquid;

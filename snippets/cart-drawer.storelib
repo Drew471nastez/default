@@ -9,7 +9,7 @@
   assign render_wrapper = render_wrapper | default: true, allow_false: true
 -%}
 
-{%- if settings.cart_type == 'drawer' and template.name != 'cart' -%}
+{%- if template.name != 'cart' -%}
   {% if render_wrapper %}
     <div
       id="shopify-section-cart-drawer-section"
@@ -51,11 +51,7 @@
       aria-labelledby="cart-drawer-heading"
       cart-summary-sticky="true"
     >
-      <cart-drawer-component
-        {% if settings.auto_open_cart_drawer and template.name != 'cart' %}
-          auto-open
-        {% endif %}
-      >
+      <cart-drawer-component>
         <template id="empty-cart-template">
           {{ empty_cart_drawer_content }}
 {% comment %}{% endcomment %}        </template>

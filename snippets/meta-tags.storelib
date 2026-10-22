@@ -123,4 +123,5 @@
   >
 {% endif %}
 
+<meta name="theme-empty-cart-url" content="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}">
 </template>

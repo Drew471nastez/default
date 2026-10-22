@@ -20,7 +20,11 @@
     when 'card'
       assign show_currency = settings.currency_code_enabled_product_cards
   endcase
-  if show_currency
+  if context != blank
+    capture formatted_price
+      render 'money-code', value: value, context: context, show: show_currency
+    endcapture
+  elsif show_currency
     assign formatted_price = value | money_with_currency
   else
     assign formatted_price = value | money

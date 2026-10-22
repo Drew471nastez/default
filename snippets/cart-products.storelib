@@ -54,7 +54,6 @@
     data-cart-drawer-empty
   {% endif %}
   style="
-    {%- if settings.product_title_case == 'uppercase' -%}--product-title-case: uppercase;{%- endif -%}
     {{- custom_style -}}
   "
 >
@@ -67,7 +66,12 @@
 
     <a
       class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+      {%- if context == 'drawer' or force_empty %}
+        href="{{ routes.all_products_collection_url }}"
+        data-theme-empty-cart-link
+      {%- else %}
+        href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+      {%- endif %}
     >
       <span class="button-text">
         {{ 'actions.continue_shopping' | t }}
@@ -397,20 +401,20 @@
                   </div>
                 </td>
                 {%- liquid
-                  if settings.currency_code_enabled_cart_items
-                    assign price = item.final_line_price | money_with_currency
-                    assign unit_price = item.unit_price | money_with_currency
-                  else
-                    assign price = item.final_line_price | money
-                    assign unit_price = item.unit_price | money
-                  endif
+                  assign price_plain = item.final_line_price | money
+                  capture price
+                    render 'money-code', value: item.final_line_price, context: 'cart_item', show: settings.currency_code_enabled_cart_items
+                  endcapture
+                  capture unit_price
+                    render 'money-code', value: item.unit_price, context: 'cart_item', show: settings.currency_code_enabled_cart_items
+                  endcapture
                 -%}
                 <td
                   class="cart-items__price cart-secondary-typography"
                   role="cell"
                   headers="productTotal"
                 >
-                  <text-component value="{{ price | strip_html }}"
+                  <text-component value="{{ price_plain | strip_html }}"
                     ><bdi>{{ price }}</bdi></text-component
                   >
                   {%- if item.unit_price_measurement -%}

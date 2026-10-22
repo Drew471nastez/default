@@ -42,9 +42,11 @@
     {%- endif -%}
   </div>
 
-  {% if settings.show_cart_note or settings.show_add_discount_code %}
+  {%- comment -%}
+    The note and discount are always drawn and shown by the theme's CSS (Cart > Cart options),
+    so turning one on or off never changes the cart drawer's markup.
+  {%- endcomment -%}
     <div class="cart-actions">
-      {% if settings.show_cart_note %}
         <script
           type="module"
           src="{{ 'cart-note.js' | asset_url }}"
@@ -52,11 +54,7 @@
 
         <cart-note style="display: flex;">
           {% capture cart_note_accordion_children %}
-            <details
-              {% if settings.cart_note_open_by_default %}
-                open
-              {% endif %}
-            >
+            <details>
               <summary class="cart-note__summary">
                 <span class="cart-note__label cart-primary-typography">
                   {{ 'content.seller_note' | t }}
@@ -87,16 +85,10 @@
           {% endcapture %}
           {% render 'accordion-custom-component',
             children: cart_note_accordion_children,
-            class: 'cart-note',
-            open_by_default_on_desktop: settings.cart_note_open_by_default,
-            open_by_default_on_mobile: settings.cart_note_open_by_default
+            class: 'cart-note'
           %}
         </cart-note>
-      {% endif %}
-      {% if settings.show_cart_note and settings.show_add_discount_code %}
-        <div class="cart-actions__divider"></div>
-      {% endif %}
-      {% if settings.show_add_discount_code %}
+      <div class="cart-actions__divider"></div>
         {% liquid
           assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
           for item in cart.items
@@ -216,16 +208,13 @@
           </details>
         {% endcapture %}
         {% render 'accordion-custom-component', children: cart_discount_accordion_children, class: 'cart-discount' %}
-      {% endif %}
     </div>
-  {% endif %}
 
   {%- liquid
-    if settings.currency_code_enabled_cart_total
-      assign total_price = cart.total_price | money_with_currency
-    else
-      assign total_price = cart.total_price | money
-    endif
+    assign total_price_plain = cart.total_price | money
+    capture total_price
+      render 'money-code', value: cart.total_price, context: 'cart_total', show: settings.currency_code_enabled_cart_total
+    endcapture
   -%}
 
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
@@ -236,7 +225,7 @@
       <span class="cart-totals__total-label cart-primary-typography">{{ 'content.cart_estimated_total' | t }}</span>
       <text-component
         ref="cartTotal"
-        value="{{ total_price | strip_html }}"
+        value="{{ total_price_plain | strip_html }}"
         class="cart-totals__total-value cart-secondary-typography"
         {% comment %} Used by payment_terms web component {% endcomment %}
         data-testid="cart-total-value"
@@ -247,13 +236,16 @@
     </span>
     {% if settings.show_installments %}
       <span class="cart-totals__item cart-totals__installments">
-        {% form 'cart', cart %}
+        {%- comment -%} A fixed id: one numbered per drawing changed the drawer's markup on every change. {%- endcomment -%}
+        {% form 'cart', cart, id: 'cart-installments-form' %}
           {{ form | payment_terms }}
         {% endform %}
       </span>
     {% endif %}
     <div class="cart-totals__item cart-totals__tax-note cart-primary-typography">
-      {% render 'tax-info', has_discounts_enabled: settings.show_add_discount_code %}
+      {%- comment -%} Both wordings, the one for Cart > Allow discounts shown by the theme's CSS. {%- endcomment -%}
+      <span data-tax-note-discounts="true">{% render 'tax-info', has_discounts_enabled: true %}</span>
+      <span data-tax-note-discounts="false">{% render 'tax-info', has_discounts_enabled: false %}</span>
     </div>
   </div>
 </div>

@@ -24,7 +24,9 @@ import { previewCardImage, resetCardImage, disposeCardImagePreview } from '@them
  */
 export class ProductCardLink extends ProductComponent {
   get productTransitionEnabled() {
-    return this.getAttribute('data-product-transition') === 'true';
+    // Motion > Product card to product page transition, read from the theme's CSS.
+    const enabled = getComputedStyle(document.documentElement).getPropertyValue('--theme-product-transition').trim() !== '0';
+    return enabled && this.getAttribute('data-product-transition') === 'true';
   }
 
   get featuredMediaUrl() {

@@ -8,14 +8,26 @@
   falls back to dropping it at 1800 ms. It is gated on the same settings (snippets/scripts.liquid).
 {% endcomment %}
 {% unless request.design_mode %}
-{% if settings.transition_to_main_product or settings.page_transition_enabled %}
-  {% style %}
+{% style %}
+  {%- if settings.transition_to_main_product or settings.page_transition_enabled %}
     @media (prefers-reduced-motion: no-preference) {
       @view-transition {
         navigation: auto;
       }
     }
-  {% endstyle %}
+  {%- endif %}
+  {%- if settings.page_transition_enabled %}
+    html:active-view-transition-type(page-navigation) main.content-for-layout {
+      view-transition-name: main-content;
+    }
+  {%- endif %}
+  {%- if settings.transition_to_main_product %}
+    html:active-view-transition-type(page-navigation) main.content-for-layout[data-template*='product'] {
+      view-transition-name: none;
+    }
+  {%- endif %}
+{% endstyle %}
+{% if settings.transition_to_main_product or settings.page_transition_enabled %}
   <link
     rel="expect"
     href="#MainContent"

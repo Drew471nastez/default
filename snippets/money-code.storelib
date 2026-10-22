@@ -1,0 +1,32 @@
+<template compat="shopify">
+{%- doc -%}
+  A price with its currency code drawn beside it, shown or hidden by the theme's
+  settings CSS (Prices & currency). Turning a currency code on or off is then a
+  stylesheet change: no price is drawn again.
+
+  When the shop's money format does not end in the code, the code is decided
+  here instead, from `show`.
+
+  @param {number} value - Price in the platform's minor units.
+  @param {string} context - product, card, cart_item or cart_total.
+  @param {boolean} [show] - The setting's value, for formats without a separable code.
+{%- enddoc -%}
+{%- liquid
+  assign plain = value | money
+  assign coded = value | money_with_currency
+  assign coded_head = coded | slice: 0, plain.size
+  if coded_head == plain and coded.size > plain.size
+    assign code = coded | slice: plain.size, coded.size
+    echo plain
+    echo '<span class="price-currency-code" data-currency-context="'
+    echo context
+    echo '">'
+    echo code
+    echo '</span>'
+  elsif show
+    echo coded
+  else
+    echo plain
+  endif
+-%}
+</template>

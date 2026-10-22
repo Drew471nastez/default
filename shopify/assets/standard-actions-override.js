@@ -17,7 +17,9 @@ function init() {
       /** @type {HTMLElement & {open?: () => void} | null} */
       const drawer = document.querySelector('theme-drawer#cart-drawer');
 
-      if (drawer?.open) {
+      const drawerEnabled = getComputedStyle(document.documentElement).getPropertyValue('--theme-cart-drawer').trim() !== '0';
+
+      if (drawer?.open && drawerEnabled) {
         drawer.open();
       } else {
         window.location.href = Theme.routes.cart_url || '/cart';

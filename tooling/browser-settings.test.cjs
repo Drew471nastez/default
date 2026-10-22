@@ -330,11 +330,12 @@ test('page width presets stay centered and section spacing responds on desktop a
     const page=await browser.newPage();
     for (const scale of [50,100,150]) {
       const values=settings({content_max_width:1200,section_spacing_scale:scale});
-      const variables=await render('snippets/theme-styles-variables.storelib',{settings:values});
       const spacing=await render('snippets/spacing-style.storelib',{settings:{padding_block_start:80,padding_block_end:0}});
       for (const [preset,width] of [['narrow',1200],['normal',1600],['wide',2000]]) {
+        // The layout's body class is fixed (page-width-theme); the preset arrives as CSS.
+        const variables=await render('snippets/theme-styles-variables.storelib',{settings:{...values,page_width:preset}});
         await page.setViewportSize({width:2400,height:1000});
-        await page.setContent(`<style>${source('shopify/assets/base.css')}</style>${variables}<body class="page-width-${preset}"><section class="section section--page-width spacing-style" style="${spacing}"><div id="content">Example</div></section></body>`);
+        await page.setContent(`<style>${source('shopify/assets/base.css')}</style>${variables}<body class="page-width-theme"><section class="section section--page-width spacing-style" style="${spacing}"><div id="content">Example</div></section></body>`);
         const dimensions=await page.locator('#content').evaluate(el=>{const r=el.getBoundingClientRect();return {width:r.width,left:r.left,right:r.right,padding:getComputedStyle(el.parentElement).paddingTop};});
         assert(Math.abs(dimensions.width-width)<1);
         assert(Math.abs(dimensions.left-(2400-dimensions.right))<1);
@@ -486,5 +487,23 @@ test('editor reloads keep the preview scroll position on the document and deskto
       await page.waitForTimeout(500);
       assert.equal(await page.evaluate(get=>new Function('return '+get)()().scrollTop,scroller.toString()),0,'another page starts at the top');
     }
+  } finally { await browser.close(); }
+});
+
+test('a currency code turned on or off shows on the same price markup through CSS alone', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    const product={id:'p1',title:'Example',url:'/products/example',available:true,selected_or_first_available_variant:{price:2439,compare_at_price:3752}};
+    const price=await render('blocks/price.storelib',{settings:settings({}),closest:{product},template:{name:'collection'},block:{id:'price',settings:{width:'fit-content',alignment:'left',type_preset:'h6',show_sale_price_first:true}}});
+    const css=html=>[...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match=>match[1]).join('\n');
+    const styles=async on=>css(await render('snippets/theme-styles-variables.storelib',{settings:settings({currency_code_enabled_product_cards:on})}));
+    await page.setContent(`<style id="theme">${await styles(false)}</style><div class="product-card--theme">${price}</div>`);
+    const text=()=>page.evaluate(()=>document.querySelector('.price bdi').innerText.trim());
+    assert.equal(await text(),'€24.39');
+    await page.evaluate(css=>document.querySelector('#theme').textContent=css,await styles(true));
+    assert.equal(await text(),'€24.39 EUR');
+    await page.evaluate(css=>document.querySelector('#theme').textContent=css,await styles(false));
+    assert.equal(await text(),'€24.39');
   } finally { await browser.close(); }
 });
