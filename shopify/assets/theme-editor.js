@@ -1,5 +1,77 @@
 // Theme editor specific logic
 import { updateAllHeaderCustomProperties } from '@theme/utilities';
+import { getScrollContainer } from '@theme/scroll-container';
+
+/**
+ * Keeps the preview's scroll position when the editor reloads the page after a setting change.
+ *
+ * history.state only survives a same-entry reload that fires pagehide. An editor that resets the
+ * frame's address or replaces the frame loses it, and on desktop `.page-wrapper` is the scroller,
+ * which the browser never restores natively. The position is kept per page in sessionStorage and
+ * re-applied once the page is tall enough, until the visitor scrolls themselves.
+ */
+(function editorScrollKeeper() {
+  const KEY = 'editor-scroll-position';
+  const MAX_AGE = 30 * 60 * 1000;
+  const SETTLE_TIME = 4000;
+  const page = location.pathname + location.search;
+
+  const read = () => {
+    try { return JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch { return null; }
+  };
+  const write = (value) => {
+    try { value ? sessionStorage.setItem(KEY, JSON.stringify(value)) : sessionStorage.removeItem(KEY); } catch {}
+  };
+
+  let restoring = false;
+  let saveFrame;
+  const save = () => {
+    if (restoring) return;
+    write({ page, top: getScrollContainer().scrollTop, time: Date.now() });
+  };
+  const scheduleSave = () => {
+    if (saveFrame) return;
+    saveFrame = requestAnimationFrame(() => {
+      saveFrame = undefined;
+      save();
+    });
+  };
+
+  const saved = read();
+  if (saved?.page === page && Date.now() - saved.time < MAX_AGE && saved.top > 0) {
+    restoring = true;
+    const stop = () => {
+      if (!restoring) return;
+      restoring = false;
+      resizeObserver.disconnect();
+      clearTimeout(timer);
+      for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) removeEventListener(name, stop, true);
+      save();
+    };
+    const apply = () => {
+      if (!restoring) return;
+      const container = getScrollContainer();
+      const max = Math.max(0, container.scrollHeight - container.clientHeight);
+      container.scrollTo({ top: Math.min(saved.top, max), behavior: 'instant' });
+    };
+    // Late images, fonts and sections grow the page; follow them until the target is reachable.
+    const resizeObserver = new ResizeObserver(apply);
+    const timer = setTimeout(stop, SETTLE_TIME);
+    for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(name, stop, { capture: true, passive: true });
+    resizeObserver.observe(document.body);
+    const wrapper = document.querySelector('.page-wrapper');
+    if (wrapper) {
+      resizeObserver.observe(wrapper);
+      for (const child of wrapper.children) resizeObserver.observe(child);
+    }
+    apply();
+    addEventListener('load', apply, { once: true });
+  }
+
+  // Element scroll events do not bubble; capture sees `.page-wrapper` and the document alike.
+  document.addEventListener('scroll', scheduleSave, { capture: true, passive: true });
+  addEventListener('pagehide', save);
+})();
 
 /** @type {{ activeSlideIndex: number | null }} */
 const layeredSlideshowState = {

@@ -43,3 +43,9 @@ Shared card appearance values were embedded as literals in every card's inline s
 The browser regression changes only that stylesheet after rendering the cards. Radius, padding, gap, price size and title/price alignment update on the existing nodes while preserving scroll position on both the document and desktop page-wrapper scroller. It tests the theme's response to a style update, not delivery of updates from Storelib's sidebar.
 
 The requested end-to-end live preview is **not resolved by this theme patch**. This checkout has no sidebar-settings event transport, preview reload scheduling or five-second reload call. The parent editor must deliver updated global styles and re-render server-formatted currency markup without replacing the preview document. Currency context tests verify which money filter is selected; they do not emulate Storelib's editor, money formatter or save pipeline. The Storelib editor/app repository or documented integration contract is needed to finish that work. No undocumented message protocol, repeated polling or navigation interception was added.
+
+## Follow-up: scroll position across editor reloads
+
+When a setting change reloads the preview, the page went back to the top. On desktop the page scrolls inside `.page-wrapper`, which browsers never restore, and the theme's own `history.state` restore is lost when the editor resets the frame's address. In design mode only, `theme-editor.js` now keeps the position per page in sessionStorage and puts it back as late content grows the page. It stops as soon as the creator scrolls, clicks or types. The browser regression covers a plain reload and an address reset at 375 and 1440 pixels, fails on the previous script and passes on this one.
+
+This does not stop the reload or shorten the delay before it. Those are the builder's.

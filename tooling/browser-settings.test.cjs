@@ -309,7 +309,7 @@ test('editor batches section updates and tolerates blocked or malformed session 
           removeItem(key){delete records[key];},
         }});
       },blocked);
-      await page.addScriptTag({content:source('shopify/assets/theme-editor.js').replace("import { updateAllHeaderCustomProperties } from '@theme/utilities';",'const updateAllHeaderCustomProperties=()=>window.headerUpdates++;')});
+      await page.addScriptTag({content:source('shopify/assets/theme-editor.js').replace("import { updateAllHeaderCustomProperties } from '@theme/utilities';",'const updateAllHeaderCustomProperties=()=>window.headerUpdates++;').replace("import { getScrollContainer } from '@theme/scroll-container';",'const getScrollContainer=()=>document.scrollingElement;')});
       await page.evaluate(()=>{
         for(let i=0;i<12;i++)document.dispatchEvent(new Event('shopify:section:load'));
         const dialog=document.querySelector('dialog');dialog.setAttribute('open','');dialog.removeAttribute('open');dialog.setAttribute('open','');
@@ -446,4 +446,44 @@ test('account screens stay usable on small screens and hand off to the platform 
     }
     // The route above is deliberately mocked; this verifies navigation, not authentication.
   } finally {await browser.close();}
+});
+
+test('editor reloads keep the preview scroll position on the document and desktop page-wrapper scrollers', async () => {
+  const browser=await openBrowser();
+  try {
+    const page=await browser.newPage();
+    const origin='http://preview.test';
+    // Late content mimics images and sections that finish after the editor script runs.
+    const html=`<!doctype html><html class="shopify-design-mode"><head><style>${source('shopify/assets/base.css')}</style>
+      <script>window.Shopify={designMode:true};</script>
+      <script type="importmap">{"imports":{"@theme/utilities":"/utilities.js","@theme/scroll-container":"/scroll-container.js"}}</script>
+      <script src="/theme-editor.js" type="module"></script></head>
+      <body><div class="page-wrapper"><div style="height:1200px;flex:none"></div><div id="late" style="height:0;flex:none"></div><div style="height:400px;flex:none"></div></div>
+      <script>setTimeout(()=>document.getElementById('late').style.height='2400px',300)</script></body></html>`;
+    await page.route(origin+'/**',route=>{
+      const path=new URL(route.request().url()).pathname;
+      const js=body=>route.fulfill({contentType:'text/javascript',body});
+      if (path==='/utilities.js') return js('export function updateAllHeaderCustomProperties(){}');
+      if (path==='/scroll-container.js') return js(source('shopify/assets/scroll-container.js'));
+      if (path==='/theme-editor.js') return js(source('shopify/assets/theme-editor.js'));
+      return route.fulfill({contentType:'text/html',body:html});
+    });
+    const scroller=()=>innerWidth>=990?document.querySelector('.page-wrapper'):document.scrollingElement;
+    for (const width of [375,1440]) {
+      await page.setViewportSize({width,height:800});
+      await page.goto(origin+'/products/example');
+      await page.waitForTimeout(500);
+      await page.evaluate(get=>new Function('return '+get)()().scrollTo({top:2600,behavior:'instant'}),scroller.toString());
+      await page.waitForTimeout(100);
+      for (const reload of [()=>page.reload(),()=>page.goto(origin+'/products/example')]) {
+        await reload();
+        await page.waitForTimeout(800);
+        const top=await page.evaluate(get=>new Function('return '+get)()().scrollTop,scroller.toString());
+        assert.equal(top,2600,`width ${width}`);
+      }
+      await page.goto(origin+'/collections/all');
+      await page.waitForTimeout(500);
+      assert.equal(await page.evaluate(get=>new Function('return '+get)()().scrollTop,scroller.toString()),0,'another page starts at the top');
+    }
+  } finally { await browser.close(); }
 });
