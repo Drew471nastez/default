@@ -35,6 +35,7 @@
   },
   "shopify": {
     "logo": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png",
+    "favicon": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png",
     "cart_type": "drawer",
     "quick_add": true,
     "page_width": "narrow",
@@ -109,7 +110,7 @@
     "drawer_shadow_color": "#000000",
     "pills_border_radius": 23,
     "popover_drop_shadow": true,
-    "product_card_radius": 4,
+    "product_card_radius": 6,
     "scheme_inverse_text": "#ffffff",
     "scheme_surface_text": "#171717",
     "type_line_height_h1": "display-tight",
@@ -153,7 +154,7 @@
     "account_dashboard_page": "/customer-account",
     "empty_cart_button_link": "/collections/all",
     "palette_variant_border": "{{ settings.site_border_color }}",
-    "product_card_alignment": "start",
+    "product_card_alignment": "center",
     "product_card_image_fit": "cover",
     "show_add_discount_code": true,
     "type_letter_spacing_h1": "heading-normal",
@@ -214,9 +215,10 @@
     "currency_code_enabled_cart_total": true,
     "palette_primary_button_background": "#ff2222",
     "show_accelerated_checkout_buttons": true,
-    "currency_code_enabled_product_cards": false,
+    "currency_code_enabled_product_cards": true,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "#ff4f4f",
     "palette_selected_variant_background": "{{ settings.page_text_color }}"
-  }
+  },
+  "favicon_url": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png"
 }
