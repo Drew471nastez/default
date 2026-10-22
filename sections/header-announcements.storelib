@@ -259,7 +259,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_2",
+      "id": "hdr_4",
       "label": "Appearance"
     },
     {
@@ -327,7 +327,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_9",
+      "id": "hdr_11",
       "label": "Padding"
     },
     {

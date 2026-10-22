@@ -8,10 +8,10 @@
       "settings": {
         "speed": 5,
         "show_country": true,
-        "show_language": true,
         "divider_color": "{{ settings.site_border_color }}",
         "divider_width": 1,
         "section_width": "page-width",
+        "show_language": true,
         "background_color": "{{ settings.page_background_color }}",
         "padding_block_end": 15,
         "padding_block_start": 15
