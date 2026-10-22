@@ -562,12 +562,244 @@
         }
       },
       "block_order": []
+    },
+    "carousel-1792694838213": {
+      "name": "Carousel",
+      "type": "carousel",
+      "hidden": false,
+      "settings": {
+        "columns": 3,
+        "columns_gap": 12,
+        "padding_block_end": 48,
+        "padding_block_start": 48
+      },
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "static": true,
+          "settings": {
+            "gap": 12,
+            "width": "fill",
+            "border": "none",
+            "height": "fit",
+            "border_width": 1,
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "border_radius": 0,
+            "custom_height": 100,
+            "align_baseline": true,
+            "border_opacity": 100,
+            "video_position": "cover",
+            "background_media": "none",
+            "content_direction": "row",
+            "padding_block_end": 16,
+            "padding_inline_end": 0,
+            "vertical_alignment": "flex-end",
+            "vertical_on_mobile": false,
+            "custom_width_mobile": 100,
+            "padding_block_start": 0,
+            "horizontal_alignment": "space-between",
+            "padding_inline_start": 0,
+            "background_image_position": "cover",
+            "vertical_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start"
+          },
+          "blocks": {
+            "block-mvjw7xz9-1-gjrph": {
+              "type": "text",
+              "settings": {
+                "font": "var(--font-body--family)",
+                "text": "<p>Discover elevated design </p>",
+                "wrap": "pretty",
+                "width": "fit-content",
+                "alignment": "left",
+                "max_width": "normal",
+                "type_preset": "h3"
+              }
+            }
+          },
+          "block_order": [
+            "block-mvjw7xz9-1-gjrph"
+          ]
+        },
+        "static-carousel-content": {
+          "type": "_carousel-content",
+          "static": true,
+          "settings": {
+            "border": "none",
+            "height": "fit",
+            "position": "top",
+            "border_width": 1,
+            "border_radius": 0,
+            "border_opacity": 100,
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          },
+          "blocks": {
+            "block-mvjw7xz9-2-br0z4": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjw7xz9-3-b6oqs": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjw7xz9-4-7egaz": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Artistry in action </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjw7xz9-5-r88tr": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Bold style that's recognizable anywhere</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjw7xz9-3-b6oqs",
+                "block-mvjw7xz9-4-7egaz",
+                "block-mvjw7xz9-5-r88tr"
+              ]
+            },
+            "block-mvjw7xz9-6-0rp6m": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjw7xz9-7-v7ixs": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjw7xz9-8-z4pib": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Uncompromising standards </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjw7xz9-9-5swqf": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Expert construction and an impeccable finish</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjw7xz9-7-v7ixs",
+                "block-mvjw7xz9-8-z4pib",
+                "block-mvjw7xz9-9-5swqf"
+              ]
+            },
+            "block-mvjw7xz9-10-nb4gp": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjw7xz9-11-qzrx7": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjw7xz9-12-g8m9k": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Made to last </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjw7xz9-13-31uqx": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Pieces that only get better with time and wear </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjw7xz9-11-qzrx7",
+                "block-mvjw7xz9-12-g8m9k",
+                "block-mvjw7xz9-13-31uqx"
+              ]
+            },
+            "block-mvjw7xz9-14-oc27h": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjw7xz9-15-5lbw9": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjw7xz9-16-usdni": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<h2>Quality you can feel</h2>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjw7xz9-17-1ko6d": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Authentic materials, no compromises </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjw7xz9-15-5lbw9",
+                "block-mvjw7xz9-16-usdni",
+                "block-mvjw7xz9-17-1ko6d"
+              ]
+            }
+          },
+          "block_order": [
+            "block-mvjw7xz9-2-br0z4",
+            "block-mvjw7xz9-6-0rp6m",
+            "block-mvjw7xz9-10-nb4gp",
+            "block-mvjw7xz9-14-oc27h"
+          ]
+        }
+      },
+      "block_order": []
+    },
+    "collection-links-1792694841183": {
+      "name": "Collection links",
+      "type": "collection-links",
+      "hidden": false,
+      "settings": {},
+      "blocks": {
+        "link": {
+          "type": "_collection-link",
+          "static": true,
+          "settings": {},
+          "blocks": {
+            "title": {
+              "type": "_inline-collection-title",
+              "static": true,
+              "settings": {
+                "font": "var(--font-subheading--family)"
+              }
+            },
+            "image": {
+              "type": "_image",
+              "static": true,
+              "settings": {
+                "ratio": "square",
+                "height": "large"
+              }
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": []
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
     "carousel-1792665996057",
-    "featured-product-information-1792675731914"
+    "featured-product-information-1792675731914",
+    "carousel-1792694838213",
+    "collection-links-1792694841183"
   ]
 }
