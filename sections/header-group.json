@@ -41,7 +41,7 @@
         "divider_size": "page-width",
         "show_country": true,
         "divider_width": 0,
-        "logo_position": "left",
+        "logo_position": "center",
         "menu_position": "left",
         "section_width": "page-width",
         "show_language": true,
