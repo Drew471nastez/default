@@ -102,11 +102,12 @@
   assign primary_hover_text_rgba = ''
   assign secondary_hover_text_rgba = ''
   if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank
+    assign custom_hover_border = settings.storelib_button_hover_border | default: settings.storelib_button_hover_bg
     assign effective_primary_button_hover_background = settings.storelib_button_hover_bg
-    assign effective_primary_button_hover_border = settings.storelib_button_hover_bg
+    assign effective_primary_button_hover_border = custom_hover_border
     assign primary_hover_text_rgba = settings.storelib_button_hover_text.rgba
     assign effective_secondary_button_hover_background = settings.storelib_button_hover_bg
-    assign effective_secondary_button_hover_border = settings.storelib_button_hover_bg
+    assign effective_secondary_button_hover_border = custom_hover_border
     assign secondary_hover_text_rgba = settings.storelib_button_hover_text.rgba
   elsif settings.storelib_button_hover_effect == 'none'
     assign effective_primary_button_hover_background = 'rgb(' | append: settings.palette_primary_button_background.rgba | append: ')'

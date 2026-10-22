@@ -580,6 +580,9 @@
     --input-box-shadow-width: var(--style-border-width-inputs);
     --input-box-shadow: 0 0 0 var(--input-box-shadow-width) var(--color-input-border);
     --input-box-shadow-focus: 0 0 0 calc(var(--input-box-shadow-width) + 0.5px) var(--color-input-border);
+    {%- if settings.storelib_link_hover != blank %}
+    --link-hover-color: {{ settings.storelib_link_hover }};
+    {%- endif %}
     --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
     --input-disabled-border-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
     --input-disabled-text-color: rgb(var(--color-foreground-rgb) / var(--opacity-50));
@@ -699,6 +702,28 @@
     --quick-add-background: {{ settings.quick_add_background }};
     --quick-add-foreground: {{ settings.quick_add_text }};
   }
+  {%- comment -%} Form fields: border on hover and focus, keyboard focus ring {%- endcomment -%}
+  {%- if settings.storelib_input_border != blank %}
+  textarea:is(:hover, :focus),
+  input:not([type='checkbox'], [type='radio']):is(:hover, :focus) {
+    border-color: {{ settings.storelib_input_border }};
+  }
+
+  .field__input:hover {
+    box-shadow: 0 0 0 var(--input-box-shadow-width) {{ settings.storelib_input_border }};
+  }
+
+  .field__input:focus {
+    box-shadow: 0 0 0 calc(var(--input-box-shadow-width) + 0.5px) {{ settings.storelib_input_border }};
+  }
+  {%- endif %}
+  {%- if settings.storelib_input_focus != blank %}
+  :is(input, textarea, select):focus-visible,
+  .field__input:focus-visible {
+    outline: var(--focus-outline-width) solid {{ settings.storelib_input_focus }};
+    outline-offset: var(--focus-outline-offset);
+  }
+  {%- endif %}
 {% endstyle %}
 
 {% render 'contrast-override',

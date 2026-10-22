@@ -21,7 +21,7 @@ test('settings use simple names, independent heading controls and Theme/Custom c
     if (setting.id?.endsWith('color_scheme') && !setting.visible_if) assert.deepEqual(setting.options.map(o=>o.value),['inherit','custom']);
   }
   const site=schema.find(group=>group.name==='Site colors');
-  assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Borders','Field text']);
+  assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Borders','Link hover','Field text']);
 });
 
 test('price contexts choose currency independently, including absent handles and related cards on product pages', async () => {
@@ -399,6 +399,8 @@ test('every global control has an explicit consumer or a verified dynamic token 
     if (!control.id) continue;
     const dynamicType=/^type_(size|font|case|line_height|letter_spacing|weight)_(paragraph|h[1-6])$/.test(control.id);
     const dynamicScheme=/^scheme_(surface|inverse|accent)_(background|text)$/.test(control.id);
+    // Hidden so Form fields keeps one Corner radius; declared only to move it out of Storelib's panel.
+    if (control.id==='storelib_input_radius' && control.visible_if==='{{ false }}') continue;
     assert(code.includes(`settings.${control.id}`) || code.includes(`settings['${control.id}']`) || dynamicType || dynamicScheme,`Disconnected global control: ${control.id}`);
   }
 });
@@ -482,4 +484,29 @@ test('store, 404 and password sections offer only blocks that belong in them', (
     if (name!=='password') assert(!types.includes('email-signup'),`${name} offers email-signup`);
   }
   assert(offered('password').includes('email-signup'));
+});
+
+test('every Storelib platform setting is declared in a theme group and reaches CSS', async () => {
+  const platform=JSON.parse(source('config/storelib_settings_schema.json')).panels.flatMap(panel=>panel.settings).filter(setting=>setting.type!=='header');
+  const placed=Object.fromEntries(schema.flatMap(group=>(group.settings||[]).map(setting=>[setting.id,group.name])));
+  const expected={storelib_button_hover_bg:'Buttons',storelib_button_hover_text:'Buttons',storelib_button_hover_border:'Buttons',storelib_button_hover_effect:'Buttons',
+    storelib_link_hover:'Site colors',storelib_input_border:'Form fields',storelib_input_focus:'Form fields',storelib_input_radius:'Form fields'};
+  for (const setting of platform) assert.equal(placed[setting.id],expected[setting.id],setting.id);
+  const saved=JSON.parse(source('config/settings.json')).shopify;
+  for (const setting of platform) assert(setting.id in saved,`${setting.id} keeps its value`);
+
+  const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({storelib_link_hover:'#aa0000',storelib_input_border:'#00aa00',storelib_input_focus:'#0000aa'})});
+  assert.match(css,/--link-hover-color:\s*#aa0000/);
+  assert.match(css,/\.field__input:hover\s*{\s*box-shadow:[^}]*#00aa00/);
+  assert.match(css,/input:not\(\[type='checkbox'\], \[type='radio'\]\):is\(:hover, :focus\)\s*{\s*border-color:\s*#00aa00/);
+  assert.match(css,/\.field__input:focus-visible\s*{\s*outline:[^}]*#0000aa/);
+  const plain=await render('snippets/theme-styles-variables.storelib',{settings:settings({storelib_link_hover:'',storelib_input_border:'',storelib_input_focus:''})});
+  assert.doesNotMatch(plain,/--link-hover-color|\.field__input:hover/);
+  assert.match(source('shopify/assets/base.css'),/a:hover {\n  color: var\(--link-hover-color, /);
+
+  const palette=await render('snippets/color-palette.storelib',{settings:settings({storelib_button_hover_effect:'custom',storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd',storelib_button_hover_border:'#111111'})});
+  assert.match(palette,/--color-primary-button-hover-border:\s*#111111/);
+  assert.match(palette,/--color-secondary-button-hover-border:\s*#111111/);
+  const fallback=await render('snippets/color-palette.storelib',{settings:settings({storelib_button_hover_effect:'custom',storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd',storelib_button_hover_border:''})});
+  assert.match(fallback,/--color-primary-button-hover-border:\s*#9b95c1/);
 });

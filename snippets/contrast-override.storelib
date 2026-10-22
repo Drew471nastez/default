@@ -164,7 +164,7 @@
         {%- if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank %}
         --color-primary-button-hover-background: {{ settings.storelib_button_hover_bg }};
         --color-primary-button-hover-text: {{ settings.storelib_button_hover_text }};
-        --color-primary-button-hover-border: {{ settings.storelib_button_hover_bg }};
+        --color-primary-button-hover-border: {{ settings.storelib_button_hover_border | default: settings.storelib_button_hover_bg }};
         {%- elsif settings.storelib_button_hover_effect == 'none' %}
         --color-primary-button-hover-background: {{ effective_text_color }};
         --color-primary-button-hover-text: {{ background_color }};
@@ -181,7 +181,7 @@
         {%- if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank %}
         --color-secondary-button-hover-background: {{ settings.storelib_button_hover_bg }};
         --color-secondary-button-hover-text: {{ settings.storelib_button_hover_text }};
-        --color-secondary-button-hover-border: {{ settings.storelib_button_hover_bg }};
+        --color-secondary-button-hover-border: {{ settings.storelib_button_hover_border | default: settings.storelib_button_hover_bg }};
         {%- elsif settings.storelib_button_hover_effect == 'none' %}
         --color-secondary-button-hover-background: {{ background_color }};
         --color-secondary-button-hover-text: {{ effective_text_color }};

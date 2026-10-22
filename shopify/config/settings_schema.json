@@ -62,7 +62,7 @@
       {
         "type": "paragraph",
         "id": "color_palette",
-        "content": "Choose colors by what they change: Background, Text, Borders and Field text.",
+        "content": "Choose colors by what they change: Background, Text, Borders, Link hover and Field text.",
         "visible_if": "{{ false }}"
       },
       {
@@ -84,6 +84,12 @@
         "id": "site_border_color",
         "label": "Borders",
         "default": "#292929"
+      },
+      {
+        "type": "color",
+        "id": "storelib_link_hover",
+        "label": "Link hover",
+        "info": "Leave empty to fade links on hover."
       },
       {
         "type": "color",
@@ -1525,6 +1531,13 @@
         "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
       },
       {
+        "type": "color",
+        "id": "storelib_button_hover_border",
+        "label": "Hover border",
+        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}",
+        "info": "Leave empty to use the hover background."
+      },
+      {
         "type": "range",
         "id": "button_hover_duration",
         "label": "Hover speed",
@@ -1761,6 +1774,29 @@
         "unit": "px",
         "label": "Corner radius",
         "default": 8
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_border",
+        "label": "Border on hover and focus",
+        "info": "Leave empty to keep the border color."
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_focus",
+        "label": "Focus ring",
+        "info": "Shown when a field is reached with the keyboard. Leave empty to use the text color."
+      },
+      {
+        "type": "range",
+        "id": "storelib_input_radius",
+        "label": "Corner radius (Storelib)",
+        "min": -1,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "default": -1,
+        "visible_if": "{{ false }}"
       },
       {
         "type": "select",
