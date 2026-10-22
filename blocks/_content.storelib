@@ -23,7 +23,7 @@
     {
       "type": "select",
       "id": "horizontal_alignment_flex_direction_column",
-      "label": "Alignment",
+      "label": "Horizontal alignment",
       "options": [
         {
           "value": "flex-start",
@@ -43,7 +43,7 @@
     {
       "type": "select",
       "id": "vertical_alignment_flex_direction_column",
-      "label": "Position",
+      "label": "Vertical alignment",
       "options": [
         {
           "value": "flex-start",
@@ -67,7 +67,7 @@
     {
       "type": "range",
       "id": "gap",
-      "label": "Gap",
+      "label": "Space between items",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -80,14 +80,48 @@
       "label": "Appearance"
     },
     {
+      "type": "select",
+      "id": "theme_color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Follow parent section"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        },
+        {
+          "value": "custom",
+          "label": "Custom colors"
+        }
+      ],
+      "default": "inherit",
+      "info": "Follow the parent section or choose a shared scheme. Custom uses this block’s background and text colors."
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background color",
-      "placeholder": "Default"
+      "label": "Custom background",
+      "placeholder": "Default",
+      "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_7",
+      "id": "hdr_8",
       "label": "Padding"
     },
     {
@@ -129,6 +163,12 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Custom text color",
+      "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
     }
   ],
   "blocks": [

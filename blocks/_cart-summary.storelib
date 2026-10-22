@@ -160,13 +160,13 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background color",
+      "label": "Custom background",
       "placeholder": "Default"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Custom text color",
       "placeholder": "Default"
     },
     {
@@ -183,7 +183,7 @@
     {
       "type": "select",
       "id": "border",
-      "label": "Style",
+      "label": "Border style",
       "options": [
         {
           "value": "none",
@@ -203,7 +203,7 @@
       "max": 100,
       "step": 1,
       "unit": "px",
-      "label": "Thickness",
+      "label": "Border thickness",
       "default": 1,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
@@ -214,7 +214,7 @@
       "max": 100,
       "step": 1,
       "unit": "%",
-      "label": "Opacity",
+      "label": "Border opacity",
       "default": 100,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },

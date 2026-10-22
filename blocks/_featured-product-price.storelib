@@ -81,7 +81,7 @@
     {
       "type": "select",
       "id": "type_preset",
-      "label": "Text preset",
+      "label": "Text style",
       "options": [
         {
           "value": "",

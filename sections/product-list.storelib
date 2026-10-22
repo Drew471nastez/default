@@ -264,7 +264,7 @@
     {
       "type": "select",
       "id": "section_width",
-      "label": "Width",
+      "label": "Content width",
       "options": [
         {
           "value": "page-width",
@@ -280,7 +280,7 @@
     {
       "type": "select",
       "id": "horizontal_alignment",
-      "label": "Alignment",
+      "label": "Horizontal alignment",
       "options": [
         {
           "value": "flex-start",
@@ -300,7 +300,7 @@
     {
       "type": "range",
       "id": "gap",
-      "label": "Gap",
+      "label": "Space between items",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -314,7 +314,11 @@
       "options": [
         {
           "value": "inherit",
-          "label": "Default / custom colors"
+          "label": "Use theme default"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
         },
         {
           "value": "surface",
@@ -327,20 +331,31 @@
         {
           "value": "accent",
           "label": "Accent"
+        },
+        {
+          "value": "custom",
+          "label": "Custom colors"
         }
       ],
       "default": "inherit",
-      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+      "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background color",
-      "placeholder": "Default"
+      "label": "Custom background",
+      "placeholder": "Default",
+      "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Custom text color",
+      "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_19",
+      "id": "hdr_20",
       "label": "Padding"
     },
     {

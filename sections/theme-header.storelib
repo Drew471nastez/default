@@ -1553,7 +1553,7 @@
     {
       "type": "select",
       "id": "section_width",
-      "label": "Width",
+      "label": "Content width",
       "options": [
         {
           "value": "page-width",
@@ -1753,7 +1753,11 @@
       "options": [
         {
           "value": "inherit",
-          "label": "Default / custom colors"
+          "label": "Use theme default"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
         },
         {
           "value": "surface",
@@ -1766,22 +1770,28 @@
         {
           "value": "accent",
           "label": "Accent"
+        },
+        {
+          "value": "custom",
+          "label": "Custom colors"
         }
       ],
       "default": "inherit",
-      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+      "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
     },
     {
       "type": "color",
       "id": "background_color_top",
-      "label": "Top row background",
-      "placeholder": "Default"
+      "label": "Custom top row background",
+      "placeholder": "Default",
+      "visible_if": "{{ section.settings.theme_color_scheme_top == 'custom' }}"
     },
     {
       "type": "color",
       "id": "text_color_top",
-      "label": "Top row text",
-      "placeholder": "Default"
+      "label": "Custom top row text",
+      "placeholder": "Default",
+      "visible_if": "{{ section.settings.theme_color_scheme_top == 'custom' }}"
     },
     {
       "type": "select",
@@ -1790,7 +1800,11 @@
       "options": [
         {
           "value": "inherit",
-          "label": "Default / custom colors"
+          "label": "Use theme default"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
         },
         {
           "value": "surface",
@@ -1803,24 +1817,28 @@
         {
           "value": "accent",
           "label": "Accent"
+        },
+        {
+          "value": "custom",
+          "label": "Custom colors"
         }
       ],
       "default": "inherit",
-      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+      "info": "Follow shared theme colors, choose a shared scheme, or select Custom colors to override this area."
     },
     {
       "type": "color",
       "id": "background_color_bottom",
-      "label": "Bottom row background",
+      "label": "Custom bottom row background",
       "placeholder": "Default",
-      "visible_if": "{{ section.settings.menu_row == 'bottom' or section.settings.localization_row == 'bottom' or section.settings.search_row == 'bottom' }}"
+      "visible_if": "{{ section.settings.theme_color_scheme_bottom == 'custom' }}"
     },
     {
       "type": "color",
       "id": "text_color_bottom",
-      "label": "Bottom row text",
+      "label": "Custom bottom row text",
       "placeholder": "Default",
-      "visible_if": "{{ section.settings.menu_row == 'bottom' or section.settings.localization_row == 'bottom' or section.settings.search_row == 'bottom' }}"
+      "visible_if": "{{ section.settings.theme_color_scheme_bottom == 'custom' }}"
     },
     {
       "type": "header",

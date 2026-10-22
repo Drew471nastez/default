@@ -173,13 +173,13 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Custom text color",
       "placeholder": "Default"
     },
     {
       "type": "select",
       "id": "font_size",
-      "label": "Size",
+      "label": "Custom text size",
       "options": [
         {
           "value": "0.625rem",
@@ -207,7 +207,7 @@
     {
       "type": "select",
       "id": "case",
-      "label": "Case",
+      "label": "Capitalization",
       "options": [
         {
           "value": "none",

@@ -28,7 +28,7 @@
     {
       "type": "select",
       "id": "horizontal_alignment_flex_direction_column",
-      "label": "Alignment",
+      "label": "Horizontal alignment",
       "options": [
         {
           "value": "flex-start",
@@ -48,7 +48,7 @@
     {
       "type": "select",
       "id": "vertical_alignment_flex_direction_column",
-      "label": "Position",
+      "label": "Vertical alignment",
       "options": [
         {
           "value": "flex-start",
@@ -72,7 +72,7 @@
     {
       "type": "range",
       "id": "gap",
-      "label": "Gap",
+      "label": "Space between items",
       "min": 0,
       "max": 100,
       "step": 1,

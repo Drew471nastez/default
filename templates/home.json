@@ -5,6 +5,7 @@
       "type": "hero",
       "settings": {
         "gap": 24,
+        "text_color": "#ffffff",
         "media_type_1": "image",
         "media_type_2": "image",
         "overlay_color": "#12121266",
@@ -20,6 +21,7 @@
         "blurred_reflection": false,
         "gradient_direction": "to bottom",
         "reflection_opacity": 75,
+        "theme_color_scheme": "custom",
         "vertical_alignment": "flex-end",
         "vertical_on_mobile": true,
         "custom_mobile_media": false,
@@ -30,9 +32,7 @@
         "section_height_custom": 50,
         "stack_media_on_mobile": false,
         "vertical_alignment_flex_direction_column": "flex-end",
-        "horizontal_alignment_flex_direction_column": "center",
-        "theme_color_scheme": "custom",
-        "text_color": "#ffffff"
+        "horizontal_alignment_flex_direction_column": "center"
       },
       "blocks": {
         "text_YLPk4p": {
@@ -267,8 +267,8 @@
         "columns_gap": 12,
         "background_color": "#000000",
         "padding_block_end": 48,
-        "padding_block_start": 48,
-        "theme_color_scheme": "custom"
+        "theme_color_scheme": "custom",
+        "padding_block_start": 48
       },
       "blocks": {
         "static-header": {

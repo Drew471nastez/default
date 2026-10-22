@@ -189,7 +189,7 @@
     {
       "type": "select",
       "id": "type_preset",
-      "label": "Preset",
+      "label": "Text style",
       "options": [
         {
           "value": "",

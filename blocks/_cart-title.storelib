@@ -96,7 +96,7 @@
     {
       "type": "select",
       "id": "type_preset",
-      "label": "Preset",
+      "label": "Text style",
       "options": [
         {
           "value": "",
@@ -148,7 +148,7 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Custom text color",
       "placeholder": "Default"
     },
     {

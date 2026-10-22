@@ -109,32 +109,334 @@
 
 <schema>
 {
+  "type": "customer-access",
+  "name": "Customer account access",
+  "settings": [
+    {
+      "type": "paragraph",
+      "id": "para_1",
+      "label": "Uses Storelib’s built-in customer account flow. This section controls appearance and navigation; Storelib handles authentication and account management.",
+      "content": "Uses Storelib’s built-in customer account flow. This section controls appearance and navigation; Storelib handles authentication and account management."
+    },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Screen",
+      "default": "login",
+      "options": [
+        {
+          "value": "login",
+          "label": "Login"
+        },
+        {
+          "value": "signup",
+          "label": "Signup"
+        },
+        {
+          "value": "account",
+          "label": "Account overview"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "theme_color_scheme",
+      "label": "Color scheme",
+      "default": "inherit",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Use account theme settings"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "id": "hdr_4",
+      "label": "Signed-out screen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Log in"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Sign in to view and manage your account.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Account-service button",
+      "default": "Continue to sign in"
+    },
+    {
+      "type": "text",
+      "id": "signup_label",
+      "label": "Signup link",
+      "default": "New here? Create an account"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Login link",
+      "default": "Already have an account? Log in"
+    },
+    {
+      "type": "header",
+      "id": "hdr_10",
+      "label": "Signed-in screen"
+    },
+    {
+      "type": "text",
+      "id": "signed_in_heading",
+      "label": "Heading",
+      "default": "Your account"
+    },
+    {
+      "type": "richtext",
+      "id": "signed_in_text",
+      "label": "Introduction",
+      "default": "<p>View your details and continue to manage your account.</p>"
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name label",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "manage_label",
+      "label": "Manage-account button",
+      "default": "Manage your account"
+    },
+    {
+      "type": "header",
+      "id": "hdr_16",
+      "label": "Accounts unavailable"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_heading",
+      "label": "Heading",
+      "default": "Customer accounts are unavailable"
+    },
+    {
+      "type": "richtext",
+      "id": "unavailable_text",
+      "label": "Message",
+      "default": "<p>You can continue browsing the shop.</p>"
+    },
+    {
+      "type": "header",
+      "id": "hdr_19",
+      "label": "Return navigation"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Link label",
+      "default": "Continue shopping"
+    },
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "Link destination",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer account access"
+    }
+  ],
   "shopify": {
     "name": "Customer account access",
     "settings": [
-      {"type":"paragraph","content":"Uses Storelib’s built-in customer account flow. This section controls appearance and navigation; Storelib handles authentication and account management."},
-      {"type":"select","id":"mode","label":"Screen","default":"login","options":[{"value":"login","label":"Login"},{"value":"signup","label":"Signup"},{"value":"account","label":"Account overview"}]},
-      {"type":"select","id":"theme_color_scheme","label":"Color scheme","default":"inherit","options":[{"value":"inherit","label":"Use account theme settings"},{"value":"base","label":"Page colors"},{"value":"surface","label":"Soft surface"},{"value":"inverse","label":"Inverse"},{"value":"accent","label":"Accent"}]},
-      {"type":"header","content":"Signed-out screen"},
-      {"type":"text","id":"heading","label":"Heading","default":"Log in"},
-      {"type":"richtext","id":"intro","label":"Introduction","default":"<p>Sign in to view and manage your account.</p>"},
-      {"type":"text","id":"primary_label","label":"Account-service button","default":"Continue to sign in"},
-      {"type":"text","id":"signup_label","label":"Signup link","default":"New here? Create an account"},
-      {"type":"text","id":"login_label","label":"Login link","default":"Already have an account? Log in"},
-      {"type":"header","content":"Signed-in screen"},
-      {"type":"text","id":"signed_in_heading","label":"Heading","default":"Your account"},
-      {"type":"richtext","id":"signed_in_text","label":"Introduction","default":"<p>View your details and continue to manage your account.</p>"},
-      {"type":"text","id":"name_label","label":"Name label","default":"Name"},
-      {"type":"text","id":"email_label","label":"Email label","default":"Email"},
-      {"type":"text","id":"manage_label","label":"Manage-account button","default":"Manage your account"},
-      {"type":"header","content":"Accounts unavailable"},
-      {"type":"text","id":"unavailable_heading","label":"Heading","default":"Customer accounts are unavailable"},
-      {"type":"richtext","id":"unavailable_text","label":"Message","default":"<p>You can continue browsing the shop.</p>"},
-      {"type":"header","content":"Return navigation"},
-      {"type":"text","id":"back_label","label":"Link label","default":"Continue shopping"},
-      {"type":"url","id":"back_url","label":"Link destination","default":"/collections/all"}
+      {
+        "type": "paragraph",
+        "content": "Uses Storelib’s built-in customer account flow. This section controls appearance and navigation; Storelib handles authentication and account management."
+      },
+      {
+        "type": "select",
+        "id": "mode",
+        "label": "Screen",
+        "default": "login",
+        "options": [
+          {
+            "value": "login",
+            "label": "Login"
+          },
+          {
+            "value": "signup",
+            "label": "Signup"
+          },
+          {
+            "value": "account",
+            "label": "Account overview"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "theme_color_scheme",
+        "label": "Color scheme",
+        "default": "inherit",
+        "options": [
+          {
+            "value": "inherit",
+            "label": "Use account theme settings"
+          },
+          {
+            "value": "base",
+            "label": "Page colors"
+          },
+          {
+            "value": "surface",
+            "label": "Soft surface"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Signed-out screen"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Log in"
+      },
+      {
+        "type": "richtext",
+        "id": "intro",
+        "label": "Introduction",
+        "default": "<p>Sign in to view and manage your account.</p>"
+      },
+      {
+        "type": "text",
+        "id": "primary_label",
+        "label": "Account-service button",
+        "default": "Continue to sign in"
+      },
+      {
+        "type": "text",
+        "id": "signup_label",
+        "label": "Signup link",
+        "default": "New here? Create an account"
+      },
+      {
+        "type": "text",
+        "id": "login_label",
+        "label": "Login link",
+        "default": "Already have an account? Log in"
+      },
+      {
+        "type": "header",
+        "content": "Signed-in screen"
+      },
+      {
+        "type": "text",
+        "id": "signed_in_heading",
+        "label": "Heading",
+        "default": "Your account"
+      },
+      {
+        "type": "richtext",
+        "id": "signed_in_text",
+        "label": "Introduction",
+        "default": "<p>View your details and continue to manage your account.</p>"
+      },
+      {
+        "type": "text",
+        "id": "name_label",
+        "label": "Name label",
+        "default": "Name"
+      },
+      {
+        "type": "text",
+        "id": "email_label",
+        "label": "Email label",
+        "default": "Email"
+      },
+      {
+        "type": "text",
+        "id": "manage_label",
+        "label": "Manage-account button",
+        "default": "Manage your account"
+      },
+      {
+        "type": "header",
+        "content": "Accounts unavailable"
+      },
+      {
+        "type": "text",
+        "id": "unavailable_heading",
+        "label": "Heading",
+        "default": "Customer accounts are unavailable"
+      },
+      {
+        "type": "richtext",
+        "id": "unavailable_text",
+        "label": "Message",
+        "default": "<p>You can continue browsing the shop.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Return navigation"
+      },
+      {
+        "type": "text",
+        "id": "back_label",
+        "label": "Link label",
+        "default": "Continue shopping"
+      },
+      {
+        "type": "url",
+        "id": "back_url",
+        "label": "Link destination",
+        "default": "/collections/all"
+      }
     ],
-    "presets": [{"name":"Customer account access"}]
+    "presets": [
+      {
+        "name": "Customer account access"
+      }
+    ]
   }
 }
 </schema>

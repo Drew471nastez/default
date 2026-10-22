@@ -56,7 +56,7 @@
     {
       "type": "select",
       "id": "font",
-      "label": "Font",
+      "label": "Font family",
       "options": [
         {
           "value": "var(--font-body--family)",
@@ -80,7 +80,7 @@
     {
       "type": "select",
       "id": "weight",
-      "label": "Weight",
+      "label": "Font weight",
       "options": [
         {
           "value": "",
@@ -120,7 +120,7 @@
     {
       "type": "select",
       "id": "line_height",
-      "label": "Line height",
+      "label": "Line spacing",
       "options": [
         {
           "value": "tight",
@@ -160,7 +160,7 @@
     {
       "type": "select",
       "id": "case",
-      "label": "Case",
+      "label": "Capitalization",
       "options": [
         {
           "value": "none",

@@ -844,12 +844,12 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background color"
+      "label": "Custom background"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Custom text color",
       "placeholder": "Default"
     },
     {

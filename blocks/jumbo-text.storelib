@@ -20,7 +20,7 @@
     {
       "type": "select",
       "id": "font",
-      "label": "Font",
+      "label": "Font family",
       "options": [
         {
           "value": "body",
@@ -50,7 +50,7 @@
     {
       "type": "select",
       "id": "line_height",
-      "label": "Line height",
+      "label": "Line spacing",
       "options": [
         {
           "value": "0.8",
@@ -90,7 +90,7 @@
     {
       "type": "select",
       "id": "case",
-      "label": "Case",
+      "label": "Capitalization",
       "options": [
         {
           "value": "none",
@@ -138,7 +138,7 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color"
+      "label": "Custom text color"
     }
   ],
   "presets": [

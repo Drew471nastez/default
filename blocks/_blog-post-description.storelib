@@ -98,7 +98,7 @@
     {
       "type": "select",
       "id": "type_preset",
-      "label": "Preset",
+      "label": "Text style",
       "options": [
         {
           "value": "rte",
@@ -143,7 +143,7 @@
     {
       "type": "select",
       "id": "font",
-      "label": "Font",
+      "label": "Font family",
       "options": [
         {
           "value": "var(--font-body--family)",
@@ -168,7 +168,7 @@
     {
       "type": "select",
       "id": "font_size",
-      "label": "Size",
+      "label": "Custom text size",
       "options": [
         {
           "value": "",
@@ -245,7 +245,7 @@
     {
       "type": "select",
       "id": "line_height",
-      "label": "Line height",
+      "label": "Line spacing",
       "options": [
         {
           "value": "tight",
@@ -287,7 +287,7 @@
     {
       "type": "select",
       "id": "case",
-      "label": "Case",
+      "label": "Capitalization",
       "options": [
         {
           "value": "none",
@@ -329,7 +329,7 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Custom text color",
       "placeholder": "Default"
     },
     {

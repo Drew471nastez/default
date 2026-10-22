@@ -195,7 +195,7 @@
     {
       "type": "range",
       "id": "gap",
-      "label": "Gap",
+      "label": "Space between items",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -234,11 +234,44 @@
       "default": "none"
     },
     {
+      "type": "select",
+      "id": "theme_color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Follow parent section"
+        },
+        {
+          "value": "base",
+          "label": "Page colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        },
+        {
+          "value": "custom",
+          "label": "Custom colors"
+        }
+      ],
+      "default": "inherit",
+      "info": "Follow the parent section or choose a shared scheme. Custom uses this block’s background and text colors."
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background color",
+      "label": "Custom background",
       "placeholder": "Default",
-      "visible_if": "{{ block.settings.background_media == 'none' }}"
+      "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
     },
     {
       "type": "video",
@@ -288,13 +321,13 @@
     },
     {
       "type": "header",
-      "id": "hdr_18",
+      "id": "hdr_19",
       "label": "Borders"
     },
     {
       "type": "select",
       "id": "border",
-      "label": "Style",
+      "label": "Border style",
       "options": [
         {
           "value": "none",
@@ -314,7 +347,7 @@
       "max": 100,
       "step": 1,
       "unit": "px",
-      "label": "Thickness",
+      "label": "Border thickness",
       "default": 1,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
@@ -325,7 +358,7 @@
       "max": 100,
       "step": 1,
       "unit": "%",
-      "label": "Opacity",
+      "label": "Border opacity",
       "default": 100,
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
@@ -348,7 +381,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_24",
+      "id": "hdr_25",
       "label": "Padding"
     },
     {
@@ -390,6 +423,12 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Custom text color",
+      "visible_if": "{{ block.settings.theme_color_scheme == 'custom' }}"
     }
   ],
   "blocks": [
