@@ -473,3 +473,13 @@ test('hover color lives in Buttons and Automatic, Custom and No change reach bot
   const button=kind=>inverseNone.match(new RegExp(`--color-${kind}-button-background:\\s*([^;]+);`))[1].trim();
   for (const kind of ['primary','secondary']) assert.equal(hover(inverseNone,kind).background,button(kind),kind);
 });
+
+test('store, 404 and password sections offer only blocks that belong in them', () => {
+  const offered=name=>JSON.parse(source(`sections/${name}.storelib`).match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]).shopify.blocks.map(block=>block.type);
+  for (const name of ['product-list','product-information','featured-product-information','main-404','password']) {
+    const types=offered(name);
+    for (const unrelated of ['@theme','contact-form','video']) assert(!types.includes(unrelated),`${name} offers ${unrelated}`);
+    if (name!=='password') assert(!types.includes('email-signup'),`${name} offers email-signup`);
+  }
+  assert(offered('password').includes('email-signup'));
+});

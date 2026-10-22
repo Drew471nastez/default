@@ -54,6 +54,22 @@
     text-align: var(--product-card-text-align);
   }
 
+  /* The price block's own width (often fit-content) would shrink the row and pin it to the start. */
+  .product-card--theme product-price > * {
+    width: 100%;
+  }
+
+  /*
+    The shared corner radius rounds the whole card: its frame and its image. Inside a padded card
+    the image follows the frame with a matching inner radius. A gallery's own larger radius wins.
+  */
+  .product-card--theme .card-gallery {
+    border-radius: max(
+      var(--border-radius, 0px),
+      var(--theme-product-card-radius, 0px) - var(--theme-product-card-padding, 0px) - var(--theme-product-card-border-width, 0px)
+    );
+  }
+
   .product-grid__card.product-grid__card {
     display: flex;
     flex-flow: column nowrap;

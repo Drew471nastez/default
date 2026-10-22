@@ -23,7 +23,7 @@ test('shared style changes update existing grid/search cards and price alignment
     const after=settings({product_card_radius:28,product_card_padding:20,product_card_gap:24,product_card_alignment:'center',product_card_price_size:22,product_card_border_width:2});
     const price=await render('blocks/price.storelib',{settings:before,closest:{product},template:{name:'collection'},block:{id:'price',settings:{width:'fit-content',alignment:'left',type_preset:'h6',show_sale_price_first:true}}});
     const title=await render('blocks/product-title.storelib',{settings:before,closest:{product},block:{id:'title',settings:{width:'fit-content',type_preset:'h5',alignment:'left'}}});
-    const children=title+price;
+    const children='<div class="card-gallery border-style" style="--border-radius:0px;overflow:hidden"><div style="aspect-ratio:1"></div></div>'+title+price;
     const card=await render('snippets/product-card.storelib',{settings:before,product,block:{id:'shared-card',settings:{}},children});
     const custom=await render('snippets/product-card.storelib',{settings:before,product,block:{id:'custom-card',settings:{card_style_source:'custom',border:'solid',border_width:1,border_radius:3,product_card_gap:5}},children});
     const resource=await render('snippets/resource-card.storelib',{settings:before,resource_type:'product',resource:product});
@@ -53,7 +53,8 @@ test('shared style changes update existing grid/search cards and price alignment
           radius:getComputedStyle(content).borderRadius,padding:getComputedStyle(content).paddingTop,gap:getComputedStyle(content).rowGap,
           titleAlign:getComputedStyle(card.querySelector('.product-title-block')).textAlign,priceAlign:getComputedStyle(container).textAlign,
           priceFont:getComputedStyle(price.querySelector('.price')).fontSize,
-          centered:Math.abs((Math.min(...spans.map(r=>r.left))+Math.max(...spans.map(r=>r.right)))/2-(bounds.left+bounds.right)/2)<2,
+          centered:Math.abs((Math.min(...spans.map(r=>r.left))+Math.max(...spans.map(r=>r.right)))/2-(content.getBoundingClientRect().left+content.getBoundingClientRect().right)/2)<2,
+          imageRadius:getComputedStyle(card.querySelector('.card-gallery')).borderRadius,
           fullPriceWidth:Math.abs(price.getBoundingClientRect().width-content.clientWidth+parseFloat(getComputedStyle(content).paddingLeft)+parseFloat(getComputedStyle(content).paddingRight))<2,
           searchRadius:getComputedStyle(document.querySelector('.resource-card--theme')).borderRadius,
           customRadius:getComputedStyle(document.querySelector('#product-card-custom-card .product-card__content')).borderRadius,
@@ -62,7 +63,7 @@ test('shared style changes update existing grid/search cards and price alignment
       assert(result.sameCard&&result.samePrice,'style changes must not replace card or price nodes');
       assert.equal(navigations,0);assert.equal(result.scroll,700);
       assert.equal(result.radius,'28px');assert.equal(result.searchRadius,'28px');assert.equal(result.customRadius,'3px');
-      assert.equal(result.padding,'20px');assert.equal(result.gap,'24px');assert.equal(result.priceFont,'22px');
+      assert.equal(result.imageRadius,'6px');assert.equal(result.padding,'20px');assert.equal(result.gap,'24px');assert.equal(result.priceFont,'22px');
       assert.equal(result.titleAlign,'center');assert.equal(result.priceAlign,'center');assert(result.centered&&result.fullPriceWidth);
       page.off('framenavigated',onNavigate);
     }

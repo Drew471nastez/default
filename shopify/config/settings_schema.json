@@ -1853,7 +1853,8 @@
         "max": 40,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "info": "Rounds the card and its image."
       },
       {
         "type": "range",
