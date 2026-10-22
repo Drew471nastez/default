@@ -162,7 +162,7 @@
     "type_letter_spacing_h5": "heading-normal",
     "type_letter_spacing_h6": "heading-normal",
     "drawer_background_color": "{{ settings.page_background_color }}",
-    "page_transition_enabled": true,
+    "page_transition_enabled": false,
     "product_card_price_font": "body",
     "product_card_price_size": 15,
     "button_text_case_primary": "default",
