@@ -87,6 +87,7 @@
     "content_max_width": 1440,
     "drawer_text_color": "{{ settings.page_text_color }}",
     "show_installments": true,
+    "site_border_color": "#292929",
     "type_heading_font": "inter_n7",
     "account_login_page": "/login",
     "card_corner_radius": 4,
@@ -210,7 +211,6 @@
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "#ff4f4f",
-    "palette_selected_variant_background": "{{ settings.page_text_color }}",
-    "site_border_color": "#292929"
+    "palette_selected_variant_background": "{{ settings.page_text_color }}"
   }
 }

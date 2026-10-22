@@ -74,13 +74,28 @@
    {
     "type": "color",
     "id": "page_background_color",
-    "label": "Page background"
+    "label": "Background",
+    "default": "#ffffff",
+    "info": "Shared by sections set to Theme."
    },
    {
     "type": "color",
     "id": "page_text_color",
-    "label": "Page text",
-    "info": "Default for theme sections"
+    "label": "Text",
+    "default": "#000000",
+    "info": "Shared by headings, paragraphs and sections set to Theme."
+   },
+   {
+    "type": "color",
+    "id": "site_border_color",
+    "label": "Borders",
+    "default": "#292929"
+   },
+   {
+    "type": "color",
+    "id": "palette_input_text",
+    "label": "Field text",
+    "default": "#424242"
    },
    {
     "type": "select",
@@ -105,76 +120,68 @@
      }
     ],
     "default": "base",
-    "info": "Used by every section set to Use theme default. A section can choose another scheme or Custom colors."
+    "info": "Used by every section set to Use theme default. A section can choose another scheme or Custom colors.",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "checkbox",
     "id": "ensure_text_contrast",
-    "label": "Protect page and section text contrast",
+    "label": "Readable text",
     "default": true,
-    "info": "Choose readable text for page, section and group surfaces. Individual custom text colors can still override inherited colors. Turn off to keep exact surface text colors."
+    "info": "Automatically correct low-contrast section text. Custom text blocks keep their own colors."
    },
    {
     "type": "paragraph",
-    "id": "para_6",
-    "label": "Use shared schemes across sections. Default preserves existing section colors; selecting a shared scheme replaces the section background and text together.",
-    "content": "Use shared schemes across sections. Default preserves existing section colors; selecting a shared scheme replaces the section background and text together."
-   },
-   {
-    "type": "header",
-    "id": "hdr_7",
-    "label": "Soft surface"
+    "id": "para_8",
+    "label": "Choose the site colors here. Sections follow Theme by default; choose Custom in a section to give it its own background and text.",
+    "content": "Choose the site colors here. Sections follow Theme by default; choose Custom in a section to give it its own background and text."
    },
    {
     "type": "color",
     "id": "scheme_surface_background",
     "label": "Background",
-    "default": "#f5f5f5"
+    "default": "#f5f5f5",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "color",
     "id": "scheme_surface_text",
     "label": "Text",
-    "default": "#171717"
-   },
-   {
-    "type": "header",
-    "id": "hdr_10",
-    "label": "Inverse"
+    "default": "#171717",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "color",
     "id": "scheme_inverse_background",
     "label": "Background",
-    "default": "#171717"
+    "default": "#171717",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "color",
     "id": "scheme_inverse_text",
     "label": "Text",
-    "default": "#ffffff"
-   },
-   {
-    "type": "header",
-    "id": "hdr_13",
-    "label": "Accent"
+    "default": "#ffffff",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "color",
     "id": "scheme_accent_background",
     "label": "Background",
-    "default": "#e8e8e8"
+    "default": "#e8e8e8",
+    "visible_if": "{{ false }}"
    },
    {
     "type": "color",
     "id": "scheme_accent_text",
     "label": "Text",
-    "default": "#171717"
+    "default": "#171717",
+    "visible_if": "{{ false }}"
    }
   ]
  },
  {
-  "name": "Fonts & text styles",
+  "name": "Fonts",
   "settings": [
    {
     "type": "header",
@@ -318,6 +325,14 @@
      {
       "value": "heading",
       "label": "Heading"
+     },
+     {
+      "value": "subheading",
+      "label": "Subheading"
+     },
+     {
+      "value": "body",
+      "label": "Body"
      },
      {
       "value": "accent",
@@ -501,6 +516,14 @@
       "label": "Heading"
      },
      {
+      "value": "subheading",
+      "label": "Subheading"
+     },
+     {
+      "value": "body",
+      "label": "Body"
+     },
+     {
       "value": "accent",
       "label": "Accent"
      }
@@ -682,16 +705,16 @@
       "label": "Heading"
      },
      {
-      "value": "accent",
-      "label": "Accent"
-     },
-     {
       "value": "subheading",
       "label": "Subheading"
      },
      {
       "value": "body",
       "label": "Body"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
      }
     ],
     "default": "heading"
@@ -871,16 +894,16 @@
       "label": "Heading"
      },
      {
-      "value": "accent",
-      "label": "Accent"
-     },
-     {
       "value": "subheading",
       "label": "Subheading"
      },
      {
       "value": "body",
       "label": "Body"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
      }
     ],
     "default": "subheading"
@@ -1060,16 +1083,16 @@
       "label": "Heading"
      },
      {
-      "value": "accent",
-      "label": "Accent"
-     },
-     {
       "value": "subheading",
       "label": "Subheading"
      },
      {
       "value": "body",
       "label": "Body"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
      }
     ],
     "default": "subheading"
@@ -1249,16 +1272,16 @@
       "label": "Heading"
      },
      {
-      "value": "accent",
-      "label": "Accent"
-     },
-     {
       "value": "subheading",
       "label": "Subheading"
      },
      {
       "value": "body",
       "label": "Body"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
      }
     ],
     "default": "subheading"
@@ -1451,7 +1474,8 @@
    {
     "type": "range",
     "id": "content_max_width",
-    "label": "Standard page width",
+    "label": "Content width",
+    "info": "The Narrow preset uses this width. Normal is one-third wider; Wide is two-thirds wider. Content stays centered and fits smaller screens.",
     "min": 960,
     "max": 1800,
     "step": 20,
@@ -1472,7 +1496,7 @@
   ]
  },
  {
-  "name": "Buttons & links",
+  "name": "Buttons",
   "settings": [
    {
     "type": "header",
@@ -1654,6 +1678,43 @@
     "step": 2,
     "default": 44,
     "unit": "px"
+   },
+   {
+    "type": "header",
+    "id": "hdr_21",
+    "label": "Hover & focus"
+   },
+   {
+    "type": "paragraph",
+    "id": "para_22",
+    "label": "Button hover colors adjust automatically for readability. Keyboard focus remains visible on buttons, links and fields.",
+    "content": "Button hover colors adjust automatically for readability. Keyboard focus remains visible on buttons, links and fields."
+   },
+   {
+    "type": "range",
+    "id": "button_hover_duration",
+    "label": "Hover speed",
+    "min": 0,
+    "max": 400,
+    "step": 20,
+    "unit": "ms",
+    "default": 200
+   },
+   {
+    "type": "range",
+    "id": "focus_ring_width",
+    "label": "Focus outline",
+    "min": 2,
+    "max": 4,
+    "step": 1,
+    "unit": "px",
+    "default": 2
+   },
+   {
+    "type": "checkbox",
+    "id": "add_to_cart_animation",
+    "label": "Add to cart",
+    "default": true
    }
   ]
  },
@@ -1664,11 +1725,6 @@
     "type": "color",
     "id": "palette_input_background",
     "label": "Background"
-   },
-   {
-    "type": "color",
-    "id": "palette_input_text",
-    "label": "Text"
    },
    {
     "type": "color",
@@ -1755,31 +1811,31 @@
    {
     "type": "select",
     "id": "product_card_color_scheme",
-    "label": "Color scheme",
+    "label": "Colors",
     "options": [
      {
       "value": "inherit",
-      "label": "Follow containing section"
+      "label": "Theme"
      },
      {
-      "value": "base",
-      "label": "Page colors"
-     },
-     {
-      "value": "surface",
-      "label": "Soft surface"
-     },
-     {
-      "value": "inverse",
-      "label": "Inverse"
-     },
-     {
-      "value": "accent",
-      "label": "Accent"
+      "value": "custom",
+      "label": "Custom"
      }
     ],
     "default": "inherit",
-    "info": "Follow the surrounding section or choose a fixed shared scheme for all product cards."
+    "info": "Follow the site colors, or choose your own background and text."
+   },
+   {
+    "type": "color",
+    "id": "product_card_text",
+    "label": "Text",
+    "visible_if": "{{ settings.product_card_color_scheme == 'custom' }}"
+   },
+   {
+    "type": "color",
+    "id": "product_card_background",
+    "label": "Background",
+    "visible_if": "{{ settings.product_card_color_scheme == 'custom' }}"
    },
    {
     "type": "range",
@@ -1839,7 +1895,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_9",
+    "id": "hdr_11",
     "label": "Product title"
    },
    {
@@ -1878,7 +1934,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_12",
+    "id": "hdr_14",
     "label": "Product price"
    },
    {
@@ -1917,7 +1973,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_15",
+    "id": "hdr_17",
     "label": "Product image"
    },
    {
@@ -1987,7 +2043,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_22",
+    "id": "hdr_24",
     "label": "Media"
    },
    {
@@ -2001,6 +2057,31 @@
     "id": "product_card_carousel",
     "label": "Allow product image carousel",
     "default": true
+   },
+   {
+    "type": "select",
+    "id": "card_hover_effect",
+    "label": "Card hover effect",
+    "options": [
+     {
+      "value": "none",
+      "label": "None"
+     },
+     {
+      "value": "lift",
+      "label": "Lift"
+     },
+     {
+      "value": "scale",
+      "label": "Scale"
+     },
+     {
+      "value": "subtle-zoom",
+      "label": "Zoom"
+     }
+    ],
+    "default": "lift",
+    "info": "Applies to product and collection cards"
    }
   ]
  },
@@ -2654,30 +2735,31 @@
    {
     "type": "select",
     "id": "account_color_scheme",
-    "label": "Account page colors",
+    "label": "Colors",
     "options": [
      {
       "value": "inherit",
-      "label": "Use theme default"
+      "label": "Theme"
      },
      {
-      "value": "base",
-      "label": "Page colors"
-     },
-     {
-      "value": "surface",
-      "label": "Soft surface"
-     },
-     {
-      "value": "inverse",
-      "label": "Inverse"
-     },
-     {
-      "value": "accent",
-      "label": "Accent"
+      "value": "custom",
+      "label": "Custom"
      }
     ],
-    "default": "inherit"
+    "default": "inherit",
+    "info": "Follow the site colors, or choose your own background and text."
+   },
+   {
+    "type": "color",
+    "id": "account_text",
+    "label": "Text",
+    "visible_if": "{{ settings.account_color_scheme == 'custom' }}"
+   },
+   {
+    "type": "color",
+    "id": "account_background",
+    "label": "Background",
+    "visible_if": "{{ settings.account_color_scheme == 'custom' }}"
    },
    {
     "type": "range",
@@ -2727,7 +2809,7 @@
   ]
  },
  {
-  "name": "Motion & hover effects",
+  "name": "Motion",
   "settings": [
    {
     "type": "checkbox",
@@ -2740,37 +2822,6 @@
     "id": "transition_to_main_product",
     "label": "Product card to product page transition",
     "default": true
-   },
-   {
-    "type": "checkbox",
-    "id": "add_to_cart_animation",
-    "label": "Add to cart",
-    "default": true
-   },
-   {
-    "type": "select",
-    "id": "card_hover_effect",
-    "label": "Card hover effect",
-    "options": [
-     {
-      "value": "none",
-      "label": "None"
-     },
-     {
-      "value": "lift",
-      "label": "Lift"
-     },
-     {
-      "value": "scale",
-      "label": "Scale"
-     },
-     {
-      "value": "subtle-zoom",
-      "label": "Zoom"
-     }
-    ],
-    "default": "lift",
-    "info": "Applies to product and collection cards"
    }
   ]
  },

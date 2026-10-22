@@ -149,34 +149,35 @@
     {
       "type": "select",
       "id": "theme_color_scheme",
-      "label": "Color scheme",
+      "label": "Colors",
       "default": "inherit",
       "options": [
         {
           "value": "inherit",
-          "label": "Use account theme settings"
+          "label": "Theme"
         },
         {
-          "value": "base",
-          "label": "Page colors"
-        },
-        {
-          "value": "surface",
-          "label": "Soft surface"
-        },
-        {
-          "value": "inverse",
-          "label": "Inverse"
-        },
-        {
-          "value": "accent",
-          "label": "Accent"
+          "value": "custom",
+          "label": "Custom"
         }
-      ]
+      ],
+      "info": "Follow the site colors, or choose your own background and text."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "visible_if": "{{ section.settings.theme_color_scheme == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_4",
+      "id": "hdr_6",
       "label": "Signed-out screen"
     },
     {
@@ -211,7 +212,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_10",
+      "id": "hdr_12",
       "label": "Signed-in screen"
     },
     {
@@ -246,7 +247,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_16",
+      "id": "hdr_18",
       "label": "Accounts unavailable"
     },
     {
@@ -263,7 +264,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_19",
+      "id": "hdr_21",
       "label": "Return navigation"
     },
     {

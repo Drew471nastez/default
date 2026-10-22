@@ -95,26 +95,31 @@
     {
       "type": "select",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "Colors",
       "default": "white",
       "options": [
         {
           "value": "white",
-          "label": "Default"
+          "label": "Theme"
         },
         {
-          "value": "surface",
-          "label": "Soft surface"
-        },
-        {
-          "value": "inverse",
-          "label": "Inverse"
-        },
-        {
-          "value": "accent",
-          "label": "Accent"
+          "value": "custom",
+          "label": "Custom"
         }
-      ]
+      ],
+      "info": "Follow the site colors, or choose your own background and text."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "visible_if": "{{ section.settings.color_scheme == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "visible_if": "{{ section.settings.color_scheme == 'custom' }}"
     },
     {
       "type": "select",
