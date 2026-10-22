@@ -9,14 +9,14 @@
       "id": "storelib_hover_and_focus",
       "name": "Hover and focus",
       "shown_in": "Theme settings, after the theme's own groups",
-      "shown": true,
+      "shown": false,
       "settings": [
         {
           "type": "header",
           "id": "storelib_hdr_buttons",
           "label": "Buttons on hover",
           "group": "Hover and focus",
-          "shown": true
+          "shown": false
         },
         {
           "type": "color",
@@ -45,7 +45,8 @@
           "default": "",
           "group": "Hover and focus",
           "heading": "Buttons on hover",
-          "shown": true
+          "shown": false,
+          "placed_by_theme": true
         },
         {
           "type": "select",
@@ -84,7 +85,7 @@
           "id": "storelib_hdr_links",
           "label": "Links on hover",
           "group": "Hover and focus",
-          "shown": true
+          "shown": false
         },
         {
           "type": "color",
@@ -93,14 +94,15 @@
           "default": "",
           "group": "Hover and focus",
           "heading": "Links on hover",
-          "shown": true
+          "shown": false,
+          "placed_by_theme": true
         },
         {
           "type": "header",
           "id": "storelib_hdr_inputs",
           "label": "Fields",
           "group": "Hover and focus",
-          "shown": true
+          "shown": false
         },
         {
           "type": "color",
@@ -109,7 +111,8 @@
           "default": "",
           "group": "Hover and focus",
           "heading": "Fields",
-          "shown": true
+          "shown": false,
+          "placed_by_theme": true
         },
         {
           "type": "color",
@@ -118,7 +121,8 @@
           "default": "",
           "group": "Hover and focus",
           "heading": "Fields",
-          "shown": true
+          "shown": false,
+          "placed_by_theme": true
         },
         {
           "type": "range",
@@ -132,7 +136,8 @@
           "info": "-1 keeps the theme's own",
           "group": "Hover and focus",
           "heading": "Fields",
-          "shown": true
+          "shown": false,
+          "placed_by_theme": true
         }
       ]
     }

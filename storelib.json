@@ -27,9 +27,7 @@
     "defined_in": "config/storelib_settings_schema.json",
     "values_in": "config/settings.json",
     "values_at": "shopify",
-    "panels": [
-      "Hover and focus"
-    ],
+    "panels": [],
     "theme_placement": "A storelib_* id the theme's shopify/config/settings_schema.json declares is drawn where the theme puts it and left out of Storelib's panel."
   },
   "live_preview": {

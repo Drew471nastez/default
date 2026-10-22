@@ -218,11 +218,7 @@
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "#ff4f4f",
-    "palette_selected_variant_background": "{{ settings.page_text_color }}",
-    "storelib_button_hover_border": "",
-    "storelib_link_hover": "",
-    "storelib_input_border": "",
-    "storelib_input_focus": ""
+    "palette_selected_variant_background": "{{ settings.page_text_color }}"
   },
   "favicon_url": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png"
 }
