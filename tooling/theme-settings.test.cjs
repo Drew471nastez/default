@@ -494,7 +494,8 @@ test('every Storelib platform setting is declared in a theme group and reaches C
     storelib_link_hover:'Colors',storelib_input_border:'Buttons & fields',storelib_input_focus:'Buttons & fields',storelib_input_radius:'Buttons & fields'};
   for (const setting of platform) assert.equal(placed[setting.id],expected[setting.id],setting.id);
   const saved=JSON.parse(source('config/settings.json')).shopify;
-  for (const setting of platform) assert(setting.id in saved,`${setting.id} keeps its value`);
+  // Values the creator chose stay; an empty colour is left out by Storelib once the theme declares the setting.
+  for (const id of ['storelib_button_hover_bg','storelib_button_hover_text','storelib_button_hover_effect','storelib_input_radius']) assert(id in saved,`${id} keeps its value`);
 
   const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({storelib_link_hover:'#aa0000',storelib_input_border:'#00aa00',storelib_input_focus:'#0000aa'})});
   assert.match(css,/--link-hover-color:\s*#aa0000/);
