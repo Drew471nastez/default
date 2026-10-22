@@ -1481,8 +1481,46 @@
   "name": "Buttons",
   "settings": [
    {
+    "type": "range",
+    "id": "button_min_height",
+    "label": "Minimum button height",
+    "min": 44,
+    "max": 64,
+    "step": 2,
+    "default": 44,
+    "unit": "px"
+   },
+   {
+    "type": "range",
+    "id": "button_hover_duration",
+    "label": "Hover speed",
+    "min": 0,
+    "max": 400,
+    "step": 20,
+    "unit": "ms",
+    "default": 200,
+    "info": "Button color-transition duration. Set 0 ms for an instant change."
+   },
+   {
+    "type": "range",
+    "id": "focus_ring_width",
+    "label": "Focus outline",
+    "min": 2,
+    "max": 4,
+    "step": 1,
+    "unit": "px",
+    "default": 2,
+    "info": "Visible keyboard focus outline for buttons, links and form fields."
+   },
+   {
+    "type": "checkbox",
+    "id": "add_to_cart_animation",
+    "label": "Add to cart",
+    "default": true
+   },
+   {
     "type": "header",
-    "id": "hdr_1",
+    "id": "hdr_5",
     "label": "Primary button"
    },
    {
@@ -1557,7 +1595,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_9",
+    "id": "hdr_13",
     "label": "Secondary button"
    },
    {
@@ -1632,12 +1670,12 @@
    },
    {
     "type": "header",
-    "id": "hdr_17",
+    "id": "hdr_21",
     "label": "Pills"
    },
    {
     "type": "paragraph",
-    "id": "para_18",
+    "id": "para_22",
     "label": "Used for applied filters, discount codes, and search suggestions",
     "content": "Used for applied filters, discount codes, and search suggestions"
    },
@@ -1650,53 +1688,6 @@
     "step": 1,
     "unit": "px",
     "default": 40
-   },
-   {
-    "type": "range",
-    "id": "button_min_height",
-    "label": "Minimum button height",
-    "min": 44,
-    "max": 64,
-    "step": 2,
-    "default": 44,
-    "unit": "px"
-   },
-   {
-    "type": "header",
-    "id": "hdr_21",
-    "label": "Hover & focus"
-   },
-   {
-    "type": "paragraph",
-    "id": "para_22",
-    "label": "Button hover colors adjust automatically for readability. Keyboard focus remains visible on buttons, links and fields.",
-    "content": "Button hover colors adjust automatically for readability. Keyboard focus remains visible on buttons, links and fields."
-   },
-   {
-    "type": "range",
-    "id": "button_hover_duration",
-    "label": "Hover speed",
-    "min": 0,
-    "max": 400,
-    "step": 20,
-    "unit": "ms",
-    "default": 200
-   },
-   {
-    "type": "range",
-    "id": "focus_ring_width",
-    "label": "Focus outline",
-    "min": 2,
-    "max": 4,
-    "step": 1,
-    "unit": "px",
-    "default": 2
-   },
-   {
-    "type": "checkbox",
-    "id": "add_to_cart_animation",
-    "label": "Add to cart",
-    "default": true
    }
   ]
  },
