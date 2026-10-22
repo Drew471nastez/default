@@ -47,7 +47,7 @@
             "border_radius": 0,
             "border_opacity": 100,
             "extend_summary": true,
-            "background_color": "#292929"
+            "background_color": "transparent"
           }
         }
       },

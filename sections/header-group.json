@@ -24,10 +24,22 @@
             "font_size": "0.75rem",
             "letter_spacing": "normal"
           }
+        },
+        "block-mvjy3wuj-25-zsjj3": {
+          "type": "_announcement",
+          "settings": {
+            "case": "none",
+            "font": "var(--font-subheading--family)",
+            "text": "Shop our latest arrivals!",
+            "weight": "",
+            "font_size": "0.75rem",
+            "letter_spacing": "normal"
+          }
         }
       },
       "block_order": [
-        "announcement_BxgCk9"
+        "announcement_BxgCk9",
+        "block-mvjy3wuj-25-zsjj3"
       ]
     },
     "header_section": {
@@ -38,11 +50,12 @@
         "search_row": "top",
         "show_search": true,
         "border_width": 0,
+        "bubble_style": "custom",
         "divider_size": "page-width",
         "show_country": true,
         "divider_width": 0,
-        "logo_position": "center",
-        "menu_position": "left",
+        "logo_position": "left",
+        "menu_position": "center",
         "section_width": "page-width",
         "show_language": true,
         "section_height": "standard",

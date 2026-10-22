@@ -84,26 +84,12 @@
             "open_in_new_tab": false,
             "custom_width_mobile": 100
           }
-        },
-        "block-mvjx8baz-21-i0sxn": {
-          "type": "jumbo-text",
-          "settings": {
-            "case": "none",
-            "font": "accent",
-            "text": "Be bold.",
-            "alignment": "left",
-            "line_height": "1.2",
-            "text_effect": "none",
-            "letter_spacing": "-0.03em",
-            "animation_repeat": false
-          }
         }
       },
       "block_order": [
         "text_YLPk4p",
         "block-mvjx5374-20-wv3iq",
-        "block-mvjx409r-19-07kc6",
-        "block-mvjx8baz-21-i0sxn"
+        "block-mvjx409r-19-07kc6"
       ]
     },
     "product_list_fa6P9H": {
@@ -282,6 +268,52 @@
         }
       },
       "block_order": []
+    },
+    "section-1792698143695": {
+      "name": "Section",
+      "type": "section",
+      "hidden": false,
+      "settings": {
+        "gap": 16,
+        "padding_block_end": 40,
+        "padding_block_start": 40,
+        "horizontal_alignment_flex_direction_column": "center"
+      },
+      "blocks": {
+        "block-mvjy6si7-27-pgvzw": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>Subscribe to our emails</h2>",
+            "width": "100%",
+            "alignment": "center"
+          }
+        },
+        "block-mvjy6si7-28-m2cqw": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Be the first to know about new collections and special offers. </p>",
+            "width": "100%",
+            "alignment": "center",
+            "type_preset": "paragraph"
+          }
+        },
+        "block-mvjy6si7-29-7wd7j": {
+          "type": "email-signup",
+          "settings": {
+            "label": "Sign up",
+            "width": "custom",
+            "style_class": "button-unstyled",
+            "custom_width": 50,
+            "display_type": "arrow",
+            "integrated_button": true
+          }
+        }
+      },
+      "block_order": [
+        "block-mvjy6si7-27-pgvzw",
+        "block-mvjy6si7-28-m2cqw",
+        "block-mvjy6si7-29-7wd7j"
+      ]
     },
     "carousel-1792665996057": {
       "name": "Carousel",
@@ -491,7 +523,7 @@
       "hidden": false,
       "settings": {
         "gap": 48,
-        "product": "/products/black-sleeves",
+        "product": "",
         "equal_columns": true,
         "padding_block_end": 40,
         "padding_block_start": 40
@@ -531,7 +563,7 @@
                 "block-mvjkufgq-2-8qv0g": {
                   "type": "product-title",
                   "settings": {
-                    "type_preset": "rte"
+                    "type_preset": "h1"
                   }
                 },
                 "block-mvjkufgq-3-645zh": {
@@ -824,6 +856,7 @@
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
+    "section-1792698143695",
     "carousel-1792665996057",
     "featured-product-information-1792675731914",
     "carousel-1792694838213",
