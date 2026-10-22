@@ -1,25 +1,25 @@
 {
   "menus": {
     "main-menu": {
+      "title": "Main menu",
       "links": [
         {
-          "url": "/",
-          "title": "Home"
+          "title": "Home",
+          "url": "/"
         },
         {
-          "url": "/collections/best-sellters",
-          "title": "Shop"
+          "title": "Shop",
+          "url": "/collections/best-sellters"
         },
         {
-          "url": "/contact",
-          "title": "Contact"
+          "title": "Contact",
+          "url": "/contact"
         },
         {
-          "url": "/faq",
-          "title": "About Us"
+          "title": "About Us",
+          "url": "/faq"
         }
-      ],
-      "title": "Main menu"
+      ]
     }
   },
   "compat": {
@@ -87,7 +87,7 @@
     "badge_font_family": "body",
     "button_min_height": 44,
     "card_hover_effect": "lift",
-    "content_max_width": 1240,
+    "content_max_width": 1280,
     "drawer_text_color": "{{ settings.page_text_color }}",
     "show_installments": true,
     "site_border_color": "#292929",
@@ -110,7 +110,7 @@
     "drawer_shadow_color": "#000000",
     "pills_border_radius": 23,
     "popover_drop_shadow": true,
-    "product_card_radius": 5,
+    "product_card_radius": 4,
     "scheme_inverse_text": "#ffffff",
     "scheme_surface_text": "#171717",
     "type_line_height_h1": "display-tight",
@@ -173,7 +173,7 @@
     "product_card_image_ratio": "square",
     "product_card_title_lines": 3,
     "scheme_accent_background": "#e8e8e8",
-    "storelib_button_hover_bg": "#9b95c1",
+    "storelib_button_hover_bg": "#735ef9",
     "type_font_button_primary": "accent",
     "badge_sold_out_text_color": "{{ settings.page_text_color }}",
     "cart_note_open_by_default": false,
@@ -218,7 +218,11 @@
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "#ff4f4f",
-    "palette_selected_variant_background": "{{ settings.page_text_color }}"
+    "palette_selected_variant_background": "{{ settings.page_text_color }}",
+    "storelib_button_hover_border": "",
+    "storelib_link_hover": "",
+    "storelib_input_border": "",
+    "storelib_input_focus": ""
   },
   "favicon_url": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png"
 }
