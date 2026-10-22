@@ -12,7 +12,7 @@ README.md says what each folder is and which ones Storelib reads back.
    every page, are `sections/header-group.json` and
    `sections/footer-group.json`; the theme's settings are
    `config/settings.json`.
-2. Commit and push to `main`.
+2. Commit and push to `claude/theme-settings-realtime-preview-3dfgg9`.
 3. Storelib reads every changed file and saves it to the site as a draft. A
    builder that is open shows it within a few seconds.
 4. The commit gets a status named "Storelib", and when a file was not taken
