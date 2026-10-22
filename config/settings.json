@@ -110,7 +110,7 @@
     "drawer_shadow_color": "#000000",
     "pills_border_radius": 23,
     "popover_drop_shadow": true,
-    "product_card_radius": 6,
+    "product_card_radius": 5,
     "scheme_inverse_text": "#ffffff",
     "scheme_surface_text": "#171717",
     "type_line_height_h1": "display-tight",
