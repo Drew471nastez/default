@@ -307,7 +307,7 @@
       "settings": {
         "gap": 28,
         "columns": 4,
-        "product": "{{ closest.product }}",
+        "product": "/products/pants-down",
         "rows_gap": 24,
         "columns_gap": 12,
         "icons_shape": "none",
