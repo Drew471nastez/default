@@ -18,10 +18,33 @@
     "AGENTS.md",
     "CLAUDE.md",
     "storelib.json",
+    "config/storelib_settings_schema.json",
     "shopify/assets/<pictures>",
     "shopify/config/assets.json",
     "shopify/config/settings_panel.json"
   ],
+  "platform_settings": {
+    "defined_in": "config/storelib_settings_schema.json",
+    "values_in": "config/settings.json",
+    "values_at": "shopify",
+    "panels": [
+      "Hover and focus"
+    ],
+    "theme_placement": "A storelib_* id the theme's shopify/config/settings_schema.json declares is drawn where the theme puts it and left out of Storelib's panel."
+  },
+  "live_preview": {
+    "about": "Events the builder's canvas dispatches when the creator changes something, so a script can redraw in place.",
+    "events": [
+      {
+        "event": "storelib:settings-change",
+        "when": "fired on `document`, detail `{ settings, live }`: the ids and new values of the settings that changed, on every value while a slider or colour is dragged (`live: true`) and once more on release. The canvas applies the change without reloading the page; a script that read a setting once can read it again here."
+      },
+      {
+        "event": "storelib:section-load",
+        "when": "fired on the section's own element and bubbles to `document`, detail `{ sectionId }`: the section was drawn again in place after a change. A script that sets a section up once (a slider, a menu, a drawer) sets it up again for that section here."
+      }
+    ]
+  },
   "edited_built_ins": [],
   "left_out": []
 }

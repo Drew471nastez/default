@@ -224,28 +224,10 @@
       "type": "button"
     },
     {
-      "type": "icon"
-    },
-    {
-      "type": "video"
-    },
-    {
       "type": "group"
     },
     {
       "type": "spacer"
-    },
-    {
-      "type": "accordion"
-    },
-    {
-      "type": "custom-liquid"
-    },
-    {
-      "type": "email-signup"
-    },
-    {
-      "type": "contact-form"
     }
   ],
   "shopify": {
@@ -268,28 +250,10 @@
         "type": "button"
       },
       {
-        "type": "icon"
-      },
-      {
-        "type": "video"
-      },
-      {
         "type": "group"
       },
       {
         "type": "spacer"
-      },
-      {
-        "type": "accordion"
-      },
-      {
-        "type": "custom-liquid"
-      },
-      {
-        "type": "email-signup"
-      },
-      {
-        "type": "contact-form"
       }
     ],
     "settings": [

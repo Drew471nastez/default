@@ -518,9 +518,6 @@
       "type": "icon"
     },
     {
-      "type": "video"
-    },
-    {
       "type": "group"
     },
     {
@@ -531,12 +528,6 @@
     },
     {
       "type": "custom-liquid"
-    },
-    {
-      "type": "email-signup"
-    },
-    {
-      "type": "contact-form"
     }
   ],
   "presets": [],
@@ -565,9 +556,6 @@
         "type": "icon"
       },
       {
-        "type": "video"
-      },
-      {
         "type": "group"
       },
       {
@@ -578,12 +566,6 @@
       },
       {
         "type": "custom-liquid"
-      },
-      {
-        "type": "email-signup"
-      },
-      {
-        "type": "contact-form"
       }
     ],
     "disabled_on": {

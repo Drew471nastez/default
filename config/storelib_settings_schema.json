@@ -1,0 +1,140 @@
+{
+  "about": "Settings Storelib adds to this theme's Theme settings in the builder. Storelib writes this file on every Push, so a change to it is not taken. Their values are in config/settings.json under \"shopify\", beside the theme's own, with the default written out where none was chosen; change a value there and push.",
+  "owner": "storelib",
+  "values_in": "config/settings.json",
+  "values_at": "shopify",
+  "theme_placement": "When shopify/config/settings_schema.json declares one of these ids itself, the builder draws that setting where the theme puts it and leaves it out of Storelib's group (shown: false, placed_by_theme: true). When the theme declares every one, the group is not shown. The value stays at the same place in config/settings.json either way.",
+  "panels": [
+    {
+      "id": "storelib_hover_and_focus",
+      "name": "Hover and focus",
+      "shown_in": "Theme settings, after the theme's own groups",
+      "shown": true,
+      "settings": [
+        {
+          "type": "header",
+          "id": "storelib_hdr_buttons",
+          "label": "Buttons on hover",
+          "group": "Hover and focus",
+          "shown": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_button_hover_bg",
+          "label": "Background",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Buttons on hover",
+          "shown": false,
+          "placed_by_theme": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_button_hover_text",
+          "label": "Text",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Buttons on hover",
+          "shown": false,
+          "placed_by_theme": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_button_hover_border",
+          "label": "Border",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Buttons on hover",
+          "shown": true
+        },
+        {
+          "type": "select",
+          "id": "storelib_button_hover_effect",
+          "label": "Effect",
+          "default": "theme",
+          "options": [
+            {
+              "value": "theme",
+              "label": "As the theme does"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "lift",
+              "label": "Lift"
+            },
+            {
+              "value": "darken",
+              "label": "Darken"
+            },
+            {
+              "value": "underline",
+              "label": "Underline"
+            }
+          ],
+          "group": "Hover and focus",
+          "heading": "Buttons on hover",
+          "shown": false,
+          "placed_by_theme": true
+        },
+        {
+          "type": "header",
+          "id": "storelib_hdr_links",
+          "label": "Links on hover",
+          "group": "Hover and focus",
+          "shown": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_link_hover",
+          "label": "Colour",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Links on hover",
+          "shown": true
+        },
+        {
+          "type": "header",
+          "id": "storelib_hdr_inputs",
+          "label": "Fields",
+          "group": "Hover and focus",
+          "shown": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_input_border",
+          "label": "Border",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Fields",
+          "shown": true
+        },
+        {
+          "type": "color",
+          "id": "storelib_input_focus",
+          "label": "Focus ring",
+          "default": "",
+          "group": "Hover and focus",
+          "heading": "Fields",
+          "shown": true
+        },
+        {
+          "type": "range",
+          "id": "storelib_input_radius",
+          "label": "Corner radius",
+          "min": -1,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": -1,
+          "info": "-1 keeps the theme's own",
+          "group": "Hover and focus",
+          "heading": "Fields",
+          "shown": true
+        }
+      ]
+    }
+  ]
+}

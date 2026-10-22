@@ -371,34 +371,13 @@
       "type": "text"
     },
     {
-      "type": "image"
-    },
-    {
       "type": "button"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "video"
     },
     {
       "type": "group"
     },
     {
       "type": "spacer"
-    },
-    {
-      "type": "accordion"
-    },
-    {
-      "type": "custom-liquid"
-    },
-    {
-      "type": "email-signup"
-    },
-    {
-      "type": "contact-form"
     }
   ],
   "presets": [
@@ -955,34 +934,13 @@
         "type": "text"
       },
       {
-        "type": "image"
-      },
-      {
         "type": "button"
-      },
-      {
-        "type": "icon"
-      },
-      {
-        "type": "video"
       },
       {
         "type": "group"
       },
       {
         "type": "spacer"
-      },
-      {
-        "type": "accordion"
-      },
-      {
-        "type": "custom-liquid"
-      },
-      {
-        "type": "email-signup"
-      },
-      {
-        "type": "contact-form"
       }
     ],
     "disabled_on": {

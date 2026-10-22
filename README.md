@@ -15,6 +15,7 @@ Start with AGENTS.md if you are an AI agent (Claude Code and Codex read it on th
 | blocks/, snippets/, layout/ | The theme's blocks, snippets and page shell, the same way. | Yes |
 | shopify/ | The theme's own files as they were imported: templates for account pages, config, locales, CSS, JavaScript and fonts. `shopify/config/settings_schema.json` is the theme settings; the builder's Theme settings are made from it. | Yes, pictures excepted |
 | shopify/assets/<pictures> | The theme's pictures and videos, to look at. Upload a new one in Storelib's Files. | No |
+| config/storelib_settings_schema.json | The settings Storelib adds to Theme settings (Hover and focus): ids, types, labels, options, defaults and the group each shows in. Their values are in `config/settings.json` under `shopify`. | No, the values are |
 | README.md, AGENTS.md, CLAUDE.md, storelib.json | Written by Storelib each time it sends the theme. | No |
 
 Anything else in this repository is yours, and Storelib leaves it alone.
@@ -22,6 +23,17 @@ Anything else in this repository is yours, and Storelib leaves it alone.
 ## Changing a built-in section
 
 Every section here is the theme's own. Change it in place.
+
+## Settings Storelib adds
+
+Theme settings in the builder show the theme's own groups and then Storelib's Hover and focus: buttons on hover (background, text, border, effect), links on hover, and fields (border, focus ring, corner radius). `config/storelib_settings_schema.json` lists each one with its id, type, label, options, default and group. Their values are in `config/settings.json` under `shopify`, each written out, defaults included; change a value there and push. If the theme's own `shopify/config/settings_schema.json` declares one of these ids, the builder draws it where the theme puts it instead.
+
+## Live preview
+
+In the builder, a change is drawn in the canvas without reloading the page. A script of the theme's hears it:
+
+- `storelib:settings-change`: fired on `document`, detail `{ settings, live }`: the ids and new values of the settings that changed, on every value while a slider or colour is dragged (`live: true`) and once more on release. The canvas applies the change without reloading the page; a script that read a setting once can read it again here.
+- `storelib:section-load`: fired on the section's own element and bubbles to `document`, detail `{ sectionId }`: the section was drawn again in place after a change. A script that sets a section up once (a slider, a menu, a drawer) sets it up again for that section here.
 
 ## Adding a section
 

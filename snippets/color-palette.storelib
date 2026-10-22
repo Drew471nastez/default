@@ -97,6 +97,27 @@
   endif
 %}
 
+{% comment %} Buttons > Hover color: Custom and No change replace the automatic shift for both buttons {% endcomment %}
+{% liquid
+  assign primary_hover_text_rgba = ''
+  assign secondary_hover_text_rgba = ''
+  if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank
+    assign effective_primary_button_hover_background = settings.storelib_button_hover_bg
+    assign effective_primary_button_hover_border = settings.storelib_button_hover_bg
+    assign primary_hover_text_rgba = settings.storelib_button_hover_text.rgba
+    assign effective_secondary_button_hover_background = settings.storelib_button_hover_bg
+    assign effective_secondary_button_hover_border = settings.storelib_button_hover_bg
+    assign secondary_hover_text_rgba = settings.storelib_button_hover_text.rgba
+  elsif settings.storelib_button_hover_effect == 'none'
+    assign effective_primary_button_hover_background = 'rgb(' | append: settings.palette_primary_button_background.rgba | append: ')'
+    assign effective_primary_button_hover_border = 'rgb(' | append: settings.palette_primary_button_border.rgba | append: ')'
+    assign primary_hover_text_rgba = settings.palette_primary_button_text.rgba
+    assign effective_secondary_button_hover_background = 'rgb(' | append: settings.palette_secondary_button_background.rgba | append: ')'
+    assign effective_secondary_button_hover_border = 'rgb(' | append: settings.palette_secondary_button_border.rgba | append: ')'
+    assign secondary_hover_text_rgba = settings.palette_secondary_button_text.rgba
+  endif
+%}
+
 {% comment %} Variant hover effective values (smart contrast for fallback text/border) {% endcomment %}
 {% liquid
   capture effective_variant_hover_background
@@ -182,14 +203,14 @@
     --color-primary-button-background: rgb({{ settings.palette_primary_button_background.rgba }});
     --color-primary-button-border: rgb({{ settings.palette_primary_button_border.rgba }});
     --color-primary-button-focus-outline: rgb({{ effective_primary_button_focus_outline.rgb }});
-    --color-primary-button-hover-text: rgb({% if effective_primary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_primary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_primary_button_hover_text.rgba }}{% endif %});
+    --color-primary-button-hover-text: rgb({% if primary_hover_text_rgba != blank %}{{ primary_hover_text_rgba }}{% elsif effective_primary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_primary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_primary_button_hover_text.rgba }}{% endif %});
     --color-primary-button-hover-background: {{ effective_primary_button_hover_background }};
     --color-primary-button-hover-border: {{ effective_primary_button_hover_border }};
 
     --color-secondary-button-text: rgb({{ settings.palette_secondary_button_text.rgba }});
     --color-secondary-button-background: rgb({{ settings.palette_secondary_button_background.rgba }});
     --color-secondary-button-border: rgb({{ settings.palette_secondary_button_border.rgba }});
-    --color-secondary-button-hover-text: rgb({% if effective_secondary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_secondary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_secondary_button_hover_text.rgba }}{% endif %});
+    --color-secondary-button-hover-text: rgb({% if secondary_hover_text_rgba != blank %}{{ secondary_hover_text_rgba }}{% elsif effective_secondary_button_hover_text == palette_darkest %}0 0 0 / 1{% elsif effective_secondary_button_hover_text == palette_lightest %}255 255 255 / 1{% else %}{{ effective_secondary_button_hover_text.rgba }}{% endif %});
     --color-secondary-button-hover-background: {{ effective_secondary_button_hover_background }};
     --color-secondary-button-hover-border: {{ effective_secondary_button_hover_border }};
 

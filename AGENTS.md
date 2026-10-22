@@ -15,10 +15,27 @@ README.md says what each folder is and which ones Storelib reads back.
 2. Commit and push to `main`.
 3. Storelib reads every changed file and saves it to the site as a draft. A
    builder that is open shows it within a few seconds.
-4. The commit gets a status named "Storelib", and when a file was not taken
-   a comment on the commit lists each one with its line and what to fix. The
-   other files in the same push are still taken. Fix the file and push again.
+4. The commit gets a status named "Storelib" and a comment saying which
+   files were taken, and listing each one that was not with its line and what
+   to fix. The other files in the same push are still taken. Fix the file and
+   push again. How to read them is below.
 5. Nothing is live until the creator presses Publish in the builder.
+
+## Reading what Storelib said about a push
+
+Storelib writes the same words three ways, so whatever access you have, one
+of them reaches you:
+
+- **A git note**, with nothing but this clone:
+  `git fetch origin refs/notes/storelib:refs/notes/storelib` then
+  `git notes --ref=storelib show HEAD` (or `git log --notes=storelib`).
+- **The commit comment**, readable by anyone who can read the code:
+  `gh api repos/{owner}/{repo}/commits/<sha>/comments`.
+- **The commit status** named "Storelib" (`gh api repos/{owner}/{repo}/commits/<sha>/status`,
+  which needs read access to commit statuses). Its Details link is the comment.
+
+A push Storelib read with nothing to change ("Already up to date") gets only
+the status. Give it a few seconds after the push.
 
 Every section here is the theme's own; change it in place. Keep the `<template compat="shopify">` line and the schema block after it.
 ## Settings in the builder's sidebar
@@ -32,6 +49,30 @@ replaced. The theme settings are `shopify/config/settings_schema.json`,
 read the same way into the builder's Theme settings, with their values in
 `config/settings.json` under `shopify`. A setting the builder has no
 control for keeps its value on the page, and the commit comment names it.
+
+## Settings Storelib adds to Theme settings
+
+The builder shows the theme's own groups and then Storelib's Hover and
+focus: Buttons on hover (Background, Text, Border, Effect), Links on hover
+(Colour) and Fields (Border, Focus ring, Corner radius). They are not in the
+theme's schema. `config/storelib_settings_schema.json` lists every one: id, type, label,
+options, default and the group it shows in. Storelib writes that file, so
+change values, not the file: each value is in `config/settings.json` under
+`"shopify"`, written out with its default where none was chosen. A
+default you leave as it is stays the default. To draw one of
+these where the theme wants it, declare its id in
+`shopify/config/settings_schema.json`: the builder then shows it there and
+leaves it out of Hover and focus, and the value stays where it is. Menus
+are `menus` in the same file, as Navigation in the builder shows them. Colour schemes are under `"shopify"` by the theme's own setting id, usually `color_schemes`.
+
+## Live preview in the builder
+
+A change in the builder is drawn in the canvas without reloading the page.
+In an imported theme's canvas, a script of the theme's that sets itself up
+once can listen on `document` for:
+
+- `storelib:settings-change`: fired on `document`, detail `{ settings, live }`: the ids and new values of the settings that changed, on every value while a slider or colour is dragged (`live: true`) and once more on release. The canvas applies the change without reloading the page; a script that read a setting once can read it again here.
+- `storelib:section-load`: fired on the section's own element and bubbles to `document`, detail `{ sectionId }`: the section was drawn again in place after a change. A script that sets a section up once (a slider, a menu, a drawer) sets it up again for that section here.
 
 ## The format of each folder
 

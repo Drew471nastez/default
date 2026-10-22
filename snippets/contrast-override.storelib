@@ -161,16 +161,36 @@
         --color-primary-button-background: {{ effective_text_color }};
         --color-primary-button-text: {{ background_color }};
         --color-primary-button-border: {{ effective_text_color }};
+        {%- if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank %}
+        --color-primary-button-hover-background: {{ settings.storelib_button_hover_bg }};
+        --color-primary-button-hover-text: {{ settings.storelib_button_hover_text }};
+        --color-primary-button-hover-border: {{ settings.storelib_button_hover_bg }};
+        {%- elsif settings.storelib_button_hover_effect == 'none' %}
+        --color-primary-button-hover-background: {{ effective_text_color }};
+        --color-primary-button-hover-text: {{ background_color }};
+        --color-primary-button-hover-border: {{ effective_text_color }};
+        {%- else %}
         --color-primary-button-hover-background: {{ background_color }};
         --color-primary-button-hover-text: {{ effective_text_color }};
         --color-primary-button-hover-border: {{ effective_text_color }};
+        {%- endif %}
         --color-primary-button-focus-outline: {{ effective_text_color }};
         --color-secondary-button-background: {{ background_color }};
         --color-secondary-button-text: {{ effective_text_color }};
         --color-secondary-button-border: {{ effective_text_color }};
+        {%- if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank %}
+        --color-secondary-button-hover-background: {{ settings.storelib_button_hover_bg }};
+        --color-secondary-button-hover-text: {{ settings.storelib_button_hover_text }};
+        --color-secondary-button-hover-border: {{ settings.storelib_button_hover_bg }};
+        {%- elsif settings.storelib_button_hover_effect == 'none' %}
+        --color-secondary-button-hover-background: {{ background_color }};
+        --color-secondary-button-hover-text: {{ effective_text_color }};
+        --color-secondary-button-hover-border: {{ effective_text_color }};
+        {%- else %}
         --color-secondary-button-hover-background: {{ effective_text_color }};
         --color-secondary-button-hover-text: {{ background_color }};
         --color-secondary-button-hover-border: {{ effective_text_color }};
+        {%- endif %}
         --color-input-background: {{ background_color }};
         --color-input-text: {{ effective_text_color }};
         --color-input-text-rgb: {{ effective_text_color_rgb }};

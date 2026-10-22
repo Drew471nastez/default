@@ -1490,6 +1490,41 @@
         "unit": "px"
       },
       {
+        "type": "select",
+        "id": "storelib_button_hover_effect",
+        "label": "Hover color",
+        "options": [
+          {
+            "value": "theme",
+            "label": "Automatic"
+          },
+          {
+            "value": "custom",
+            "label": "Custom"
+          },
+          {
+            "value": "none",
+            "label": "No change"
+          }
+        ],
+        "default": "theme",
+        "info": "Automatic shifts each button's own colors and keeps the text readable."
+      },
+      {
+        "type": "color",
+        "id": "storelib_button_hover_bg",
+        "label": "Hover background",
+        "default": "#3e3e3e",
+        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "storelib_button_hover_text",
+        "label": "Hover text",
+        "default": "#ffffff",
+        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
+      },
+      {
         "type": "range",
         "id": "button_hover_duration",
         "label": "Hover speed",
@@ -1498,7 +1533,8 @@
         "step": 20,
         "unit": "ms",
         "default": 200,
-        "info": "Button color-transition duration. Set 0 ms for an instant change."
+        "info": "Set 0 ms for an instant change.",
+        "visible_if": "{{ settings.storelib_button_hover_effect != 'none' }}"
       },
       {
         "type": "range",
@@ -1817,7 +1853,8 @@
         "max": 40,
         "step": 1,
         "unit": "px",
-        "default": 0
+        "default": 0,
+        "info": "Rounds the card and its image."
       },
       {
         "type": "range",
