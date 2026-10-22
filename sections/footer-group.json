@@ -111,7 +111,7 @@
             "border_width": 1,
             "custom_width": 100,
             "display_type": "arrow",
-            "border_radius": 100,
+            "border_radius": 9,
             "heading_preset": "h3",
             "input_text_color": "{{ settings.palette_input_text }}",
             "input_type_preset": "paragraph",
