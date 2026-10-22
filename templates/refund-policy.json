@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "refund-policy-mvjeqqdy-0": {
+      "name": "Refund Policy",
+      "type": "rich_text",
+      "hidden": false,
+      "settings": {
+        "body": "<p><em>Last updated: 2026-10-22</em></p>\n<p>This policy explains when you can ask this shop for a refund and how to do it. Replace anything in square brackets with your own terms before you publish.</p>\n<h3>Returns</h3>\n<p>You have [30] days from the day you receive your order to request a return. To be eligible, the item must be in the condition you received it, unused, and in its original packaging, and you will need the receipt or proof of purchase.</p>\n<h3>Digital products</h3>\n<p>Because digital downloads are available immediately, they are [not refundable once downloaded, except where the file is faulty or not as described]. If something you bought does not work, contact us and we will put it right.</p>\n<h3>Damaged or wrong items</h3>\n<p>Check your order as soon as it arrives. If anything is damaged, faulty, or not what you ordered, tell us within [14] days and we will arrange a replacement or a refund.</p>\n<h3>How to start a return</h3>\n<p>Email [your@email.com] with your order number and what you would like to happen. We will reply within [2 working days] and tell you where to send the item. Items sent back without asking first cannot be accepted.</p>\n<h3>Refunds</h3>\n<p>Once we have received and checked the return we will let you know whether the refund was approved. An approved refund goes back to your original payment method within [10] working days. Banks and card providers usually take a few days more to show it.</p>\n<h3>Exceptions</h3>\n<p>We cannot refund [perishable goods, custom or personalised items, gift cards, or sale items]. Ask us before ordering if you are unsure.</p>\n<h3>Contact</h3>\n<p>Questions about this policy: [your@email.com].</p>",
+        "heading": "Refund Policy",
+        "alignment": "left",
+        "max_width": "narrow",
+        "padding_top": 80,
+        "color_scheme": "white",
+        "padding_bottom": 80
+      },
+      "blocks": {},
+      "block_order": []
+    }
+  },
+  "order": [
+    "refund-policy-mvjeqqdy-0"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "format": "storelib-repo/1",
+  "theme": "Horizon",
+  "kind": "shopify",
+  "docs": "https://storelib.com/developers",
+  "reads_back": [
+    "config/settings.json",
+    "templates/*.json",
+    "sections/*-group.json",
+    "sections/*.storelib",
+    "blocks/*.storelib",
+    "snippets/*.storelib",
+    "layout/*.storelib",
+    "shopify/** (pictures excepted)"
+  ],
+  "reference_only": [
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "storelib.json",
+    "shopify/assets/<pictures>",
+    "shopify/config/assets.json",
+    "shopify/config/settings_panel.json"
+  ],
+  "edited_built_ins": [],
+  "left_out": []
+}

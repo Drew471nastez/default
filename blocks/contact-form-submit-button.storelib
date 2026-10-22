@@ -1,0 +1,264 @@
+<template compat="shopify">
+
+{%- assign block_settings = block.settings -%}
+{% render 'button-custom-styles', block_settings: block_settings, block_id: block.id %}
+<button
+  type="submit"
+  class="button submit-button size-style {{ block_settings.style_class }} {{ block_settings.style_class }}--{{ block.id }}"
+  style="{% render 'size-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  {{ block_settings.label }}
+</button>
+
+{% stylesheet %}
+  .submit-button {
+    min-width: max-content;
+  }
+{% endstylesheet %}
+
+
+
+</template>
+
+<schema>
+{
+  "name": "Submit button",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Submit"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Style",
+      "options": [
+        {
+          "value": "button",
+          "label": "Primary"
+        },
+        {
+          "value": "button-secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "button-custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "button",
+      "info": "Edit primary and secondary button styles in theme settings"
+    },
+    {
+      "type": "header",
+      "id": "hdr_3",
+      "label": "Button colors"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "Background",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "Text",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "Borders",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "id": "hdr_7",
+      "label": "Size"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Desktop width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "Fit"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "Mobile width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "Fit"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    }
+  ],
+  "presets": [],
+  "shopify": {
+    "name": "t:names.submit_button",
+    "tag": null,
+    "settings": [
+      {
+        "type": "text",
+        "id": "label",
+        "label": "t:settings.label",
+        "default": "t:text_defaults.contact_form_button_label"
+      },
+      {
+        "type": "select",
+        "id": "style_class",
+        "label": "t:settings.style",
+        "options": [
+          {
+            "value": "button",
+            "label": "t:options.primary"
+          },
+          {
+            "value": "button-secondary",
+            "label": "t:options.secondary"
+          },
+          {
+            "value": "button-custom",
+            "label": "t:options.custom"
+          }
+        ],
+        "default": "button",
+        "info": "t:info.edit_button_style_in_theme_settings"
+      },
+      {
+        "type": "header",
+        "content": "t:content.button_colors",
+        "visible_if": "{{ block.settings.style_class == \"button-custom\" }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_button_background",
+        "label": "t:settings.background",
+        "default": "{{ settings.color_palette.foreground }}",
+        "alpha": true,
+        "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_button_text",
+        "label": "t:settings.text",
+        "default": "{{ settings.color_palette.background }}",
+        "alpha": true,
+        "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+      },
+      {
+        "type": "color",
+        "id": "custom_button_border",
+        "label": "t:settings.borders",
+        "default": "{{ settings.color_palette.background }}",
+        "alpha": true,
+        "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+      },
+      {
+        "type": "header",
+        "content": "t:content.size"
+      },
+      {
+        "type": "select",
+        "id": "width",
+        "label": "t:settings.width_desktop",
+        "options": [
+          {
+            "value": "fit-content",
+            "label": "t:options.fit_content"
+          },
+          {
+            "value": "custom",
+            "label": "t:options.custom"
+          }
+        ],
+        "default": "fit-content"
+      },
+      {
+        "type": "range",
+        "id": "custom_width",
+        "label": "t:settings.width",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 100,
+        "visible_if": "{{ block.settings.width == 'custom' }}"
+      },
+      {
+        "type": "select",
+        "id": "width_mobile",
+        "label": "t:settings.width_mobile",
+        "options": [
+          {
+            "value": "fit-content",
+            "label": "t:options.fit_content"
+          },
+          {
+            "value": "custom",
+            "label": "t:options.custom"
+          }
+        ],
+        "default": "fit-content"
+      },
+      {
+        "type": "range",
+        "id": "custom_width_mobile",
+        "label": "t:settings.width",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 100,
+        "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+      }
+    ],
+    "presets": []
+  }
+}
+</schema>

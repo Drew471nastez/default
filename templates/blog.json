@@ -1,0 +1,95 @@
+{
+  "sections": {
+    "main": {
+      "name": "Blog posts",
+      "type": "main-blog",
+      "settings": {
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding_block_end": 48,
+        "padding_block_start": 0
+      },
+      "blocks": {
+        "title": {
+          "type": "text",
+          "settings": {
+            "case": "none",
+            "font": "var(--font-body--family)",
+            "text": "<h1>{{ closest.blog.title }}</h1>",
+            "wrap": "pretty",
+            "width": "fit-content",
+            "alignment": "left",
+            "max_width": "narrow",
+            "background": false,
+            "line_height": "normal",
+            "type_preset": "h2",
+            "corner_radius": 0,
+            "letter_spacing": "normal",
+            "background_color": "#00000026",
+            "padding_block_end": 48,
+            "padding_inline_end": 0,
+            "padding_block_start": 48,
+            "padding_inline_start": 0
+          }
+        },
+        "static-blog-post-card": {
+          "type": "_blog-post-card",
+          "static": true,
+          "settings": {
+            "alignment": "left"
+          },
+          "blocks": {
+            "heading": {
+              "type": "_heading",
+              "static": true,
+              "settings": {
+                "case": "none",
+                "font": "var(--font-body--family)",
+                "wrap": "pretty",
+                "alignment": "left",
+                "read_only": true,
+                "line_height": "normal",
+                "type_preset": "h4",
+                "letter_spacing": "normal",
+                "show_alignment": false,
+                "padding_block_end": 10,
+                "padding_inline_end": 0,
+                "padding_block_start": 0,
+                "padding_inline_start": 0
+              }
+            },
+            "blog-post-details": {
+              "type": "_blog-post-info-text",
+              "static": true,
+              "settings": {
+                "alignment": "left",
+                "show_date": true,
+                "show_author": false,
+                "show_alignment": false,
+                "padding_block_end": 0,
+                "padding_block_start": 0
+              }
+            },
+            "image": {
+              "type": "_blog-post-image",
+              "static": true,
+              "settings": {
+                "border": "none",
+                "height": "large",
+                "border_width": 1,
+                "border_radius": 4,
+                "border_opacity": 100
+              }
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "title"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

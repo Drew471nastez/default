@@ -1,0 +1,48 @@
+<template compat="shopify">
+
+
+<div>
+  {{ block.settings.custom_liquid }}
+</div>
+
+
+
+</template>
+
+<schema>
+{
+  "name": "Custom Liquid",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Liquid code",
+      "info": "Add app snippets or other code to create advanced customizations. Learn more"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Liquid",
+      "category": "t:categories.custom"
+    }
+  ],
+  "shopify": {
+    "name": "t:names.custom_liquid",
+    "tag": null,
+    "settings": [
+      {
+        "type": "liquid",
+        "id": "custom_liquid",
+        "label": "t:settings.custom_liquid",
+        "info": "t:info.custom_liquid"
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:names.custom_liquid",
+        "category": "t:categories.custom"
+      }
+    ]
+  }
+}
+</schema>

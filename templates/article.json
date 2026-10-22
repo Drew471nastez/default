@@ -1,0 +1,82 @@
+{
+  "sections": {
+    "section": {
+      "name": "Blog post",
+      "type": "main-blog-post",
+      "settings": {
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "content_direction": "column",
+        "padding_block_end": 80,
+        "padding_block_start": 40
+      },
+      "blocks": {
+        "blog-post-title": {
+          "type": "text",
+          "settings": {
+            "case": "none",
+            "font": "var(--font-body--family)",
+            "text": "<h1>{{ article.title }}</h1>",
+            "wrap": "pretty",
+            "width": "100%",
+            "alignment": "center",
+            "max_width": "normal",
+            "background": false,
+            "line_height": "normal",
+            "type_preset": "h2",
+            "corner_radius": 0,
+            "letter_spacing": "normal",
+            "background_color": "#00000026",
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          }
+        },
+        "blog-post-details": {
+          "type": "_blog-post-info-text",
+          "settings": {
+            "alignment": "center",
+            "show_date": true,
+            "show_author": false,
+            "show_alignment": true,
+            "padding_block_end": 0,
+            "padding_block_start": 0
+          }
+        },
+        "blog-post-image": {
+          "type": "image",
+          "settings": {
+            "image": "{{ article.image }}",
+            "width": "fill",
+            "border": "none",
+            "height": "fit",
+            "border_width": 1,
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "border_radius": 0,
+            "border_opacity": 100,
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "custom_width_mobile": 100,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          }
+        },
+        "blog-post-content": {
+          "type": "_blog-post-content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "blog-post-title",
+        "blog-post-details",
+        "blog-post-image",
+        "blog-post-content"
+      ]
+    }
+  },
+  "order": [
+    "section"
+  ]
+}

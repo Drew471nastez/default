@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "terms-of-service-mvjeqqdz-2": {
+      "name": "Terms Of Service",
+      "type": "rich_text",
+      "hidden": false,
+      "settings": {
+        "body": "<p><em>Last updated: 2026-10-22</em></p>\n<p>These terms cover your use of this website and anything you buy from this shop. By using the site you agree to them. Replace anything in square brackets with your own terms before you publish.</p>\n<h3>Who we are</h3>\n<p>This shop is run by [Your business name], [your business address], [company or tax number if you have one].</p>\n<h3>Orders</h3>\n<p>An order is an offer to buy. It is accepted when we send you confirmation. If we cannot fulfil an order, or a price or description was wrong, we may cancel it and refund you in full.</p>\n<h3>Prices and payment</h3>\n<p>Prices are shown in [your currency] and include [tax / exclude tax, which is added at checkout]. Payment is taken when the order is placed. Delivery costs are shown before you pay.</p>\n<h3>Delivery</h3>\n<p>We aim to dispatch within [2 working days]. Delivery times are estimates, not guarantees, and anything outside our control may delay them. Risk passes to you when the order is delivered.</p>\n<h3>Cancelling and returning</h3>\n<p>Your right to cancel and return is set out in our refund policy, which forms part of these terms.</p>\n<h3>Digital products and licences</h3>\n<p>Anything you download is licensed to you for [personal, non-commercial use]. You may not resell, redistribute, or claim it as your own work.</p>\n<h3>Our content</h3>\n<p>The text, images and design on this site belong to us or to whoever licensed them to us. Please do not copy them without asking.</p>\n<h3>Acceptable use</h3>\n<p>Do not use this site to break the law, to interfere with how it works, or to collect other people's information.</p>\n<h3>Liability</h3>\n<p>Nothing here limits liability where the law does not allow it, including for death or personal injury caused by negligence, or for fraud. Otherwise our liability for any order is limited to what you paid for it.</p>\n<h3>Changes</h3>\n<p>We may update these terms. The version published here when you place an order is the one that applies to it.</p>\n<h3>Law</h3>\n<p>These terms are governed by the law of [your country], and its courts have jurisdiction.</p>\n<h3>Contact</h3>\n<p>[your@email.com].</p>",
+        "heading": "Terms Of Service",
+        "alignment": "left",
+        "max_width": "narrow",
+        "padding_top": 80,
+        "color_scheme": "white",
+        "padding_bottom": 80
+      },
+      "blocks": {},
+      "block_order": []
+    }
+  },
+  "order": [
+    "terms-of-service-mvjeqqdz-2"
+  ]
+}

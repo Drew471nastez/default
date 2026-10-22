@@ -1,0 +1,58 @@
+<template compat="shopify">
+
+
+<div
+  class="featured-collection-block"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .featured-collection-block {
+    width: 100%;
+  }
+{% endstylesheet %}
+
+
+
+</template>
+
+<schema>
+{
+  "name": "Featured collection",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [],
+  "shopify": {
+    "name": "t:names.featured_collection",
+    "tag": null,
+    "blocks": [
+      {
+        "type": "@theme"
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "settings": [
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "t:settings.collection"
+      }
+    ],
+    "presets": []
+  }
+}
+</schema>

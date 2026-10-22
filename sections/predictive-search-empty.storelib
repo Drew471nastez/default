@@ -1,0 +1,25 @@
+<template compat="shopify">
+
+
+{% render 'predictive-search-empty-state',
+  load_empty_state: true,
+  shadow_opacity: 0.1,
+  products_test_id: 'products-list-default--reset'
+%}
+
+
+
+</template>
+
+<schema>
+{
+  "type": "predictive-search-empty",
+  "name": "Predictive search empty",
+  "settings": [],
+  "shopify": {
+    "name": "t:names.predictive_search_empty",
+    "class": "predictive-search-empty-section",
+    "settings": []
+  }
+}
+</schema>

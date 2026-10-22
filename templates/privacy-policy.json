@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "privacy-policy-mvjeqqdz-1": {
+      "name": "Privacy Policy",
+      "type": "rich_text",
+      "hidden": false,
+      "settings": {
+        "body": "<p><em>Last updated: 2026-10-22</em></p>\n<p>This policy explains what this shop does with your personal information when you visit this website or buy something. Replace anything in square brackets with your own details before you publish.</p>\n<h3>What we collect</h3>\n<p>When you place an order we collect your name, billing and delivery address, email address, phone number and what you bought. Payment card details go straight to our payment provider and are never stored by us.</p>\n<p>When you browse, we collect information about your device and how you use the site, which helps us keep it working and understand what people are looking for.</p>\n<h3>Why we use it</h3>\n<p>To take and deliver your order, to answer you when you get in touch, to prevent fraud, to meet our legal obligations, and, if you have asked for it, to send you marketing. You can unsubscribe from marketing at any time using the link in any email.</p>\n<h3>Who we share it with</h3>\n<p>Only the services that make the shop work: our payment provider, our delivery partner, and the platform hosting this website. Each of them may only use your information to do their part. We do not sell your personal information.</p>\n<h3>How long we keep it</h3>\n<p>Order records are kept for [7 years] because tax rules require it. Anything else is kept only while it is needed for the reason it was collected.</p>\n<h3>Your rights</h3>\n<p>You can ask for a copy of the information we hold about you, ask us to correct it, or ask us to delete it. Write to [your@email.com] and we will reply within [30] days.</p>\n<h3>Cookies</h3>\n<p>This site uses cookies to keep your basket, remember your choices, and measure how the site is used. You can block cookies in your browser, though parts of the shop may stop working if you do.</p>\n<h3>Contact</h3>\n<p>[Your business name], [your business address]. Questions about this policy: [your@email.com].</p>",
+        "heading": "Privacy Policy",
+        "alignment": "left",
+        "max_width": "narrow",
+        "padding_top": 80,
+        "color_scheme": "white",
+        "padding_bottom": 80
+      },
+      "blocks": {},
+      "block_order": []
+    }
+  },
+  "order": [
+    "privacy-policy-mvjeqqdz-1"
+  ]
+}

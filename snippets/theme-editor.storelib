@@ -1,0 +1,8 @@
+<template compat="shopify">
+<script
+  src="{{ 'theme-editor.js' | asset_url }}"
+  type="module"
+  defer="defer"
+></script>
+
+</template>

@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "main": {
+      "name": "Page",
+      "type": "main-page",
+      "settings": {
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "content_direction": "column",
+        "padding_block_end": 80,
+        "padding_block_start": 40
+      },
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "settings": {
+            "case": "none",
+            "font": "var(--font-body--family)",
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "wrap": "pretty",
+            "width": "100%",
+            "alignment": "left",
+            "max_width": "normal",
+            "background": false,
+            "line_height": "normal",
+            "type_preset": "h2",
+            "corner_radius": 0,
+            "letter_spacing": "normal",
+            "background_color": "#00000026",
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          }
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

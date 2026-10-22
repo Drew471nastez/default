@@ -1,0 +1,184 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer_m9NzUG": {
+      "name": "Footer",
+      "type": "theme-footer",
+      "settings": {
+        "gap": 20,
+        "section_width": "page-width",
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding_block_end": 30,
+        "padding_block_start": 30
+      },
+      "blocks": {
+        "group_H6VpwJ": {
+          "type": "group",
+          "settings": {
+            "gap": 6,
+            "width": "fill",
+            "border": "none",
+            "height": "fit",
+            "border_width": 1,
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "border_radius": 0,
+            "custom_height": 100,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "align_baseline": false,
+            "border_opacity": 100,
+            "toggle_overlay": false,
+            "video_position": "cover",
+            "open_in_new_tab": false,
+            "background_media": "none",
+            "content_direction": "column",
+            "padding_block_end": 0,
+            "gradient_direction": "to top",
+            "padding_inline_end": 0,
+            "vertical_alignment": "center",
+            "vertical_on_mobile": true,
+            "custom_width_mobile": 100,
+            "padding_block_start": 0,
+            "horizontal_alignment": "flex-start",
+            "padding_inline_start": 0,
+            "background_image_position": "cover",
+            "vertical_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start"
+          },
+          "blocks": {
+            "text_LWt8Pz": {
+              "type": "text",
+              "settings": {
+                "case": "none",
+                "font": "var(--font-body--family)",
+                "text": "<h2>Join our email list</h2>",
+                "wrap": "pretty",
+                "width": "100%",
+                "alignment": "left",
+                "font_size": "1rem",
+                "max_width": "normal",
+                "background": false,
+                "line_height": "normal",
+                "type_preset": "h4",
+                "corner_radius": 0,
+                "letter_spacing": "normal",
+                "background_color": "#00000026",
+                "padding_block_end": 0,
+                "padding_inline_end": 0,
+                "padding_block_start": 0,
+                "padding_inline_start": 0
+              }
+            },
+            "text_f9CFLH": {
+              "type": "text",
+              "settings": {
+                "case": "none",
+                "font": "var(--font-body--family)",
+                "text": "<p>Get exclusive deals and early access to new products.</p>",
+                "wrap": "pretty",
+                "width": "100%",
+                "alignment": "left",
+                "font_size": "1rem",
+                "max_width": "normal",
+                "background": false,
+                "line_height": "normal",
+                "type_preset": "rte",
+                "corner_radius": 0,
+                "letter_spacing": "normal",
+                "background_color": "#00000026",
+                "padding_block_end": 0,
+                "padding_inline_end": 0,
+                "padding_block_start": 0,
+                "padding_inline_start": 0
+              }
+            }
+          },
+          "block_order": [
+            "text_LWt8Pz",
+            "text_f9CFLH"
+          ]
+        },
+        "email_signup_crihX7": {
+          "type": "email-signup",
+          "settings": {
+            "label": "Sign up",
+            "width": "fill",
+            "input_style": "custom",
+            "style_class": "button-unstyled",
+            "border_style": "all",
+            "border_width": 1,
+            "custom_width": 100,
+            "display_type": "arrow",
+            "border_radius": 100,
+            "heading_preset": "h3",
+            "input_text_color": "{{ settings.color_palette.color1 }}",
+            "input_type_preset": "paragraph",
+            "integrated_button": true,
+            "padding_block_end": 0,
+            "button_type_preset": "paragraph",
+            "input_border_color": "{{ settings.color_palette.color2 }}",
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0,
+            "input_background_color": "{{ settings.color_palette.background }}"
+          }
+        }
+      },
+      "block_order": [
+        "group_H6VpwJ",
+        "email_signup_crihX7"
+      ]
+    },
+    "footer_utilities_jLGE8U": {
+      "name": "Utilities",
+      "type": "footer-utilities",
+      "settings": {
+        "gap": 24,
+        "divider_color": "{{ settings.color_palette.color2 }}",
+        "section_width": "page-width",
+        "background_color": "{{ settings.color_palette.background }}",
+        "divider_thickness": 1,
+        "padding_block_end": 48,
+        "padding_block_start": 20
+      },
+      "blocks": {
+        "footer_copyright_jweRK8": {
+          "type": "footer-copyright",
+          "settings": {
+            "case": "none",
+            "font_size": "0.75rem",
+            "show_powered_by": true
+          }
+        },
+        "footer_policy_list_VCdnpa": {
+          "type": "footer-policy-list",
+          "settings": {
+            "case": "none",
+            "font_size": "0.75rem"
+          }
+        },
+        "social_links_Ew63Kq": {
+          "type": "social-links",
+          "settings": {
+            "tiktok_url": "https://www.tiktok.com/",
+            "twitter_url": "https://x.com/",
+            "youtube_url": "https://www.youtube.com/",
+            "facebook_url": "https://www.facebook.com/",
+            "instagram_url": "https://www.instagram.com/"
+          }
+        }
+      },
+      "block_order": [
+        "footer_copyright_jweRK8",
+        "footer_policy_list_VCdnpa",
+        "social_links_Ew63Kq"
+      ]
+    }
+  },
+  "order": [
+    "footer_m9NzUG",
+    "footer_utilities_jLGE8U"
+  ]
+}
