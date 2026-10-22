@@ -1,0 +1,21 @@
+**Storelib** read this push.
+
+13 files taken into the site as a draft.
+
+- `layout/theme.storelib`
+- `sections/theme-header.storelib`
+- `shopify/assets/base.css`
+- `shopify/assets/header.js`
+- `shopify/assets/section-reveal.js`
+- `shopify/assets/utilities.js`
+- `shopify/config/settings_schema.json`
+- `snippets/color-palette.storelib`
+- `snippets/contrast-override.storelib`
+- `snippets/scripts.storelib`
+- `snippets/text-block-styles.storelib`
+- `snippets/theme-styles-variables.storelib`
+- `config/settings.json`
+
+Nothing is live until the creator presses Publish.
+
+Open the builder: https://storelib.com/website-builder/editor/7a716c19-6532-480d-a2b3-1bd1fad57eea
