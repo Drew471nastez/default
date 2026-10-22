@@ -168,6 +168,7 @@
     --theme-cart-drawer: {% if settings.cart_type == 'drawer' %}1{% else %}0{% endif %};
     --theme-cart-auto-open: {% if settings.cart_type == 'drawer' and settings.auto_open_cart_drawer %}1{% else %}0{% endif %};
     --theme-product-transition: {% if settings.transition_to_main_product %}1{% else %}0{% endif %};
+    --theme-section-animation: {% if settings.section_animation != blank and settings.section_animation != 'none' %}1{% else %}0{% endif %};
     --theme-cart-note-open: {% if settings.cart_note_open_by_default %}1{% else %}0{% endif %};
     {%- case settings.product_card_image_ratio %}
       {%- when 'square' %}
@@ -594,8 +595,8 @@
     --input-box-shadow-width: var(--style-border-width-inputs);
     --input-box-shadow: 0 0 0 var(--input-box-shadow-width) var(--color-input-border);
     --input-box-shadow-focus: 0 0 0 calc(var(--input-box-shadow-width) + 0.5px) var(--color-input-border);
-    {%- if settings.storelib_link_hover != blank %}
-    --link-hover-color: {{ settings.storelib_link_hover }};
+    {%- if settings.link_hover_color != blank %}
+    --link-hover-color: {{ settings.link_hover_color }};
     {%- endif %}
     --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
     --input-disabled-border-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
@@ -717,24 +718,24 @@
     --quick-add-foreground: {{ settings.quick_add_text }};
   }
   {%- comment -%} Form fields: border on hover and focus, keyboard focus ring {%- endcomment -%}
-  {%- if settings.storelib_input_border != blank %}
+  {%- if settings.input_active_border_color != blank %}
   textarea:is(:hover, :focus),
   input:not([type='checkbox'], [type='radio']):is(:hover, :focus) {
-    border-color: {{ settings.storelib_input_border }};
+    border-color: {{ settings.input_active_border_color }};
   }
 
   .field__input:hover {
-    box-shadow: 0 0 0 var(--input-box-shadow-width) {{ settings.storelib_input_border }};
+    box-shadow: 0 0 0 var(--input-box-shadow-width) {{ settings.input_active_border_color }};
   }
 
   .field__input:focus {
-    box-shadow: 0 0 0 calc(var(--input-box-shadow-width) + 0.5px) {{ settings.storelib_input_border }};
+    box-shadow: 0 0 0 calc(var(--input-box-shadow-width) + 0.5px) {{ settings.input_active_border_color }};
   }
   {%- endif %}
-  {%- if settings.storelib_input_focus != blank %}
+  {%- if settings.input_focus_color != blank %}
   :is(input, textarea, select):focus-visible,
   .field__input:focus-visible {
-    outline: var(--focus-outline-width) solid {{ settings.storelib_input_focus }};
+    outline: var(--focus-outline-width) solid {{ settings.input_focus_color }};
     outline-offset: var(--focus-outline-offset);
   }
   {%- endif %}
@@ -794,6 +795,29 @@
     padding-block-start: var(--margin-xl);
   }
   {%- endunless %}
+  {%- comment -%} Animations > Sections on scroll (shopify/assets/section-reveal.js marks the sections) {%- endcomment -%}
+  {%- liquid
+    assign reveal = settings.section_animation | default: 'none'
+    assign reveal_ms = settings.section_animation_speed | default: 700
+  -%}
+  {%- if reveal != 'none' %}
+  @media (prefers-reduced-motion: no-preference) {
+    .shopify-section[data-reveal] {
+      transition: opacity {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1), transform {{ reveal_ms }}ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .shopify-section[data-reveal='pending'] {
+      opacity: 0;
+      transition: none;
+      {%- case reveal %}
+        {%- when 'rise' %}
+      transform: translateY(32px);
+        {%- when 'zoom' %}
+      transform: scale(0.96);
+      {%- endcase %}
+    }
+  }
+  {%- endif %}
 {% endstyle %}
 
 {% render 'contrast-override',

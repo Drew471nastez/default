@@ -810,7 +810,7 @@ export function setHeaderMenuStyle() {
       // A hybrid desktop can report touch support, and the embedded Storelib editor
       // can temporarily squeeze the menu. Neither should replace desktop navigation
       // with a full-screen drawer. Overflow is handled by the inline "More" menu.
-      headerComponent.dataset.menuStyle = window.matchMedia('(max-width: 1023px)').matches ? 'drawer' : 'menu';
+      headerComponent.dataset.menuStyle = window.matchMedia('(max-width: 749px)').matches ? 'drawer' : 'menu';
     });
   }
 }

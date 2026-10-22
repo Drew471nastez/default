@@ -55,7 +55,7 @@ class HeaderComponent extends Component {
   #headerHeight = 60;
 
   /** @type {MediaQueryList} */
-  #mobileNavigationQuery = window.matchMedia('(max-width: 1023px)');
+  #mobileNavigationQuery = window.matchMedia('(max-width: 749px)');
 
   /**
    * RAF ID for scroll handler throttling

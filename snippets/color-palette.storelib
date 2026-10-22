@@ -97,25 +97,42 @@
   endif
 %}
 
-{% comment %} Buttons > Hover color: Custom and No change replace the automatic shift for both buttons {% endcomment %}
+{% comment %} Buttons & fields > Primary / Secondary button > Hover: a colour chosen replaces the automatic shade {% endcomment %}
 {% liquid
   assign primary_hover_text_rgba = ''
   assign secondary_hover_text_rgba = ''
-  if settings.storelib_button_hover_effect == 'custom' and settings.storelib_button_hover_bg != blank and settings.storelib_button_hover_text != blank
-    assign custom_hover_border = settings.storelib_button_hover_border | default: settings.storelib_button_hover_bg
-    assign effective_primary_button_hover_background = settings.storelib_button_hover_bg
-    assign effective_primary_button_hover_border = custom_hover_border
-    assign primary_hover_text_rgba = settings.storelib_button_hover_text.rgba
-    assign effective_secondary_button_hover_background = settings.storelib_button_hover_bg
-    assign effective_secondary_button_hover_border = custom_hover_border
-    assign secondary_hover_text_rgba = settings.storelib_button_hover_text.rgba
-  elsif settings.storelib_button_hover_effect == 'none'
-    assign effective_primary_button_hover_background = 'rgb(' | append: settings.palette_primary_button_background.rgba | append: ')'
-    assign effective_primary_button_hover_border = 'rgb(' | append: settings.palette_primary_button_border.rgba | append: ')'
-    assign primary_hover_text_rgba = settings.palette_primary_button_text.rgba
-    assign effective_secondary_button_hover_background = 'rgb(' | append: settings.palette_secondary_button_background.rgba | append: ')'
-    assign effective_secondary_button_hover_border = 'rgb(' | append: settings.palette_secondary_button_border.rgba | append: ')'
-    assign secondary_hover_text_rgba = settings.palette_secondary_button_text.rgba
+  if settings.primary_button_hover_background != blank
+    assign effective_primary_button_hover_background = settings.primary_button_hover_background
+    assign effective_primary_button_hover_border = settings.primary_button_hover_background
+    assign chosen_brightness = settings.primary_button_hover_background | color_brightness
+    if chosen_brightness > 128
+      assign primary_hover_text_rgba = '0 0 0 / 1'
+    else
+      assign primary_hover_text_rgba = '255 255 255 / 1'
+    endif
+  endif
+  if settings.primary_button_hover_text != blank
+    assign primary_hover_text_rgba = settings.primary_button_hover_text.rgba
+  endif
+  if settings.primary_button_hover_border != blank
+    assign effective_primary_button_hover_border = settings.primary_button_hover_border
+  endif
+
+  if settings.secondary_button_hover_background != blank
+    assign effective_secondary_button_hover_background = settings.secondary_button_hover_background
+    assign effective_secondary_button_hover_border = settings.secondary_button_hover_background
+    assign chosen_brightness = settings.secondary_button_hover_background | color_brightness
+    if chosen_brightness > 128
+      assign secondary_hover_text_rgba = '0 0 0 / 1'
+    else
+      assign secondary_hover_text_rgba = '255 255 255 / 1'
+    endif
+  endif
+  if settings.secondary_button_hover_text != blank
+    assign secondary_hover_text_rgba = settings.secondary_button_hover_text.rgba
+  endif
+  if settings.secondary_button_hover_border != blank
+    assign effective_secondary_button_hover_border = settings.secondary_button_hover_border
   endif
 %}
 
@@ -193,6 +210,12 @@
     --color-foreground: {{ page_foreground }};
     --color-foreground-rgb: {{ page_foreground_rgb }};
     --color-border: {{ settings.site_border_color }};
+    {%- if settings.heading_color != blank %}
+    --heading-color: {{ settings.heading_color }};
+    {%- endif %}
+    {%- if settings.subheading_color != blank %}
+    --subheading-color: {{ settings.subheading_color }};
+    {%- endif %}
     --color-border-rgb: {{ settings.site_border_color.rgb }};
     --palette-lightest: {{ palette_lightest }};
     --palette-lightest-rgb: 255 255 255;

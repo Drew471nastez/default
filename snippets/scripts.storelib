@@ -145,6 +145,10 @@
   type="module"
   fetchpriority="low"
 ></script>
+<script
+  src="{{ 'section-reveal.js' | asset_url }}"
+  type="module"
+></script>
 
 <script
   src="{{ 'dialog.js' | asset_url }}"

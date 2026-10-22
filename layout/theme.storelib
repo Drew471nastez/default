@@ -145,7 +145,7 @@
           if (headerComponent) {
             // Keep first paint consistent with assets/utilities.js. Desktop must
             // never open the sidebar just because a touch screen or overflow exists.
-            headerComponent.dataset.menuStyle = window.matchMedia('(max-width: 1023px)').matches ? 'drawer' : 'menu';
+            headerComponent.dataset.menuStyle = window.matchMedia('(max-width: 749px)').matches ? 'drawer' : 'menu';
           }
         })();
 {% comment %}{% endcomment %}      </script>

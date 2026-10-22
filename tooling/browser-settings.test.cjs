@@ -507,3 +507,41 @@ test('a currency code turned on or off shows on the same price markup through CS
     assert.equal(await text(),'€24.39');
   } finally { await browser.close(); }
 });
+
+test('sections below the first screen come in on scroll, never the first screen, and not under reduced motion', async () => {
+  const browser=await openBrowser();
+  try {
+    const css=[...(await render('snippets/theme-styles-variables.storelib',{settings:settings({section_animation:'rise',section_animation_speed:300})})).matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match=>match[1]).join('\n');
+    const html=`<!doctype html><style>${css}</style><main id="MainContent">${[0,1,2,3].map(i=>`<div class="shopify-section" id="s${i}" style="height:900px">Section ${i}</div>`).join('')}</main>`;
+    for (const reduced of [false,true]) {
+      const context=await browser.newContext({viewport:{width:1000,height:800},reducedMotion:reduced?'reduce':'no-preference'});
+      const page=await context.newPage();
+      await page.route('http://site.test/**',route=>{
+        const url=new URL(route.request().url());
+        if (url.pathname==='/section-reveal.js') return route.fulfill({contentType:'text/javascript',body:source('shopify/assets/section-reveal.js')});
+        return route.fulfill({contentType:'text/html',body:html+'<script type="module" src="/section-reveal.js"></script>'});
+      });
+      await page.goto('http://site.test/');
+      await page.waitForTimeout(200);
+      const state=()=>page.evaluate(()=>[0,1,2,3].map(i=>{const s=document.getElementById('s'+i);return {reveal:s.dataset.reveal||null,opacity:getComputedStyle(s).opacity}}));
+      const start=await state();
+      assert.equal(start[0].reveal,null,'the first screen is never hidden');
+      if (reduced) { assert(start.every(s=>s.reveal===null&&s.opacity==='1'),'reduced motion hides nothing'); await context.close(); continue; }
+      assert.equal(start[2].reveal,'pending');
+      assert.equal(start[2].opacity,'0');
+      await page.evaluate(()=>document.getElementById('s2').scrollIntoView());
+      await page.waitForTimeout(800);
+      const after=await state();
+      assert.equal(after[2].opacity,'1');
+      assert.equal(after[2].reveal,null,'nothing is left on a section once it is in place');
+      // The builder's live preview: a new animation plays once on what is in view.
+      await page.evaluate(()=>document.dispatchEvent(new CustomEvent('storelib:settings-change',{detail:{settings:{section_animation:'zoom'},live:false}})));
+      await page.waitForTimeout(30);
+      const replay=await page.evaluate(()=>document.getElementById('s2').dataset.reveal||null);
+      assert(['pending','shown'].includes(replay),'the change replays on the section in view');
+      await page.waitForTimeout(800);
+      assert.equal((await state())[2].opacity,'1');
+      await context.close();
+    }
+  } finally { await browser.close(); }
+});

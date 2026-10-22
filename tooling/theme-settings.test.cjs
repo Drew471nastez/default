@@ -10,10 +10,9 @@ test('settings use simple names, independent heading controls and Theme/Custom c
   const buttons = schema.find(group => group.name === 'Buttons & fields');
   assert(!schema.some(group => /hover.*focus/i.test(group.name)));
   assert(!schema.some(group => (group.settings||[]).some(setting => setting.type==='header' && /hover.*focus/i.test(setting.content))));
-  for (const id of ['button_hover_duration','focus_ring_width']) {
-    assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1);
-    assert(buttons.settings.findIndex(setting=>setting.id===id)<buttons.settings.findIndex(setting=>setting.type==='header'&&setting.content==='Primary button'));
-  }
+  const headers=buttons.settings.filter(setting=>setting.type==='header').map(setting=>setting.content);
+  assert.deepEqual(headers,['Primary button','Secondary button','Hover','Button text','Pills','Form fields']);
+  for (const id of ['button_min_height','focus_ring_width']) assert.equal(buttons.settings.find(setting=>setting.id===id).visible_if,'{{ false }}',id);
   for (let heading=1; heading<=6; heading++) for (const control of ['font','size','weight','line_height','letter_spacing','case']) {
     assert(schema.find(group=>group.name==='Typography').settings.some(setting=>setting.id===`type_${control}_h${heading}`));
   }
@@ -21,7 +20,7 @@ test('settings use simple names, independent heading controls and Theme/Custom c
     if (setting.id?.endsWith('color_scheme') && !setting.visible_if) assert.deepEqual(setting.options.map(o=>o.value),['inherit','custom']);
   }
   const site=schema.find(group=>group.name==='Colors');
-  assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Borders','Link hover','Field text']);
+  assert.deepEqual(site.settings.filter(s=>s.type==='color'&&!s.visible_if).map(s=>s.label),['Background','Text','Headings','Subheadings','Borders','Link hover','Field text']);
 });
 
 test('price contexts choose currency independently, including absent handles and related cards on product pages', async () => {
@@ -401,7 +400,7 @@ test('every global control has an explicit consumer or a verified dynamic token 
     const dynamicType=/^type_(size|font|case|line_height|letter_spacing|weight)_(paragraph|h[1-6])$/.test(control.id);
     const dynamicScheme=/^scheme_(surface|inverse|accent)_(background|text)$/.test(control.id);
     // Hidden so Form fields keeps one Corner radius; declared only to move it out of Storelib's panel.
-    if (control.id==='storelib_input_radius' && control.visible_if==='{{ false }}') continue;
+    if (control.id.startsWith('storelib_') && control.visible_if==='{{ false }}') continue;
     assert(code.includes(`settings.${control.id}`) || code.includes(`settings['${control.id}']`) || dynamicType || dynamicScheme,`Disconnected global control: ${control.id}`);
   }
 });
@@ -445,38 +444,6 @@ test('explicit media-section text controls take effect even when automatic media
   assert(out.includes('--color-foreground: #ffffff'));
 });
 
-test('hover color lives in Buttons and Automatic, Custom and No change reach both buttons and shared schemes', async () => {
-  const buttons=schema.find(group=>group.name==='Buttons & fields').settings;
-  const ids=buttons.map(setting=>setting.id);
-  const firstHeader=buttons.findIndex(setting=>setting.type==='header'&&setting.content==='Primary button');
-  for (const id of ['storelib_button_hover_effect','storelib_button_hover_bg','storelib_button_hover_text']) {
-    assert.equal(schema.flatMap(group=>group.settings||[]).filter(setting=>setting.id===id).length,1,id);
-    assert(ids.indexOf(id)>=0&&ids.indexOf(id)<firstHeader,id);
-  }
-  assert.deepEqual(buttons.find(setting=>setting.id==='storelib_button_hover_effect').options.map(option=>option.value),['theme','custom','none']);
-  assert(['theme','custom','none'].includes(JSON.parse(source('config/settings.json')).shopify.storelib_button_hover_effect),'saved value stays valid');
-
-  const hover=(css,kind)=>Object.fromEntries(['background','text','border'].map(part=>[part,css.match(new RegExp(`--color-${kind}-button-hover-${part}:\\s*([^;]+);`))[1].trim()]));
-  const base={palette_primary_button_background:'#3e3e3e',palette_primary_button_text:'#ffffff',palette_primary_button_border:'#3e3e3e',
-    palette_secondary_button_background:'#ffffff',palette_secondary_button_text:'#171717',palette_secondary_button_border:'#171717',
-    storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd'};
-  const automatic=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'theme'})});
-  assert.notEqual(hover(automatic,'primary').background.toLowerCase(),'#9b95c1');
-  const custom=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'custom'})});
-  for (const kind of ['primary','secondary']) assert.deepEqual(hover(custom,kind),{background:'#9b95c1',text:`rgb(${color('#fdfdfd').rgba})`,border:'#9b95c1'},kind);
-  const none=await render('snippets/color-palette.storelib',{settings:settings({...base,storelib_button_hover_effect:'none'})});
-  assert.deepEqual(hover(none,'primary'),{background:`rgb(${color('#3e3e3e').rgba})`,text:`rgb(${color('#ffffff').rgba})`,border:`rgb(${color('#3e3e3e').rgba})`});
-  assert.deepEqual(hover(none,'secondary'),{background:`rgb(${color('#ffffff').rgba})`,text:`rgb(${color('#171717').rgba})`,border:`rgb(${color('#171717').rgba})`});
-
-  const scheme=async effect=>render('snippets/contrast-override.storelib',{settings:settings({...base,storelib_button_hover_effect:effect}),color_scheme:'inverse',section_id:'s'});
-  const inverseCustom=await scheme('custom');
-  assert.equal(hover(inverseCustom,'primary').background,'#9b95c1');
-  assert.equal(hover(inverseCustom,'secondary').text,'#fdfdfd');
-  const inverseNone=await scheme('none');
-  const button=kind=>inverseNone.match(new RegExp(`--color-${kind}-button-background:\\s*([^;]+);`))[1].trim();
-  for (const kind of ['primary','secondary']) assert.equal(hover(inverseNone,kind).background,button(kind),kind);
-});
-
 test('store, 404 and password sections offer only blocks that belong in them', () => {
   const offered=name=>JSON.parse(source(`sections/${name}.storelib`).match(/<schema>\s*([\s\S]*?)\s*<\/schema>/)[1]).shopify.blocks.map(block=>block.type);
   for (const name of ['product-list','product-information','featured-product-information','main-404','password']) {
@@ -485,32 +452,6 @@ test('store, 404 and password sections offer only blocks that belong in them', (
     if (name!=='password') assert(!types.includes('email-signup'),`${name} offers email-signup`);
   }
   assert(offered('password').includes('email-signup'));
-});
-
-test('every Storelib platform setting is declared in a theme group and reaches CSS', async () => {
-  const platform=JSON.parse(source('config/storelib_settings_schema.json')).panels.flatMap(panel=>panel.settings).filter(setting=>setting.type!=='header');
-  const placed=Object.fromEntries(schema.flatMap(group=>(group.settings||[]).map(setting=>[setting.id,group.name])));
-  const expected={storelib_button_hover_bg:'Buttons & fields',storelib_button_hover_text:'Buttons & fields',storelib_button_hover_border:'Buttons & fields',storelib_button_hover_effect:'Buttons & fields',
-    storelib_link_hover:'Colors',storelib_input_border:'Buttons & fields',storelib_input_focus:'Buttons & fields',storelib_input_radius:'Buttons & fields'};
-  for (const setting of platform) assert.equal(placed[setting.id],expected[setting.id],setting.id);
-  const saved=JSON.parse(source('config/settings.json')).shopify;
-  // Values the creator chose stay; an empty colour is left out by Storelib once the theme declares the setting.
-  for (const id of ['storelib_button_hover_bg','storelib_button_hover_text','storelib_button_hover_effect','storelib_input_radius']) assert(id in saved,`${id} keeps its value`);
-
-  const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({storelib_link_hover:'#aa0000',storelib_input_border:'#00aa00',storelib_input_focus:'#0000aa'})});
-  assert.match(css,/--link-hover-color:\s*#aa0000/);
-  assert.match(css,/\.field__input:hover\s*{\s*box-shadow:[^}]*#00aa00/);
-  assert.match(css,/input:not\(\[type='checkbox'\], \[type='radio'\]\):is\(:hover, :focus\)\s*{\s*border-color:\s*#00aa00/);
-  assert.match(css,/\.field__input:focus-visible\s*{\s*outline:[^}]*#0000aa/);
-  const plain=await render('snippets/theme-styles-variables.storelib',{settings:settings({storelib_link_hover:'',storelib_input_border:'',storelib_input_focus:''})});
-  assert.doesNotMatch(plain,/--link-hover-color|\.field__input:hover/);
-  assert.match(source('shopify/assets/base.css'),/a:hover {\n  color: var\(--link-hover-color, /);
-
-  const palette=await render('snippets/color-palette.storelib',{settings:settings({storelib_button_hover_effect:'custom',storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd',storelib_button_hover_border:'#111111'})});
-  assert.match(palette,/--color-primary-button-hover-border:\s*#111111/);
-  assert.match(palette,/--color-secondary-button-hover-border:\s*#111111/);
-  const fallback=await render('snippets/color-palette.storelib',{settings:settings({storelib_button_hover_effect:'custom',storelib_button_hover_bg:'#9b95c1',storelib_button_hover_text:'#fdfdfd',storelib_button_hover_border:''})});
-  assert.match(fallback,/--color-primary-button-hover-border:\s*#9b95c1/);
 });
 
 test('theme settings change only CSS or sections, never the layout around them, so the builder patches in place', async () => {
@@ -544,4 +485,67 @@ test('theme settings change only CSS or sections, never the layout around them, 
   assert.match(flags,/--theme-product-card-ratio: 4 \/ 5;/);
   assert.match(flags,/--theme-page-content-width: var\(--wide-page-width\);/);
   assert.match(await css({cart_type:'page',auto_open_cart_drawer:true}),/--theme-cart-drawer: 0;[\s\S]*--theme-cart-auto-open: 0;/);
+});
+
+test('each button has its own hover colors, and Storelib adds no hover stylesheet of its own', async () => {
+  const buttons=schema.find(group=>group.name==='Buttons & fields').settings;
+  const ids=buttons.map(setting=>setting.id);
+  for (const kind of ['primary','secondary']) {
+    const at=id=>ids.indexOf(id);
+    for (const part of ['background','text','border']) assert(at(`${kind}_button_hover_${part}`)>at(`palette_${kind}_button_${part === 'background' ? 'background' : part}`) || part==='border',`${kind} ${part}`);
+  }
+  const platform=JSON.parse(source('config/storelib_settings_schema.json')).panels.flatMap(panel=>panel.settings).filter(setting=>setting.type!=='header');
+  const declared=Object.fromEntries(schema.flatMap(group=>group.settings||[]).map(setting=>[setting.id,setting]));
+  for (const setting of platform) assert.equal(declared[setting.id]?.visible_if,'{{ false }}',setting.id);
+  const saved=JSON.parse(source('config/settings.json')).shopify;
+  for (const id of ['storelib_button_hover_bg','storelib_button_hover_text','storelib_button_hover_border','storelib_link_hover','storelib_input_border','storelib_input_focus']) assert(!saved[id],`${id} is empty, so Storelib writes no rule for it`);
+  assert(!(saved.storelib_input_radius>=0),'Storelib does not force a field radius');
+
+  const hover=(css,kind)=>Object.fromEntries(['background','text','border'].map(part=>[part,css.match(new RegExp(`--color-${kind}-button-hover-${part}:\\s*([^;]+);`))[1].trim()]));
+  const base={palette_primary_button_background:'#3e3e3e',palette_primary_button_text:'#ffffff',palette_primary_button_border:'#3e3e3e',palette_secondary_button_background:'#ffffff',palette_secondary_button_text:'#171717',palette_secondary_button_border:'#171717',
+    primary_button_hover_background:'',primary_button_hover_text:'',primary_button_hover_border:'',secondary_button_hover_background:'',secondary_button_hover_text:'',secondary_button_hover_border:''};
+  const automatic=await render('snippets/color-palette.storelib',{settings:settings(base)});
+  assert.notEqual(hover(automatic,'primary').background,'#9b95c1');
+  const chosen=await render('snippets/color-palette.storelib',{settings:settings({...base,primary_button_hover_background:'#9b95c1',secondary_button_hover_background:'#222222',secondary_button_hover_text:'#ffcc00',secondary_button_hover_border:'#ff0000'})});
+  assert.deepEqual(hover(chosen,'primary'),{background:'#9b95c1',text:'rgb(0 0 0 / 1)',border:'#9b95c1'},'a light hover background gets dark text');
+  assert.deepEqual(hover(chosen,'secondary'),{background:'#222222',text:`rgb(${color('#ffcc00').rgba})`,border:'#ff0000'});
+  const inverse=await render('snippets/contrast-override.storelib',{settings:settings({...base,primary_button_hover_background:'#222222'}),color_scheme:'inverse',section_id:'s'});
+  assert.match(inverse,/--color-primary-button-hover-background: #222222;/);
+  assert.match(inverse,/--color-primary-button-hover-text: #ffffff;/);
+});
+
+test('link hover, field colors and heading colors are the theme\'s own settings and reach CSS', async () => {
+  const colors=schema.find(group=>group.name==='Colors').settings.map(setting=>setting.id);
+  for (const id of ['heading_color','subheading_color','link_hover_color']) assert(colors.includes(id),id);
+  const fields=schema.find(group=>group.name==='Buttons & fields').settings.map(setting=>setting.id);
+  for (const id of ['input_active_border_color','input_focus_color']) assert(fields.includes(id),id);
+  const css=await render('snippets/theme-styles-variables.storelib',{settings:settings({link_hover_color:'#aa0000',input_active_border_color:'#00aa00',input_focus_color:'#0000aa'})});
+  assert.match(css,/--link-hover-color:\s*#aa0000/);
+  assert.match(css,/\.field__input:hover\s*{\s*box-shadow:[^}]*#00aa00/);
+  assert.match(css,/\.field__input:focus-visible\s*{\s*outline:[^}]*#0000aa/);
+  const palette=await render('snippets/color-palette.storelib',{settings:settings({heading_color:'#112233',subheading_color:'#445566'})});
+  assert.match(palette,/--heading-color: #112233;/);
+  assert.match(palette,/--subheading-color: #445566;/);
+  const base=source('shopify/assets/base.css');
+  assert.match(base,/h1,\n\.h1\.h1,[\s\S]*?color: var\(--heading-color, var\(--color\)\);/);
+  assert.match(base,/h6,\n\.h6\.h6,[\s\S]*?color: var\(--subheading-color, var\(--color\)\);/);
+  const inverse=await render('snippets/contrast-override.storelib',{settings:settings({}),color_scheme:'inverse',section_id:'s'});
+  assert.match(inverse,/--heading-color: initial;/,'sections on other colors keep their own text color for headings');
+  const page=await render('snippets/contrast-override.storelib',{settings:settings({}),color_scheme:'base',section_id:'s'});
+  assert.doesNotMatch(page,/--heading-color: initial;/);
+});
+
+test('sections animate on scroll as a CSS choice, with the page transitions beside them', async () => {
+  const animations=schema.find(group=>group.name==='Animations').settings.map(setting=>setting.id);
+  assert.deepEqual(animations.filter(Boolean),['section_animation','section_animation_speed','page_transition_enabled','transition_to_main_product','add_to_cart_animation']);
+  assert.match(source('snippets/scripts.storelib'),/'section-reveal\.js' \| asset_url/);
+  const css=async values=>render('snippets/theme-styles-variables.storelib',{settings:settings(values)});
+  const rise=await css({section_animation:'rise',section_animation_speed:900});
+  assert.match(rise,/--theme-section-animation: 1;/);
+  assert.match(rise,/\[data-reveal='pending'\] \{[^}]*opacity: 0;[^}]*transform: translateY\(32px\);/);
+  assert.match(rise,/transition: opacity 900ms/);
+  assert.match(rise,/prefers-reduced-motion: no-preference/);
+  const none=await css({section_animation:'none'});
+  assert.match(none,/--theme-section-animation: 0;/);
+  assert.doesNotMatch(none,/data-reveal/);
 });

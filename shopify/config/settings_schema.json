@@ -62,7 +62,7 @@
       {
         "type": "paragraph",
         "id": "color_palette",
-        "content": "Choose colors by what they change: Background, Text, Borders, Link hover and Field text.",
+        "content": "Choose colors by what they change: Background, Text, Headings, Borders, Link hover and Field text.",
         "visible_if": "{{ false }}"
       },
       {
@@ -81,15 +81,34 @@
       },
       {
         "type": "color",
+        "id": "heading_color",
+        "label": "Headings",
+        "info": "Large headings (H1 to H3) in sections that use the page colors. Leave empty to use Text."
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Subheadings",
+        "info": "Smaller headings (H4 to H6) in sections that use the page colors. Leave empty to use Text."
+      },
+      {
+        "type": "color",
         "id": "site_border_color",
         "label": "Borders",
         "default": "#292929"
       },
       {
         "type": "color",
-        "id": "storelib_link_hover",
+        "id": "link_hover_color",
         "label": "Link hover",
         "info": "Leave empty to fade links on hover."
+      },
+      {
+        "type": "color",
+        "id": "storelib_link_hover",
+        "label": "Link hover",
+        "info": "Leave empty to fade links on hover.",
+        "visible_if": "{{ false }}"
       },
       {
         "type": "color",
@@ -1503,21 +1522,77 @@
           }
         ],
         "default": "default"
+      }
+    ]
+  },
+  {
+    "name": "Animations",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Sections on scroll"
+      },
+      {
+        "type": "select",
+        "id": "section_animation",
+        "label": "Animation",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "fade",
+            "label": "Fade in"
+          },
+          {
+            "value": "rise",
+            "label": "Fade up"
+          },
+          {
+            "value": "zoom",
+            "label": "Zoom in"
+          }
+        ],
+        "default": "rise",
+        "info": "Sections below the first screen come in as visitors scroll to them. Off for visitors who ask for reduced motion."
+      },
+      {
+        "type": "range",
+        "id": "section_animation_speed",
+        "label": "Speed",
+        "min": 300,
+        "max": 1500,
+        "step": 100,
+        "unit": "ms",
+        "default": 700,
+        "visible_if": "{{ settings.section_animation != 'none' }}"
       },
       {
         "type": "header",
-        "content": "Motion"
+        "content": "Page transitions"
       },
       {
         "type": "checkbox",
         "id": "page_transition_enabled",
-        "label": "Page transition",
-        "default": true
+        "label": "Page transitions",
+        "default": true,
+        "info": "Pages fade into each other as visitors move around the site."
       },
       {
         "type": "checkbox",
         "id": "transition_to_main_product",
-        "label": "Product card to product page transition",
+        "label": "Product card to product page",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "type": "checkbox",
+        "id": "add_to_cart_animation",
+        "label": "Add to cart",
         "default": true
       }
     ]
@@ -1525,91 +1600,6 @@
   {
     "name": "Buttons & fields",
     "settings": [
-      {
-        "type": "header",
-        "content": "All buttons"
-      },
-      {
-        "type": "range",
-        "id": "button_min_height",
-        "label": "Minimum button height",
-        "min": 44,
-        "max": 64,
-        "step": 2,
-        "default": 44,
-        "unit": "px"
-      },
-      {
-        "type": "select",
-        "id": "storelib_button_hover_effect",
-        "label": "Hover color",
-        "options": [
-          {
-            "value": "theme",
-            "label": "Automatic"
-          },
-          {
-            "value": "custom",
-            "label": "Custom"
-          },
-          {
-            "value": "none",
-            "label": "No change"
-          }
-        ],
-        "default": "theme",
-        "info": "Automatic shifts each button's own colors and keeps the text readable."
-      },
-      {
-        "type": "color",
-        "id": "storelib_button_hover_bg",
-        "label": "Hover background",
-        "default": "#3e3e3e",
-        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
-      },
-      {
-        "type": "color",
-        "id": "storelib_button_hover_text",
-        "label": "Hover text",
-        "default": "#ffffff",
-        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
-      },
-      {
-        "type": "color",
-        "id": "storelib_button_hover_border",
-        "label": "Hover border",
-        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}",
-        "info": "Leave empty to use the hover background."
-      },
-      {
-        "type": "range",
-        "id": "button_hover_duration",
-        "label": "Hover speed",
-        "min": 0,
-        "max": 400,
-        "step": 20,
-        "unit": "ms",
-        "default": 200,
-        "info": "Set 0 ms for an instant change.",
-        "visible_if": "{{ settings.storelib_button_hover_effect != 'none' }}"
-      },
-      {
-        "type": "range",
-        "id": "focus_ring_width",
-        "label": "Focus outline",
-        "min": 2,
-        "max": 4,
-        "step": 1,
-        "unit": "px",
-        "default": 2,
-        "info": "Visible keyboard focus outline for buttons, links and form fields."
-      },
-      {
-        "type": "checkbox",
-        "id": "add_to_cart_animation",
-        "label": "Add to cart",
-        "default": true
-      },
       {
         "type": "header",
         "content": "Primary button"
@@ -1631,9 +1621,27 @@
       {
         "type": "color",
         "id": "palette_primary_button_border",
-        "label": "Borders",
+        "label": "Border",
         "default": "{{ settings.page_background_color }}",
         "alpha": true
+      },
+      {
+        "type": "color",
+        "id": "primary_button_hover_background",
+        "label": "Hover background",
+        "info": "Leave empty for an automatic shade of the background."
+      },
+      {
+        "type": "color",
+        "id": "primary_button_hover_text",
+        "label": "Hover text",
+        "info": "Leave empty to keep the text readable automatically."
+      },
+      {
+        "type": "color",
+        "id": "primary_button_hover_border",
+        "label": "Hover border",
+        "info": "Leave empty to follow the hover background."
       },
       {
         "type": "range",
@@ -1656,38 +1664,6 @@
         "default": 100
       },
       {
-        "type": "select",
-        "id": "type_font_button_primary",
-        "label": "Font",
-        "options": [
-          {
-            "value": "body",
-            "label": "Body"
-          },
-          {
-            "value": "accent",
-            "label": "Accent"
-          }
-        ],
-        "default": "body"
-      },
-      {
-        "type": "select",
-        "id": "button_text_case_primary",
-        "label": "Capitalization",
-        "options": [
-          {
-            "value": "default",
-            "label": "Default"
-          },
-          {
-            "value": "uppercase",
-            "label": "Uppercase"
-          }
-        ],
-        "default": "default"
-      },
-      {
         "type": "header",
         "content": "Secondary button"
       },
@@ -1708,9 +1684,27 @@
       {
         "type": "color",
         "id": "palette_secondary_button_border",
-        "label": "Borders",
+        "label": "Border",
         "default": "{{ settings.page_text_color }}",
         "alpha": true
+      },
+      {
+        "type": "color",
+        "id": "secondary_button_hover_background",
+        "label": "Hover background",
+        "info": "Leave empty for an automatic shade of the background."
+      },
+      {
+        "type": "color",
+        "id": "secondary_button_hover_text",
+        "label": "Hover text",
+        "info": "Leave empty to keep the text readable automatically."
+      },
+      {
+        "type": "color",
+        "id": "secondary_button_hover_border",
+        "label": "Hover border",
+        "info": "Leave empty to follow the hover background."
       },
       {
         "type": "range",
@@ -1733,9 +1727,60 @@
         "default": 100
       },
       {
+        "type": "header",
+        "content": "Hover"
+      },
+      {
+        "type": "range",
+        "id": "button_hover_duration",
+        "label": "Hover speed",
+        "min": 0,
+        "max": 400,
+        "step": 20,
+        "unit": "ms",
+        "default": 200,
+        "info": "How quickly a button changes color on hover. 0 ms is instant."
+      },
+      {
+        "type": "header",
+        "content": "Button text"
+      },
+      {
+        "type": "select",
+        "id": "type_font_button_primary",
+        "label": "Primary button font",
+        "options": [
+          {
+            "value": "body",
+            "label": "Body"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ],
+        "default": "body"
+      },
+      {
+        "type": "select",
+        "id": "button_text_case_primary",
+        "label": "Primary button capitalization",
+        "options": [
+          {
+            "value": "default",
+            "label": "Default"
+          },
+          {
+            "value": "uppercase",
+            "label": "Uppercase"
+          }
+        ],
+        "default": "default"
+      },
+      {
         "type": "select",
         "id": "type_font_button_secondary",
-        "label": "Font",
+        "label": "Secondary button font",
         "options": [
           {
             "value": "body",
@@ -1751,7 +1796,7 @@
       {
         "type": "select",
         "id": "button_text_case_secondary",
-        "label": "Capitalization",
+        "label": "Secondary button capitalization",
         "options": [
           {
             "value": "default",
@@ -1795,7 +1840,7 @@
       {
         "type": "color",
         "id": "palette_input_border",
-        "label": "Borders",
+        "label": "Border",
         "default": "{{ settings.page_text_color }}"
       },
       {
@@ -1820,26 +1865,15 @@
       },
       {
         "type": "color",
-        "id": "storelib_input_border",
+        "id": "input_active_border_color",
         "label": "Border on hover and focus",
         "info": "Leave empty to keep the border color."
       },
       {
         "type": "color",
-        "id": "storelib_input_focus",
+        "id": "input_focus_color",
         "label": "Focus ring",
         "info": "Shown when a field is reached with the keyboard. Leave empty to use the text color."
-      },
-      {
-        "type": "range",
-        "id": "storelib_input_radius",
-        "label": "Corner radius (Storelib)",
-        "min": -1,
-        "max": 24,
-        "step": 1,
-        "unit": "px",
-        "default": -1,
-        "visible_if": "{{ false }}"
       },
       {
         "type": "select",
@@ -1881,6 +1915,97 @@
         ],
         "default": "paragraph",
         "info": "Uses the same font, weight and line height as the selected text style throughout the site."
+      },
+      {
+        "type": "range",
+        "id": "button_min_height",
+        "label": "Minimum button height",
+        "min": 44,
+        "max": 64,
+        "step": 2,
+        "default": 44,
+        "unit": "px",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "range",
+        "id": "focus_ring_width",
+        "label": "Focus outline",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "unit": "px",
+        "default": 2,
+        "info": "Visible keyboard focus outline for buttons, links and form fields.",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "select",
+        "id": "storelib_button_hover_effect",
+        "label": "Hover color",
+        "options": [
+          {
+            "value": "theme",
+            "label": "Automatic"
+          },
+          {
+            "value": "custom",
+            "label": "Custom"
+          },
+          {
+            "value": "none",
+            "label": "No change"
+          }
+        ],
+        "default": "theme",
+        "info": "Automatic shifts each button's own colors and keeps the text readable.",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "color",
+        "id": "storelib_button_hover_bg",
+        "label": "Hover background",
+        "default": "#3e3e3e",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "color",
+        "id": "storelib_button_hover_text",
+        "label": "Hover text",
+        "default": "#ffffff",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "color",
+        "id": "storelib_button_hover_border",
+        "label": "Hover border",
+        "visible_if": "{{ false }}",
+        "info": "Leave empty to use the hover background."
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_border",
+        "label": "Border on hover and focus",
+        "info": "Leave empty to keep the border color.",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_focus",
+        "label": "Focus ring",
+        "info": "Shown when a field is reached with the keyboard. Leave empty to use the text color.",
+        "visible_if": "{{ false }}"
+      },
+      {
+        "type": "range",
+        "id": "storelib_input_radius",
+        "label": "Corner radius (Storelib)",
+        "min": -1,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "default": -1,
+        "visible_if": "{{ false }}"
       }
     ]
   },

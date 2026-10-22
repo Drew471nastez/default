@@ -47,6 +47,12 @@
     color: var(--color);
   }
 
+  /* A block with its own text colour keeps it over Colors > Headings / Subheadings. */
+  .custom-color {
+    --heading-color: initial;
+    --subheading-color: initial;
+  }
+
   .text-block:not(.text-block--full-width).rte,
   .text-block:not(.text-block--full-width).paragraph {
     /* Safari doesn't support pretty, so fallback to balance */

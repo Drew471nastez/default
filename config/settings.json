@@ -146,7 +146,7 @@
     "product_card_carousel": true,
     "product_corner_radius": 0,
     "section_spacing_scale": 115,
-    "storelib_input_radius": 1,
+    "storelib_input_radius": -1,
     "type_weight_paragraph": "inherit",
     "variant_button_radius": 14,
     "variant_swatch_height": 34,
@@ -173,7 +173,7 @@
     "product_card_image_ratio": "square",
     "product_card_title_lines": 3,
     "scheme_accent_background": "#e8e8e8",
-    "storelib_button_hover_bg": "#735ef9",
+    "storelib_button_hover_bg": "",
     "type_font_button_primary": "accent",
     "badge_sold_out_text_color": "{{ settings.page_text_color }}",
     "cart_note_open_by_default": false,
@@ -186,7 +186,7 @@
     "button_text_case_secondary": "default",
     "palette_variant_background": "{{ settings.page_background_color }}",
     "show_second_image_on_hover": true,
-    "storelib_button_hover_text": "#fdfdfd",
+    "storelib_button_hover_text": "",
     "transition_to_main_product": true,
     "type_font_button_secondary": "body",
     "type_line_height_paragraph": "body-loose",
@@ -218,7 +218,13 @@
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "#ff4f4f",
-    "palette_selected_variant_background": "{{ settings.page_text_color }}"
+    "palette_selected_variant_background": "{{ settings.page_text_color }}",
+    "primary_button_hover_background": "#735ef9",
+    "primary_button_hover_text": "#fdfdfd",
+    "secondary_button_hover_background": "#735ef9",
+    "secondary_button_hover_text": "#fdfdfd",
+    "section_animation": "rise",
+    "section_animation_speed": 700
   },
   "favicon_url": "https://storelib.com/media/store-builder-images/31468589-3d32-4bc0-91bd-406ffd05242e/imported/bf220a79a8dc48de833e9e8af0203fda.png"
 }
