@@ -627,16 +627,11 @@
 {
   "type": "mobile-bottom-nav",
   "name": "Mobile bottom navigation",
-  "description": "Sticky mobile bottom navigation for Home, Menu, Search, Account and Cart.",
-  "class": "mobile-bottom-nav-section",
-  "max_blocks": 5,
-  "enabled_on": {
-    "groups": ["overlay"]
-  },
   "settings": [
     {
       "type": "paragraph",
-      "id": "note",
+      "id": "para_1",
+      "label": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer.",
       "content": "Shown on screens under 750px, fixed to the bottom of every page. Menu opens the header menu. Search opens search. Cart opens the cart drawer."
     },
     {
@@ -656,8 +651,14 @@
       "id": "behavior",
       "label": "Behavior",
       "options": [
-        { "value": "always", "label": "Always visible" },
-        { "value": "scroll", "label": "Hide while scrolling down" }
+        {
+          "value": "always",
+          "label": "Always visible"
+        },
+        {
+          "value": "scroll",
+          "label": "Hide while scrolling down"
+        }
       ],
       "default": "always"
     },
@@ -688,7 +689,6 @@
     {
       "type": "home",
       "name": "Home",
-      "limit": 1,
       "settings": [
         {
           "type": "text",
@@ -696,12 +696,12 @@
           "label": "Label",
           "default": "Home"
         }
-      ]
+      ],
+      "limit": 1
     },
     {
       "type": "menu",
       "name": "Menu",
-      "limit": 1,
       "settings": [
         {
           "type": "text",
@@ -709,12 +709,12 @@
           "label": "Label",
           "default": "Menu"
         }
-      ]
+      ],
+      "limit": 1
     },
     {
       "type": "search",
       "name": "Search",
-      "limit": 1,
       "settings": [
         {
           "type": "text",
@@ -722,12 +722,12 @@
           "label": "Label",
           "default": "Search"
         }
-      ]
+      ],
+      "limit": 1
     },
     {
       "type": "account",
       "name": "Account",
-      "limit": 1,
       "settings": [
         {
           "type": "text",
@@ -735,12 +735,12 @@
           "label": "Label",
           "default": "Account"
         }
-      ]
+      ],
+      "limit": 1
     },
     {
       "type": "cart",
       "name": "Cart",
-      "limit": 1,
       "settings": [
         {
           "type": "text",
@@ -748,7 +748,8 @@
           "label": "Label",
           "default": "Cart"
         }
-      ]
+      ],
+      "limit": 1
     },
     {
       "type": "link",
@@ -770,16 +771,29 @@
           "id": "icon",
           "label": "Icon",
           "options": [
-            { "value": "bag", "label": "Bag" },
-            { "value": "grid", "label": "Grid" },
-            { "value": "page", "label": "Page" },
-            { "value": "pin", "label": "Pin" }
+            {
+              "value": "bag",
+              "label": "Bag"
+            },
+            {
+              "value": "grid",
+              "label": "Grid"
+            },
+            {
+              "value": "page",
+              "label": "Page"
+            },
+            {
+              "value": "pin",
+              "label": "Pin"
+            }
           ],
           "default": "bag"
         }
       ]
     }
   ],
+  "max_blocks": 5,
   "presets": [
     {
       "name": "Mobile bottom navigation",
@@ -792,21 +806,59 @@
         "text_color": "#000000"
       },
       "blocks": {
-        "nav_home": { "type": "home", "settings": { "label": "Home" } },
-        "nav_menu": { "type": "menu", "settings": { "label": "Menu" } },
-        "nav_search": { "type": "search", "settings": { "label": "Search" } },
-        "nav_account": { "type": "account", "settings": { "label": "Account" } },
-        "nav_cart": { "type": "cart", "settings": { "label": "Cart" } }
+        "nav_home": {
+          "type": "home",
+          "settings": {
+            "label": "Home"
+          }
+        },
+        "nav_menu": {
+          "type": "menu",
+          "settings": {
+            "label": "Menu"
+          }
+        },
+        "nav_search": {
+          "type": "search",
+          "settings": {
+            "label": "Search"
+          }
+        },
+        "nav_account": {
+          "type": "account",
+          "settings": {
+            "label": "Account"
+          }
+        },
+        "nav_cart": {
+          "type": "cart",
+          "settings": {
+            "label": "Cart"
+          }
+        }
       },
-      "block_order": ["nav_home", "nav_menu", "nav_search", "nav_account", "nav_cart"]
+      "block_order": [
+        "nav_home",
+        "nav_menu",
+        "nav_search",
+        "nav_account",
+        "nav_cart"
+      ]
     }
   ],
+  "enabled_on": {
+    "groups": [
+      "overlay"
+    ]
+  },
   "shopify": {
     "name": "Mobile bottom navigation",
     "class": "mobile-bottom-nav-section",
     "max_blocks": 5,
     "enabled_on": {
-      "groups": ["overlay"]
+      "groups": [
+        "overlay"
+      ]
     },
     "settings": [
       {
@@ -831,8 +883,14 @@
         "id": "behavior",
         "label": "Behavior",
         "options": [
-          { "value": "always", "label": "Always visible" },
-          { "value": "scroll", "label": "Hide while scrolling down" }
+          {
+            "value": "always",
+            "label": "Always visible"
+          },
+          {
+            "value": "scroll",
+            "label": "Hide while scrolling down"
+          }
         ],
         "default": "always"
       },
@@ -945,10 +1003,22 @@
             "id": "icon",
             "label": "Icon",
             "options": [
-              { "value": "bag", "label": "Bag" },
-              { "value": "grid", "label": "Grid" },
-              { "value": "page", "label": "Page" },
-              { "value": "pin", "label": "Pin" }
+              {
+                "value": "bag",
+                "label": "Bag"
+              },
+              {
+                "value": "grid",
+                "label": "Grid"
+              },
+              {
+                "value": "page",
+                "label": "Page"
+              },
+              {
+                "value": "pin",
+                "label": "Pin"
+              }
             ],
             "default": "bag"
           }
@@ -967,13 +1037,44 @@
           "text_color": "#000000"
         },
         "blocks": {
-          "nav_home": { "type": "home", "settings": { "label": "Home" } },
-          "nav_menu": { "type": "menu", "settings": { "label": "Menu" } },
-          "nav_search": { "type": "search", "settings": { "label": "Search" } },
-          "nav_account": { "type": "account", "settings": { "label": "Account" } },
-          "nav_cart": { "type": "cart", "settings": { "label": "Cart" } }
+          "nav_home": {
+            "type": "home",
+            "settings": {
+              "label": "Home"
+            }
+          },
+          "nav_menu": {
+            "type": "menu",
+            "settings": {
+              "label": "Menu"
+            }
+          },
+          "nav_search": {
+            "type": "search",
+            "settings": {
+              "label": "Search"
+            }
+          },
+          "nav_account": {
+            "type": "account",
+            "settings": {
+              "label": "Account"
+            }
+          },
+          "nav_cart": {
+            "type": "cart",
+            "settings": {
+              "label": "Cart"
+            }
+          }
         },
-        "block_order": ["nav_home", "nav_menu", "nav_search", "nav_account", "nav_cart"]
+        "block_order": [
+          "nav_home",
+          "nav_menu",
+          "nav_search",
+          "nav_account",
+          "nav_cart"
+        ]
       }
     ]
   }

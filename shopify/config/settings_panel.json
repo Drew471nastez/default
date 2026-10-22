@@ -49,6 +49,18 @@
   "settings": [
    {
     "type": "color",
+    "id": "color_palette::color1",
+    "label": "Colour 1",
+    "default": "#000000"
+   },
+   {
+    "type": "color",
+    "id": "color_palette::color2",
+    "label": "Colour 2",
+    "default": "#DFDFDF"
+   },
+   {
+    "type": "color",
     "id": "color_palette::background",
     "label": "Background",
     "default": "#ffffff"
@@ -58,18 +70,6 @@
     "id": "color_palette::foreground",
     "label": "Foreground",
     "default": "#000000"
-   },
-   {
-    "type": "color",
-    "id": "color_palette::color1",
-    "label": "Colour 1",
-    "default": "#333333"
-   },
-   {
-    "type": "color",
-    "id": "color_palette::color2",
-    "label": "Colour 2",
-    "default": "#DFDFDF"
    }
   ]
  },
