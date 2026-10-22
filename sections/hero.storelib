@@ -1300,9 +1300,6 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
-    },
-    {
       "type": "text"
     },
     {

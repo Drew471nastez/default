@@ -30,7 +30,22 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
+      "type": "collection-title"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "group"
+    },
+    {
+      "type": "spacer"
     }
   ],
   "presets": [],

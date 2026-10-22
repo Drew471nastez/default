@@ -198,9 +198,6 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
-    },
-    {
       "type": "_blog-post-title"
     },
     {
@@ -211,6 +208,12 @@
     },
     {
       "type": "_blog-post-content"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "image"
     }
   ],
   "presets": [],

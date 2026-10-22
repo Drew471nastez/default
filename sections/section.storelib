@@ -458,10 +458,46 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
+      "type": "_divider"
     },
     {
-      "type": "_divider"
+      "type": "text"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "icon"
+    },
+    {
+      "type": "video"
+    },
+    {
+      "type": "group"
+    },
+    {
+      "type": "spacer"
+    },
+    {
+      "type": "accordion"
+    },
+    {
+      "type": "custom-liquid"
+    },
+    {
+      "type": "email-signup"
+    },
+    {
+      "type": "contact-form"
+    },
+    {
+      "type": "comparison-slider"
+    },
+    {
+      "type": "logo"
     }
   ],
   "presets": [

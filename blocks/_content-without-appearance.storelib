@@ -82,9 +82,6 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
-    },
-    {
       "type": "text"
     },
     {
@@ -107,6 +104,9 @@
     },
     {
       "type": "_divider"
+    },
+    {
+      "type": "jumbo-text"
     }
   ],
   "presets": [

@@ -490,9 +490,6 @@
     },
     {
       "type": "jumbo-text"
-    },
-    {
-      "type": "@theme"
     }
   ],
   "presets": [

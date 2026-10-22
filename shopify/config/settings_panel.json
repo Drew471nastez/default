@@ -48,28 +48,10 @@
   "name": "Site colors",
   "settings": [
    {
-    "type": "color",
-    "id": "color_palette::color1",
-    "label": "Colour 1",
-    "default": "#424242"
-   },
-   {
-    "type": "color",
-    "id": "color_palette::color2",
-    "label": "Colour 2",
-    "default": "#292929"
-   },
-   {
-    "type": "color",
-    "id": "color_palette::background",
-    "label": "Background",
-    "default": "#ffffff"
-   },
-   {
-    "type": "color",
-    "id": "color_palette::foreground",
-    "label": "Foreground",
-    "default": "#000000"
+    "type": "paragraph",
+    "id": "color_palette",
+    "label": "Choose colors by what they change: Background, Text, Borders and Field text.",
+    "content": "Choose colors by what they change: Background, Text, Borders and Field text."
    },
    {
     "type": "color",

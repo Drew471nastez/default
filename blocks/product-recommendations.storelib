@@ -434,7 +434,16 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
+      "type": "text"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "group"
+    },
+    {
+      "type": "spacer"
     }
   ],
   "presets": [

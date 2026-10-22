@@ -561,9 +561,6 @@
     },
     {
       "type": "collection-card"
-    },
-    {
-      "type": "@theme"
     }
   ],
   "presets": [

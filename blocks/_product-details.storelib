@@ -417,9 +417,6 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
-    },
-    {
       "type": "text"
     },
     {
@@ -472,6 +469,9 @@
     },
     {
       "type": "product-custom-property"
+    },
+    {
+      "type": "disclosures"
     }
   ],
   "presets": [

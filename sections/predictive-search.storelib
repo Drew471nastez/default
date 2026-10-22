@@ -162,11 +162,6 @@
   "type": "predictive-search",
   "name": "Search popover",
   "settings": [],
-  "blocks": [
-    {
-      "type": "@theme"
-    }
-  ],
   "shopify": {
     "name": "t:names.predictive_search",
     "settings": [],

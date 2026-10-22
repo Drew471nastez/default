@@ -163,7 +163,19 @@
   ],
   "blocks": [
     {
-      "type": "@theme"
+      "type": "collection-title"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "icon"
+    },
+    {
+      "type": "spacer"
     }
   ],
   "presets": [
