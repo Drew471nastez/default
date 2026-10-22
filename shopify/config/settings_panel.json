@@ -49,6 +49,18 @@
   "settings": [
    {
     "type": "color",
+    "id": "color_palette::color1",
+    "label": "Colour 1",
+    "default": "#424242"
+   },
+   {
+    "type": "color",
+    "id": "color_palette::color2",
+    "label": "Colour 2",
+    "default": "#292929"
+   },
+   {
+    "type": "color",
     "id": "color_palette::background",
     "label": "Background",
     "default": "#ffffff"
@@ -60,16 +72,61 @@
     "default": "#000000"
    },
    {
-    "type": "color",
-    "id": "color_palette::color1",
-    "label": "Colour 1",
-    "default": "#333333"
+    "type": "paragraph",
+    "id": "para_2",
+    "label": "Use shared schemes across sections. Default preserves existing section colors; selecting a shared scheme replaces the section background and text together.",
+    "content": "Use shared schemes across sections. Default preserves existing section colors; selecting a shared scheme replaces the section background and text together."
+   },
+   {
+    "type": "header",
+    "id": "hdr_3",
+    "label": "Soft surface"
    },
    {
     "type": "color",
-    "id": "color_palette::color2",
-    "label": "Colour 2",
-    "default": "#DFDFDF"
+    "id": "scheme_surface_background",
+    "label": "Background",
+    "default": "#f5f5f5"
+   },
+   {
+    "type": "color",
+    "id": "scheme_surface_text",
+    "label": "Text",
+    "default": "#171717"
+   },
+   {
+    "type": "header",
+    "id": "hdr_6",
+    "label": "Inverse"
+   },
+   {
+    "type": "color",
+    "id": "scheme_inverse_background",
+    "label": "Background",
+    "default": "#171717"
+   },
+   {
+    "type": "color",
+    "id": "scheme_inverse_text",
+    "label": "Text",
+    "default": "#ffffff"
+   },
+   {
+    "type": "header",
+    "id": "hdr_9",
+    "label": "Accent"
+   },
+   {
+    "type": "color",
+    "id": "scheme_accent_background",
+    "label": "Background",
+    "default": "#e8e8e8"
+   },
+   {
+    "type": "color",
+    "id": "scheme_accent_text",
+    "label": "Text",
+    "default": "#171717"
    }
   ]
  },
@@ -102,25 +159,29 @@
     "type": "font_picker",
     "id": "type_body_font",
     "default": "work_sans_n4",
-    "label": "Body"
+    "label": "Body",
+    "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
    },
    {
     "type": "font_picker",
     "id": "type_subheading_font",
     "default": "work_sans_n5",
-    "label": "Subheading"
+    "label": "Subheading",
+    "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
    },
    {
     "type": "font_picker",
     "id": "type_heading_font",
     "default": "anonymous_pro_n4",
-    "label": "Heading"
+    "label": "Heading",
+    "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
    },
    {
     "type": "font_picker",
     "id": "type_accent_font",
     "default": "anonymous_pro_n4",
-    "label": "Accent"
+    "label": "Accent",
+    "info": "Choose a font family and its weight here. Text presets inherit that weight unless overridden below."
    },
    {
     "type": "header",
@@ -168,6 +229,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_paragraph",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_paragraph",
     "label": "Line height",
     "options": [
@@ -188,7 +281,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_14",
+    "id": "hdr_15",
     "label": "Heading 1"
    },
    {
@@ -281,6 +374,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_h1",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_h1",
     "label": "Line height",
     "options": [
@@ -337,7 +462,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_20",
+    "id": "hdr_22",
     "label": "Heading 2"
    },
    {
@@ -430,6 +555,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_h2",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_h2",
     "label": "Line height",
     "options": [
@@ -486,7 +643,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_26",
+    "id": "hdr_29",
     "label": "Heading 3"
    },
    {
@@ -587,6 +744,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_h3",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_h3",
     "label": "Line height",
     "options": [
@@ -643,7 +832,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_32",
+    "id": "hdr_36",
     "label": "Heading 4"
    },
    {
@@ -744,6 +933,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_h4",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_h4",
     "label": "Line height",
     "options": [
@@ -800,7 +1021,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_38",
+    "id": "hdr_43",
     "label": "Heading 5"
    },
    {
@@ -901,6 +1122,38 @@
    },
    {
     "type": "select",
+    "id": "type_weight_h5",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
+   },
+   {
+    "type": "select",
     "id": "type_line_height_h5",
     "label": "Line height",
     "options": [
@@ -957,7 +1210,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_44",
+    "id": "hdr_50",
     "label": "Heading 6"
    },
    {
@@ -1055,6 +1308,38 @@
      }
     ],
     "default": "16"
+   },
+   {
+    "type": "select",
+    "id": "type_weight_h6",
+    "label": "Weight",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "From selected font"
+     },
+     {
+      "value": "300",
+      "label": "Light"
+     },
+     {
+      "value": "400",
+      "label": "Regular"
+     },
+     {
+      "value": "500",
+      "label": "Medium"
+     },
+     {
+      "value": "600",
+      "label": "Semibold"
+     },
+     {
+      "value": "700",
+      "label": "Bold"
+     }
+    ],
+    "default": "inherit"
    },
    {
     "type": "select",
@@ -1655,6 +1940,19 @@
     "id": "drawer_border_color",
     "label": "Border color",
     "alpha": true
+   },
+   {
+    "type": "checkbox",
+    "id": "drawer_drop_shadow",
+    "label": "Show shadow",
+    "default": false
+   },
+   {
+    "type": "color",
+    "id": "drawer_shadow_color",
+    "label": "Shadow color",
+    "default": "#000000",
+    "visible_if": "{{ settings.drawer_drop_shadow }}"
    }
   ]
  },
@@ -1855,6 +2153,221 @@
   "name": "Product cards",
   "settings": [
    {
+    "type": "paragraph",
+    "id": "para_1",
+    "label": "Shared card styling applies wherever a product-card block uses Theme settings. Switch an individual card to Custom to keep its local spacing, borders and typography.",
+    "content": "Shared card styling applies wherever a product-card block uses Theme settings. Switch an individual card to Custom to keep its local spacing, borders and typography."
+   },
+   {
+    "type": "header",
+    "id": "hdr_2",
+    "label": "Shared appearance"
+   },
+   {
+    "type": "select",
+    "id": "product_card_color_scheme",
+    "label": "Color scheme",
+    "options": [
+     {
+      "value": "inherit",
+      "label": "Default / custom colors"
+     },
+     {
+      "value": "surface",
+      "label": "Soft surface"
+     },
+     {
+      "value": "inverse",
+      "label": "Inverse"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
+     }
+    ],
+    "default": "inherit",
+    "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+   },
+   {
+    "type": "range",
+    "id": "product_card_radius",
+    "label": "Corner radius",
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "unit": "px",
+    "default": 0
+   },
+   {
+    "type": "range",
+    "id": "product_card_padding",
+    "label": "Inner spacing",
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "unit": "px",
+    "default": 0
+   },
+   {
+    "type": "range",
+    "id": "product_card_gap",
+    "label": "Content gap",
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "unit": "px",
+    "default": 16
+   },
+   {
+    "type": "range",
+    "id": "product_card_border_width",
+    "label": "Border width",
+    "min": 0,
+    "max": 4,
+    "step": 1,
+    "unit": "px",
+    "default": 0
+   },
+   {
+    "type": "select",
+    "id": "product_card_alignment",
+    "label": "Text alignment",
+    "options": [
+     {
+      "value": "start",
+      "label": "Left"
+     },
+     {
+      "value": "center",
+      "label": "Center"
+     }
+    ],
+    "default": "start"
+   },
+   {
+    "type": "header",
+    "id": "hdr_9",
+    "label": "Product title"
+   },
+   {
+    "type": "select",
+    "id": "product_card_title_preset",
+    "label": "Typography",
+    "options": [
+     {
+      "value": "paragraph",
+      "label": "Body"
+     },
+     {
+      "value": "h4",
+      "label": "Heading 4"
+     },
+     {
+      "value": "h5",
+      "label": "Heading 5"
+     },
+     {
+      "value": "h6",
+      "label": "Heading 6"
+     }
+    ],
+    "default": "h5"
+   },
+   {
+    "type": "range",
+    "id": "product_card_title_lines",
+    "label": "Maximum title lines",
+    "min": 1,
+    "max": 4,
+    "step": 1,
+    "unit": "lines",
+    "default": 3
+   },
+   {
+    "type": "header",
+    "id": "hdr_12",
+    "label": "Product price"
+   },
+   {
+    "type": "select",
+    "id": "product_card_price_font",
+    "label": "Font",
+    "options": [
+     {
+      "value": "body",
+      "label": "Body"
+     },
+     {
+      "value": "subheading",
+      "label": "Subheading"
+     },
+     {
+      "value": "heading",
+      "label": "Heading"
+     },
+     {
+      "value": "accent",
+      "label": "Accent"
+     }
+    ],
+    "default": "body"
+   },
+   {
+    "type": "range",
+    "id": "product_card_price_size",
+    "label": "Price size",
+    "min": 10,
+    "max": 30,
+    "step": 1,
+    "unit": "px",
+    "default": 14
+   },
+   {
+    "type": "header",
+    "id": "hdr_15",
+    "label": "Product image"
+   },
+   {
+    "type": "select",
+    "id": "product_card_image_ratio",
+    "label": "Aspect ratio",
+    "options": [
+     {
+      "value": "custom",
+      "label": "Use image block setting"
+     },
+     {
+      "value": "portrait",
+      "label": "Portrait"
+     },
+     {
+      "value": "square",
+      "label": "Square"
+     },
+     {
+      "value": "landscape",
+      "label": "Landscape"
+     }
+    ],
+    "default": "custom"
+   },
+   {
+    "type": "select",
+    "id": "product_card_image_fit",
+    "label": "Image fit",
+    "options": [
+     {
+      "value": "cover",
+      "label": "Fill"
+     },
+     {
+      "value": "contain",
+      "label": "Fit"
+     }
+    ],
+    "default": "cover"
+   },
+   {
     "type": "checkbox",
     "id": "quick_add",
     "label": "Quick add",
@@ -1881,7 +2394,7 @@
    },
    {
     "type": "header",
-    "id": "hdr_5",
+    "id": "hdr_22",
     "label": "Media"
    },
    {
@@ -2118,6 +2631,49 @@
      }
     ],
     "default": "equal-width-buttons"
+   }
+  ]
+ },
+ {
+  "name": "Cookie banner",
+  "settings": [
+   {
+    "type": "paragraph",
+    "id": "para_1",
+    "label": "These settings style Shopify’s customer privacy banner when the platform renders it. Enable the consent banner and manage its text, regions and consent behavior in the platform privacy settings. Theme",
+    "content": "These settings style Shopify’s customer privacy banner when the platform renders it. Enable the consent banner and manage its text, regions and consent behavior in the platform privacy settings. Theme styling does not create or record consent."
+   },
+   {
+    "type": "checkbox",
+    "id": "cookie_banner_theme_style",
+    "label": "Use theme styling",
+    "default": true
+   },
+   {
+    "type": "range",
+    "id": "cookie_banner_radius",
+    "label": "Corner radius",
+    "min": 0,
+    "max": 32,
+    "step": 1,
+    "unit": "px",
+    "default": 8
+   },
+   {
+    "type": "range",
+    "id": "cookie_banner_width",
+    "label": "Maximum width",
+    "min": 320,
+    "max": 800,
+    "step": 10,
+    "unit": "px",
+    "default": 480
+   },
+   {
+    "type": "paragraph",
+    "id": "para_5",
+    "label": "The banner uses the global body font, page colors and primary button colors.",
+    "content": "The banner uses the global body font, page colors and primary button colors."
    }
   ]
  }

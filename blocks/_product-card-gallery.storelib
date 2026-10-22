@@ -56,8 +56,15 @@
   "name": "Product image",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "use_theme_image_style",
+      "label": "Use theme image settings",
+      "default": true,
+      "info": "Turn off to use this image block’s aspect ratio and fit."
+    },
+    {
       "type": "paragraph",
-      "id": "para_1",
+      "id": "para_2",
       "label": "Displays media from parent product",
       "content": "Displays media from parent product"
     },
@@ -88,7 +95,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_3",
+      "id": "hdr_4",
       "label": "Borders"
     },
     {
@@ -148,7 +155,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_9",
+      "id": "hdr_10",
       "label": "Padding"
     },
     {

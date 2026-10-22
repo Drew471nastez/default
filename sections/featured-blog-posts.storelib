@@ -272,6 +272,31 @@
       "default": 12
     },
     {
+      "type": "select",
+      "id": "theme_color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Default / custom colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "inherit",
+      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+    },
+    {
       "type": "color",
       "id": "background_color",
       "label": "Background color",
@@ -279,7 +304,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_18",
+      "id": "hdr_19",
       "label": "Padding"
     },
     {

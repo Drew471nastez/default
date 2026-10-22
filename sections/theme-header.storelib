@@ -1744,6 +1744,31 @@
       "label": "Colors"
     },
     {
+      "type": "select",
+      "id": "theme_color_scheme_top",
+      "label": "Top row color scheme",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Default / custom colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "inherit",
+      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
+    },
+    {
       "type": "color",
       "id": "background_color_top",
       "label": "Top row background",
@@ -1754,6 +1779,31 @@
       "id": "text_color_top",
       "label": "Top row text",
       "placeholder": "Default"
+    },
+    {
+      "type": "select",
+      "id": "theme_color_scheme_bottom",
+      "label": "Bottom row color scheme",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Default / custom colors"
+        },
+        {
+          "value": "surface",
+          "label": "Soft surface"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "inherit",
+      "info": "Shared colors are edited in Theme settings → Colors. Default keeps the existing custom colors."
     },
     {
       "type": "color",
@@ -1771,7 +1821,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_40",
+      "id": "hdr_42",
       "label": "Cart bubble"
     },
     {
@@ -1806,7 +1856,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_44",
+      "id": "hdr_46",
       "label": "Home page"
     },
     {
@@ -1831,7 +1881,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_48",
+      "id": "hdr_50",
       "label": "Product page"
     },
     {
@@ -1856,7 +1906,7 @@
     },
     {
       "type": "header",
-      "id": "hdr_52",
+      "id": "hdr_54",
       "label": "Collection page"
     },
     {

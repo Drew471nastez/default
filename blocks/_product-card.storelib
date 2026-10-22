@@ -32,8 +32,25 @@
   "name": "Product card",
   "settings": [
     {
+      "type": "select",
+      "id": "card_style_source",
+      "label": "Card styling",
+      "options": [
+        {
+          "value": "theme",
+          "label": "Theme settings"
+        },
+        {
+          "value": "custom",
+          "label": "Custom block settings"
+        }
+      ],
+      "default": "theme",
+      "info": "Theme settings keep product cards consistent across the site. Custom keeps this block’s individual appearance."
+    },
+    {
       "type": "paragraph",
-      "id": "para_1",
+      "id": "para_2",
       "label": "Displays product from parent section",
       "content": "Displays product from parent section"
     },
@@ -45,22 +62,24 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 16
+      "default": 16,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_3",
+      "id": "hdr_4",
       "label": "Appearance"
     },
     {
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "placeholder": "Default"
+      "placeholder": "Default",
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_5",
+      "id": "hdr_6",
       "label": "Borders"
     },
     {
@@ -77,7 +96,8 @@
           "label": "Solid"
         }
       ],
-      "default": "none"
+      "default": "none",
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "range",
@@ -88,7 +108,7 @@
       "unit": "px",
       "label": "Thickness",
       "default": 1,
-      "visible_if": "{{ block.settings.border != 'none' }}"
+      "visible_if": "{{ block.settings.card_style_source == 'custom' and block.settings.border != 'none' }}"
     },
     {
       "type": "range",
@@ -99,7 +119,7 @@
       "unit": "%",
       "label": "Opacity",
       "default": 100,
-      "visible_if": "{{ block.settings.border != 'none' }}"
+      "visible_if": "{{ block.settings.card_style_source == 'custom' and block.settings.border != 'none' }}"
     },
     {
       "type": "color",
@@ -116,11 +136,12 @@
       "max": 32,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "header",
-      "id": "hdr_11",
+      "id": "hdr_12",
       "label": "Padding"
     },
     {
@@ -131,7 +152,8 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "range",
@@ -141,7 +163,8 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "range",
@@ -151,7 +174,8 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     },
     {
       "type": "range",
@@ -161,7 +185,8 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "visible_if": "{{ block.settings.card_style_source == 'custom' }}"
     }
   ],
   "blocks": [
