@@ -1,0 +1,25 @@
+**Storelib** read this push.
+
+13 files taken into the site as a draft.
+
+- `blocks/_header-logo.storelib`
+- `sections/featured-product-information.storelib`
+- `sections/theme-header.storelib`
+- `shopify/assets/section-reveal.js`
+- `shopify/config/settings_schema.json`
+- `snippets/card-gallery.storelib`
+- `snippets/contrast-override.storelib`
+- `snippets/localization-form.storelib`
+- `snippets/predictive-search-products-list.storelib`
+- `snippets/predictive-search-styles.storelib`
+- `snippets/quick-add-modal-styles.storelib`
+- `snippets/theme-styles-variables.storelib`
+- `sections/header-group.json`
+
+Notes:
+
+- sections/header-group.json was also changed in the builder since the last sync. GitHub's version was used; the builder's is in History.
+
+Nothing is live until the creator presses Publish.
+
+Open the builder: https://storelib.com/website-builder/editor/7a716c19-6532-480d-a2b3-1bd1fad57eea
