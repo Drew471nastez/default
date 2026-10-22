@@ -7,6 +7,8 @@
       "type": "header-announcements",
       "settings": {
         "speed": 5,
+        "show_country": true,
+        "show_language": true,
         "divider_color": "{{ settings.site_border_color }}",
         "divider_width": 1,
         "section_width": "page-width",

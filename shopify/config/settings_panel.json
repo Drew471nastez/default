@@ -31,37 +31,54 @@
       {
         "type": "image_picker",
         "id": "logo",
-        "label": "Picture",
+        "label": "Logo desktop",
+        "info": "Shown on desktop. Leave empty to use the mobile logo.",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_mobile",
+        "label": "Logo mobile",
+        "info": "Shown only on phones. Leave empty to use the desktop logo.",
         "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "image_picker",
         "id": "logo_inverse",
-        "label": "Picture on a transparent header",
-        "info": "Used where the header sits over the first section. Leave empty to use the picture.",
+        "label": "Logo desktop on a transparent header",
+        "info": "Used on desktop where the header sits over the first section. Leave empty to use the desktop logo.",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_inverse_mobile",
+        "label": "Logo mobile on a transparent header",
+        "info": "Shown only on phones when the header is transparent. Leave empty to use the desktop transparent logo.",
         "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "range",
         "id": "logo_height",
-        "label": "Picture height on desktop",
+        "label": "Height on desktop",
         "min": 12,
         "max": 100,
         "step": 1,
         "unit": "px",
         "default": 36,
-        "visible_if": "{{ settings.logo_style != 'text' and settings.logo != blank }}"
+        "info": "Sizes the desktop logo, including the transparent header logo.",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "range",
         "id": "logo_height_mobile",
-        "label": "Picture height on phones",
+        "label": "Height on phones",
         "min": 12,
         "max": 100,
         "step": 1,
         "unit": "px",
         "default": 28,
-        "visible_if": "{{ settings.logo_style != 'text' and settings.logo != blank }}"
+        "info": "Sizes the mobile logo, including the transparent header logo.",
+        "visible_if": "{{ settings.logo_style != 'text' }}"
       },
       {
         "type": "header",

@@ -143,9 +143,7 @@
           assign other_media = product.media | reject: 'src', product.featured_media
           assign media_list_to_show = product.featured_media | concat: other_media
 
-          if product.media.size > 2 and generic_media_size > 0
-            assign show_arrows = true
-          endif
+          assign show_arrows = false
 
           # Don't overfetch media if we don't need to
           assign max_visible_slide_count = 1
@@ -202,6 +200,9 @@
           if settings.product_card_carousel == false
             assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
           endif
+          if settings.product_card_carousel and visible_slide_count > 1
+            assign show_arrows = true
+          endif
         %}
         {% render 'slideshow',
           ref: 'slideshow',
@@ -209,6 +210,8 @@
           slides: slides,
           slide_count: media_list_to_show.size,
           show_arrows: show_arrows,
+          icon_style: 'chevron',
+          animate_arrows: false,
           attributes: slideshow_attributes
         %}
       {%- endif -%}
@@ -467,27 +470,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     min-width: 0;
     min-height: 0;
     padding: 0;
     border-radius: var(--card-arrow-radius, 50%);
-    background: var(--card-arrow-background, var(--color-background));
+    background: color-mix(in srgb, var(--card-arrow-background, var(--color-background)) 92%, transparent);
     color: var(--card-arrow-color, var(--color-foreground));
-    box-shadow: var(--card-arrow-shadow, 0 1px 6px rgb(0 0 0 / 0.12));
+    box-shadow: var(--card-arrow-shadow, 0 1px 4px rgb(0 0 0 / 0.08));
     opacity: 0;
     animation: none;
-    transition: opacity var(--animation-speed) var(--animation-easing), scale var(--animation-speed) var(--animation-easing);
+    z-index: 2;
+    transition: opacity 180ms ease, background-color 180ms ease;
   }
 
   .card-gallery slideshow-arrows .slideshow-control .svg-wrapper {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
   }
 
   .card-gallery:is(:hover, :focus-within) slideshow-arrows .slideshow-control.slideshow-control {
-    opacity: 1;
+    opacity: 0.92;
+  }
+
+  @media screen and (max-width: 749px) {
+    .card-gallery slideshow-arrows .slideshow-control.slideshow-control {
+      opacity: 0.8;
+      width: 32px;
+      height: 32px;
+    }
   }
 
   /* Horizon's slide-in keyframes for arrows would hold them at their first frame; these fade instead. */
@@ -496,7 +508,8 @@
   }
 
   .card-gallery slideshow-arrows .slideshow-control.slideshow-control:hover {
-    scale: 1.06;
+    opacity: 1;
+    background: var(--card-arrow-background, var(--color-background));
   }
 
   .card-gallery slideshow-arrows .slideshow-control.slideshow-control:focus-visible {
@@ -511,9 +524,22 @@
     }
   }
 
+  .card-gallery slideshow-component:is([in-viewport], :not([in-viewport])) slideshow-slides {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-gallery slideshow-slides {
+      scroll-behavior: auto;
+    }
+  }
+
   .card-gallery slideshow-arrows .slideshow-control {
-    /* Align icons with quick-add button */
-    padding-inline: var(--padding-xl);
+    padding-inline: 0;
 
     @container (max-width: 249px) {
       padding-inline: 0 var(--padding-sm);

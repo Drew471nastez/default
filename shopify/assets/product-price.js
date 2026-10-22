@@ -22,7 +22,7 @@ class ProductPrice extends Component {
 
   connectedCallback() {
     super.connectedCallback();
-    const closestSection = this.closest('.shopify-section, dialog');
+    const closestSection = this.closest('.shopify-section, dialog, featured-product-information');
     if (!closestSection) return;
     this.#eventTarget = closestSection;
     closestSection.addEventListener(StandardEvents.productSelect, this.#handleProductSelect);

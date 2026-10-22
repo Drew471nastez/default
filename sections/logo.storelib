@@ -4,9 +4,29 @@
 {% liquid
   assign section_settings = section.settings
   assign image = settings.logo
+  assign image_mobile = settings.logo_mobile
 
   if section_settings.inverse and settings.logo_inverse
     assign image = settings.logo_inverse
+  endif
+  if section_settings.inverse and settings.logo_inverse_mobile
+    assign image_mobile = settings.logo_inverse_mobile
+  elsif section_settings.inverse and settings.logo_inverse
+    assign image_mobile = settings.logo_inverse
+  endif
+
+  if image == blank
+    assign image = image_mobile
+  endif
+  if image_mobile == blank
+    assign image_mobile = image
+  endif
+
+  assign image_src = image.src | default: image.url
+  assign image_mobile_src = image_mobile.src | default: image_mobile.url
+  assign image_mobile_distinct = false
+  if image_src != blank and image_mobile_src != blank and image_src != image_mobile_src
+    assign image_mobile_distinct = true
   endif
 
     render 'contrast-override', color_scheme: section_settings.theme_color_scheme, use_theme_default: true, text_color: section_settings.text_color, background_color: section_settings.background_color, section_id: section.id
@@ -21,10 +41,23 @@
         width: image.width,
         widths: '240, 352, 832, 1200, 1600, 1920, 2560, 3840',
         height: image.height,
-        class: 'logo-section__image',
+        class: 'logo-section__image logo-section__image--desktop',
         alt: shop.name,
         sizes: '(min-width: 750px) calc(var(--logo-width)), 100vw'
     -}}
+    {%- if image_mobile_distinct -%}
+      {{-
+        image_mobile
+        | image_url: width: 3840
+        | image_tag:
+          width: image_mobile.width,
+          widths: '240, 352, 832, 1200, 1600, 1920, 2560, 3840',
+          height: image_mobile.height,
+          class: 'logo-section__image logo-section__image--mobile',
+          alt: shop.name,
+          sizes: '100vw'
+      -}}
+    {%- endif -%}
   {% endcapture %}
 {%- endif -%}
 
@@ -120,6 +153,20 @@
   .logo-section__image {
     object-fit: contain;
     width: 100%;
+  }
+
+  .logo-section__image--mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .logo-section__image-wrapper:has(.logo-section__image--mobile) .logo-section__image--desktop {
+      display: none;
+    }
+
+    .logo-section__image--mobile {
+      display: block;
+    }
   }
 {% endstylesheet %}
 

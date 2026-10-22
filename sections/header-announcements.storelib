@@ -17,6 +17,16 @@
   style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;{% if section.settings.divider_color != blank %} --color-border: {{ section.settings.divider_color }};{% endif %}"
 >
   {% liquid
+    assign show_language = section.settings.show_language
+    if localization.available_languages.size <= 1
+      assign show_language = false
+    endif
+    assign show_country = section.settings.show_country
+    if localization.available_countries.size <= 1
+      assign show_country = false
+    endif
+  %}
+  {% liquid
     assign autoplay = false
     assign show_arrows = false
     if section.blocks.size > 1
@@ -39,15 +49,104 @@
       {% content_for 'blocks' %}
     </div>
   </announcement-bar-component>
+
+  {% if show_country or show_language %}
+    <dropdown-localization-component class="announcement-bar__localization dropdown-localization">
+      <button
+        type="button"
+        class="button button-unstyled announcement-bar__localization-button dropdown-localization__button localization-selector"
+        aria-expanded="false"
+        aria-controls="announcement-localization-{{ section.id }}"
+        ref="button"
+        on:click="/toggleSelector"
+      >
+        {% if show_country %}
+          <span
+            class="icon-flag"
+            style="background-image: url({{- localization.country | image_url: width: 32 }});"
+          ></span>
+          <span class="currency-code">{{ localization.country.currency.iso_code }}</span>
+        {% endif %}
+        {% if show_country and show_language %}
+          <span aria-hidden="true">/</span>
+        {% endif %}
+        {% if show_language %}
+          <span>{{ localization.language.iso_code | upcase }}</span>
+        {% endif %}
+        <span class="svg-wrapper icon-caret">
+          {{- 'icon-caret.svg' | inline_asset_content -}}
+        </span>
+      </button>
+      <div
+        id="announcement-localization-{{ section.id }}"
+        class="localization-wrapper right-bound color-custom-popover"
+        hidden
+        ref="panel"
+      >
+        {% render 'localization-form',
+          show_country: show_country,
+          show_language: show_language,
+          localization_style: 'dropdown',
+          form_id: section.id
+        %}
+      </div>
+    </dropdown-localization-component>
+  {% endif %}
 </aside>
 
 {% stylesheet %}
   .announcement-bar {
+    position: relative;
     border-block-end: var(--border-bottom-width) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .announcement-bar__localization {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  .announcement-bar__localization-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding-inline: 8px;
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 0.8125rem;
+    line-height: 1;
+  }
+
+  .announcement-bar__localization .icon-flag {
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / 0.16);
+  }
+
+  .announcement-bar__localization .localization-wrapper {
+    position: absolute;
+    inset-inline-end: 8px;
+    top: calc(100% + 6px);
+    width: min(22rem, calc(100vw - 24px));
+    max-height: min(70vh, 28rem);
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar__localization-button {
+      padding-inline: 4px;
+    }
   }
 
   .announcement-bar__slider {
     display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
     flex-direction: row;
     align-items: center;
     position: relative;
@@ -143,6 +242,20 @@
       "max": 10,
       "default": 5,
       "unit": "sec"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country",
+      "label": "Country and currency",
+      "default": false,
+      "info": "Shown at the end of the bar when the store has more than one country."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_language",
+      "label": "Language",
+      "default": false,
+      "info": "Shown at the end of the bar when the store has more than one language."
     },
     {
       "type": "header",
@@ -282,6 +395,20 @@
         "max": 10,
         "default": 5,
         "unit": "sec"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_country",
+        "label": "Country and currency",
+        "default": false,
+        "info": "Shown at the end of the bar when the store has more than one country."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_language",
+        "label": "Language",
+        "default": false,
+        "info": "Shown at the end of the bar when the store has more than one language."
       },
       {
         "type": "header",

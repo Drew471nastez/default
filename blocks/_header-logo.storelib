@@ -13,36 +13,86 @@
     assign use_inverse_logo = true
   endif
 
+  assign logo_desktop = settings.logo
+  if logo_desktop == blank
+    assign logo_desktop = settings.logo_mobile
+  endif
+  assign logo_mobile = settings.logo_mobile
+  if logo_mobile == blank
+    assign logo_mobile = logo_desktop
+  endif
+
+  assign desktop_src = logo_desktop.src | default: logo_desktop.url
+  assign mobile_src = logo_mobile.src | default: logo_mobile.url
+  assign logo_mobile_distinct = false
+  if settings.logo != blank and settings.logo_mobile != blank and desktop_src != blank and mobile_src != blank and desktop_src != mobile_src
+    assign logo_mobile_distinct = true
+  endif
+
   if use_inverse_logo
-    if settings.logo_inverse != blank
-      assign inverse_logo = settings.logo_inverse
-    else
-      assign inverse_logo = settings.logo
+    assign inverse_desktop = settings.logo_inverse
+    if inverse_desktop == blank
+      assign inverse_desktop = logo_desktop
     endif
+    assign inverse_mobile = settings.logo_inverse_mobile
+    if inverse_mobile == blank
+      assign inverse_mobile = settings.logo_inverse
+    endif
+    if inverse_mobile == blank
+      assign inverse_mobile = logo_mobile
+    endif
+
+    assign inverse_desktop_src = inverse_desktop.src | default: inverse_desktop.url
+    assign inverse_mobile_src = inverse_mobile.src | default: inverse_mobile.url
+    assign inverse_mobile_distinct = false
+    if inverse_desktop_src != blank and inverse_mobile_src != blank and inverse_desktop_src != inverse_mobile_src
+      assign inverse_mobile_distinct = true
+    endif
+  else
+    assign inverse_desktop = logo_desktop
+    assign inverse_mobile = logo_mobile
   endif
 
   assign alt_text_fallback = 'accessibility.home_logo_alt' | t: store_name: shop.name
   assign logo_height = settings.logo_height | default: 36
   assign logo_height_mobile = settings.logo_height_mobile | default: 28
-  assign logo_ratio = settings.logo.aspect_ratio
+
+  assign logo_ratio = logo_desktop.aspect_ratio
   if logo_ratio == blank or logo_ratio <= 0
-    if settings.logo.height > 0
-      assign logo_ratio = settings.logo.width | times: 1.0 | divided_by: settings.logo.height
+    if logo_desktop.height > 0
+      assign logo_ratio = logo_desktop.width | times: 1.0 | divided_by: logo_desktop.height
     else
       assign logo_ratio = 1
     endif
   endif
-  assign inverse_ratio = inverse_logo.aspect_ratio
+  assign mobile_ratio = logo_mobile.aspect_ratio
+  if mobile_ratio == blank or mobile_ratio <= 0
+    if logo_mobile.height > 0
+      assign mobile_ratio = logo_mobile.width | times: 1.0 | divided_by: logo_mobile.height
+    else
+      assign mobile_ratio = logo_ratio
+    endif
+  endif
+  assign inverse_ratio = inverse_desktop.aspect_ratio
   if inverse_ratio == blank or inverse_ratio <= 0
-    if inverse_logo.height > 0
-      assign inverse_ratio = inverse_logo.width | times: 1.0 | divided_by: inverse_logo.height
+    if inverse_desktop.height > 0
+      assign inverse_ratio = inverse_desktop.width | times: 1.0 | divided_by: inverse_desktop.height
     else
       assign inverse_ratio = logo_ratio
     endif
   endif
+  assign inverse_mobile_ratio = inverse_mobile.aspect_ratio
+  if inverse_mobile_ratio == blank or inverse_mobile_ratio <= 0
+    if inverse_mobile.height > 0
+      assign inverse_mobile_ratio = inverse_mobile.width | times: 1.0 | divided_by: inverse_mobile.height
+    else
+      assign inverse_mobile_ratio = mobile_ratio
+    endif
+  endif
   assign slot_ratio = logo_ratio | at_least: inverse_ratio
+  assign slot_ratio_mobile = mobile_ratio | at_least: inverse_mobile_ratio
   assign slot_width = logo_height | times: slot_ratio | ceil
-  assign slot_width_mobile = logo_height_mobile | times: slot_ratio | ceil
+  assign slot_width_mobile = logo_height_mobile | times: slot_ratio_mobile | ceil
 %}
 
 {% liquid
@@ -50,13 +100,50 @@
   assign logo_style = settings.logo_style | default: 'image'
   assign logo_text = settings.logo_text | default: shop.name
   assign has_picture = false
-  if settings.logo != blank or inverse_logo != blank
+  if logo_desktop != blank or inverse_desktop != blank or inverse_mobile != blank
     assign has_picture = true
   endif
   if logo_style == 'image_text' and has_picture == false
     assign logo_style = 'text'
   endif
 %}
+
+{% capture logo_image_desktop %}
+  {% render 'image',
+    image: logo_desktop,
+    class: 'header-logo__image',
+    height: logo_height,
+    alt_text_fallback: alt_text_fallback,
+    text_fallback: logo_text
+  %}
+{% endcapture %}
+{% capture logo_image_mobile %}
+  {% render 'image',
+    image: logo_mobile,
+    class: 'header-logo__image',
+    height: logo_height_mobile,
+    alt_text_fallback: alt_text_fallback,
+    text_fallback: logo_text
+  %}
+{% endcapture %}
+{% capture inverse_image_desktop %}
+  {% render 'image',
+    image: inverse_desktop,
+    class: 'header-logo__image',
+    height: logo_height,
+    alt_text_fallback: alt_text_fallback,
+    text_fallback: logo_text
+  %}
+{% endcapture %}
+{% capture inverse_image_mobile %}
+  {% render 'image',
+    image: inverse_mobile,
+    class: 'header-logo__image',
+    height: logo_height_mobile,
+    alt_text_fallback: alt_text_fallback,
+    text_fallback: logo_text
+  %}
+{% endcapture %}
 
 {% capture logo_pictures %}
   <span
@@ -65,13 +152,12 @@
     {% endif %}
     data-testid="header-logo"
   >
-    {% render 'image',
-      image: settings.logo,
-      class: 'header-logo__image',
-      height: logo_height,
-      alt_text_fallback: alt_text_fallback,
-      text_fallback: logo_text
-    %}
+    {% if logo_mobile_distinct %}
+      <span class="header-logo__device header-logo__device--desktop">{{ logo_image_desktop }}</span>
+      <span class="header-logo__device header-logo__device--mobile">{{ logo_image_mobile }}</span>
+    {% else %}
+      {{ logo_image_desktop }}
+    {% endif %}
   </span>
 
   {% if use_inverse_logo %}
@@ -79,13 +165,12 @@
       class="header-logo__transparent-header-image-container"
       data-testid="header-logo-inverse"
     >
-      {% render 'image',
-        image: inverse_logo,
-        class: 'header-logo__image',
-        height: logo_height,
-        alt_text_fallback: alt_text_fallback,
-        text_fallback: logo_text
-      %}
+      {% if inverse_mobile_distinct %}
+        <span class="header-logo__device header-logo__device--desktop">{{ inverse_image_desktop }}</span>
+        <span class="header-logo__device header-logo__device--mobile">{{ inverse_image_mobile }}</span>
+      {% else %}
+        {{ inverse_image_desktop }}
+      {% endif %}
     </span>
   {% endif %}
 {% endcapture %}
@@ -187,6 +272,26 @@
 
     @media screen and (min-width: 750px) {
       height: var(--header-logo-height);
+    }
+  }
+
+  .header-logo__device {
+    display: none;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .header-logo__device--mobile {
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-logo__device--mobile {
+      display: none;
+    }
+
+    .header-logo__device--desktop {
+      display: block;
     }
   }
 

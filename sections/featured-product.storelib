@@ -65,7 +65,7 @@
   .featured-product-section .section-content-wrapper {
     grid-template-columns: 1fr;
     display: grid;
-    overflow: hidden;
+    overflow: visible;
 
     @media screen and (min-width: 750px) {
       grid-template-columns: 1fr 1fr;

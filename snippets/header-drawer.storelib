@@ -1425,21 +1425,19 @@
 
   /* Drawer Localization Styles */
   .drawer-localization__button .icon-flag {
-    width: var(--menu-localization-font-size, var(--icon-size-sm));
-    height: var(--menu-localization-font-size, var(--icon-size-sm));
-    clip-path: circle(50%); /* stylelint-disable-line */
+    width: 22px;
+    height: 15px;
+    flex-shrink: 0;
+    border-radius: 2px;
     background-position: center;
     background-size: cover;
-    margin-inline-end: 4px;
+    margin-inline-end: 6px;
     position: relative;
+    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / 0.16);
   }
 
   .drawer-localization__button .icon-flag::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    box-shadow: inset 0 0 var(--size-shadow) var(--color-shadow);
-    border-radius: 50%;
+    content: none;
   }
 
   .drawer-localization .country-filter {
