@@ -145,7 +145,7 @@
                 "max_width": "normal",
                 "background": false,
                 "line_height": "normal",
-                "type_preset": "h4",
+                "type_preset": "rte",
                 "corner_radius": 0,
                 "letter_spacing": "normal",
                 "background_color": "#00000026",
@@ -306,7 +306,9 @@
                 "width": "fit-content",
                 "alignment": "left",
                 "max_width": "normal",
-                "type_preset": "h3"
+                "background": false,
+                "text_color": "#efeef6",
+                "type_preset": "h1"
               }
             }
           },

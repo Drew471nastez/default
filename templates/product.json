@@ -516,7 +516,10 @@
               "blocks": {
                 "block-mvjexrvf-3-h3wz5": {
                   "type": "image",
-                  "settings": {}
+                  "settings": {
+                    "link": "/products/pants-down",
+                    "image": "https://storelib.com/media/product-images/8a88f2c0-f0f5-4935-96ad-8b6ff2127a8f/temp/1792259880160_06-bottoms-color-01.webp"
+                  }
                 },
                 "block-mvjexrvf-4-qt1cf": {
                   "type": "text",
