@@ -50,8 +50,8 @@
       {
         "type": "paragraph",
         "id": "color_palette",
-        "label": "Choose colors by what they change: Background, Text, Borders and Field text.",
-        "content": "Choose colors by what they change: Background, Text, Borders and Field text."
+        "label": "Choose colors by what they change: Background, Text, Borders, Link hover and Field text.",
+        "content": "Choose colors by what they change: Background, Text, Borders, Link hover and Field text."
       },
       {
         "type": "color",
@@ -72,6 +72,12 @@
         "id": "site_border_color",
         "label": "Borders",
         "default": "#292929"
+      },
+      {
+        "type": "color",
+        "id": "storelib_link_hover",
+        "label": "Link hover",
+        "info": "Leave empty to fade links on hover."
       },
       {
         "type": "color",
@@ -114,7 +120,7 @@
       },
       {
         "type": "paragraph",
-        "id": "para_8",
+        "id": "para_9",
         "label": "Choose the site colors here. Sections follow Theme by default; choose Custom in a section to give it its own background and text.",
         "content": "Choose the site colors here. Sections follow Theme by default; choose Custom in a section to give it its own background and text."
       },
@@ -1526,6 +1532,13 @@
         "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}"
       },
       {
+        "type": "color",
+        "id": "storelib_button_hover_border",
+        "label": "Hover border",
+        "visible_if": "{{ settings.storelib_button_hover_effect == 'custom' }}",
+        "info": "Leave empty to use the hover background."
+      },
+      {
         "type": "range",
         "id": "button_hover_duration",
         "label": "Hover speed",
@@ -1556,7 +1569,7 @@
       },
       {
         "type": "header",
-        "id": "hdr_8",
+        "id": "hdr_9",
         "label": "Primary button"
       },
       {
@@ -1631,7 +1644,7 @@
       },
       {
         "type": "header",
-        "id": "hdr_16",
+        "id": "hdr_17",
         "label": "Secondary button"
       },
       {
@@ -1706,12 +1719,12 @@
       },
       {
         "type": "header",
-        "id": "hdr_24",
+        "id": "hdr_25",
         "label": "Pills"
       },
       {
         "type": "paragraph",
-        "id": "para_25",
+        "id": "para_26",
         "label": "Used for applied filters, discount codes, and search suggestions",
         "content": "Used for applied filters, discount codes, and search suggestions"
       },
@@ -1759,6 +1772,29 @@
         "unit": "px",
         "label": "Corner radius",
         "default": 8
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_border",
+        "label": "Border on hover and focus",
+        "info": "Leave empty to keep the border color."
+      },
+      {
+        "type": "color",
+        "id": "storelib_input_focus",
+        "label": "Focus ring",
+        "info": "Shown when a field is reached with the keyboard. Leave empty to use the text color."
+      },
+      {
+        "type": "range",
+        "id": "storelib_input_radius",
+        "label": "Corner radius (Storelib)",
+        "min": -1,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "default": -1,
+        "visible_if": "{{ false }}"
       },
       {
         "type": "select",
@@ -2875,64 +2911,6 @@
         "id": "para_5",
         "label": "The banner uses the global body font, page colors and primary button colors.",
         "content": "The banner uses the global body font, page colors and primary button colors."
-      }
-    ]
-  },
-  {
-    "name": "Hover and focus",
-    "source": "storelib",
-    "defined_in": "config/storelib_settings_schema.json",
-    "values_in": "config/settings.json under \"shopify\"",
-    "settings": [
-      {
-        "type": "header",
-        "id": "storelib_hdr_buttons",
-        "label": "Buttons on hover"
-      },
-      {
-        "type": "color",
-        "id": "storelib_button_hover_border",
-        "label": "Border",
-        "default": ""
-      },
-      {
-        "type": "header",
-        "id": "storelib_hdr_links",
-        "label": "Links on hover"
-      },
-      {
-        "type": "color",
-        "id": "storelib_link_hover",
-        "label": "Colour",
-        "default": ""
-      },
-      {
-        "type": "header",
-        "id": "storelib_hdr_inputs",
-        "label": "Fields"
-      },
-      {
-        "type": "color",
-        "id": "storelib_input_border",
-        "label": "Border",
-        "default": ""
-      },
-      {
-        "type": "color",
-        "id": "storelib_input_focus",
-        "label": "Focus ring",
-        "default": ""
-      },
-      {
-        "type": "range",
-        "id": "storelib_input_radius",
-        "label": "Corner radius",
-        "min": -1,
-        "max": 24,
-        "step": 1,
-        "unit": "px",
-        "default": -1,
-        "info": "-1 keeps the theme's own"
       }
     ]
   }

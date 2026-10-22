@@ -12,7 +12,7 @@ README.md says what each folder is and which ones Storelib reads back.
    every page, are `sections/header-group.json` and
    `sections/footer-group.json`; the theme's settings are
    `config/settings.json`.
-2. Commit and push to `claude/theme-settings-realtime-preview-3dfgg9`.
+2. Commit and push to `main`.
 3. Storelib reads every changed file and saves it to the site as a draft. A
    builder that is open shows it within a few seconds.
 4. The commit gets a status named "Storelib" and a comment saying which
@@ -62,7 +62,8 @@ change values, not the file: each value is in `config/settings.json` under
 default you leave as it is stays the default. To draw one of
 these where the theme wants it, declare its id in
 `shopify/config/settings_schema.json`: the builder then shows it there and
-leaves it out of Hover and focus, and the value stays where it is. Menus
+leaves it out of Hover and focus, and the value stays where it is. Storelib's
+comment on that commit says where each one now shows. Menus
 are `menus` in the same file, as Navigation in the builder shows them. Colour schemes are under `"shopify"` by the theme's own setting id, usually `color_schemes`.
 
 ## Live preview in the builder
