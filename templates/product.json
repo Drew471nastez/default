@@ -15,23 +15,6 @@
         "enable_sticky_add_to_cart": true
       },
       "blocks": {
-        "disclosures_g9mWze": {
-          "type": "disclosures",
-          "settings": {
-            "icon": "caret",
-            "heading": "Disclosures",
-            "dividers": true,
-            "text_color": "",
-            "divider_color": "{{ settings.color_palette.color2 }}",
-            "heading_preset": "h5",
-            "open_by_default": false,
-            "padding_block_end": 0,
-            "padding_inline_end": 0,
-            "padding_block_start": 0,
-            "padding_inline_start": 0,
-            "disclosure_heading_preset": "h6"
-          }
-        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -287,6 +270,23 @@
                 "padding_block_start": 0,
                 "padding_inline_start": 0
               }
+            },
+            "disclosures_g9mWze": {
+              "type": "disclosures",
+              "settings": {
+                "icon": "caret",
+                "heading": "Disclosures",
+                "dividers": true,
+                "text_color": "",
+                "divider_color": "{{ settings.color_palette.color2 }}",
+                "heading_preset": "h5",
+                "open_by_default": false,
+                "padding_block_end": 0,
+                "padding_inline_end": 0,
+                "padding_block_start": 0,
+                "padding_inline_start": 0,
+                "disclosure_heading_preset": "h6"
+              }
             }
           },
           "block_order": [
@@ -294,13 +294,12 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq"
+            "text_aEtTtq",
+            "disclosures_g9mWze"
           ]
         }
       },
-      "block_order": [
-        "disclosures_g9mWze"
-      ]
+      "block_order": []
     },
     "product_recommendations_qggXJq": {
       "name": "Recommended products",
@@ -435,10 +434,209 @@
       "block_order": [
         "text_cbcgyb"
       ]
+    },
+    "carousel-1792665810266": {
+      "name": "Carousel",
+      "type": "carousel",
+      "hidden": false,
+      "settings": {
+        "columns": 3,
+        "columns_gap": 12,
+        "padding_block_end": 48,
+        "padding_block_start": 48
+      },
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "static": true,
+          "settings": {
+            "gap": 12,
+            "width": "fill",
+            "border": "none",
+            "height": "fit",
+            "border_width": 1,
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "border_radius": 0,
+            "custom_height": 100,
+            "align_baseline": true,
+            "border_opacity": 100,
+            "video_position": "cover",
+            "background_media": "none",
+            "content_direction": "row",
+            "padding_block_end": 16,
+            "padding_inline_end": 0,
+            "vertical_alignment": "flex-end",
+            "vertical_on_mobile": false,
+            "custom_width_mobile": 100,
+            "padding_block_start": 0,
+            "horizontal_alignment": "space-between",
+            "padding_inline_start": 0,
+            "background_image_position": "cover",
+            "vertical_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start"
+          },
+          "blocks": {
+            "block-mvjexrvf-1-9d57s": {
+              "type": "text",
+              "settings": {
+                "font": "var(--font-body--family)",
+                "text": "<p>Discover elevated design </p>",
+                "wrap": "pretty",
+                "width": "fit-content",
+                "alignment": "left",
+                "max_width": "normal",
+                "type_preset": "h3"
+              }
+            }
+          },
+          "block_order": [
+            "block-mvjexrvf-1-9d57s"
+          ]
+        },
+        "static-carousel-content": {
+          "type": "_carousel-content",
+          "static": true,
+          "settings": {
+            "border": "none",
+            "height": "fit",
+            "position": "top",
+            "border_width": 1,
+            "border_radius": 0,
+            "border_opacity": 100,
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          },
+          "blocks": {
+            "block-mvjexrvf-2-fr1xc": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjexrvf-3-h3wz5": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjexrvf-4-qt1cf": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Artistry in action </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjexrvf-5-hykrt": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Bold style that's recognizable anywhere</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjexrvf-3-h3wz5",
+                "block-mvjexrvf-4-qt1cf",
+                "block-mvjexrvf-5-hykrt"
+              ]
+            },
+            "block-mvjexrvf-6-rcvto": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjexrvf-7-qg3i5": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjexrvf-8-o5e9u": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Uncompromising standards </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjexrvf-9-9ejk4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Expert construction and an impeccable finish</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjexrvf-7-qg3i5",
+                "block-mvjexrvf-8-o5e9u",
+                "block-mvjexrvf-9-9ejk4"
+              ]
+            },
+            "block-mvjexrvf-10-xj3px": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjexrvf-11-am319": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjexrvf-12-sfohk": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Made to last </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjexrvf-13-9xtbf": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Pieces that only get better with time and wear </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjexrvf-11-am319",
+                "block-mvjexrvf-12-sfohk",
+                "block-mvjexrvf-13-9xtbf"
+              ]
+            },
+            "block-mvjexrvf-14-obgks": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjexrvf-15-obar2": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjexrvf-16-s604i": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<h2>Quality you can feel</h2>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjexrvf-17-7a4lb": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Authentic materials, no compromises </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjexrvf-15-obar2",
+                "block-mvjexrvf-16-s604i",
+                "block-mvjexrvf-17-7a4lb"
+              ]
+            }
+          },
+          "block_order": [
+            "block-mvjexrvf-2-fr1xc",
+            "block-mvjexrvf-6-rcvto",
+            "block-mvjexrvf-10-xj3px",
+            "block-mvjexrvf-14-obgks"
+          ]
+        }
+      },
+      "block_order": []
     }
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq"
+    "product_recommendations_qggXJq",
+    "carousel-1792665810266"
   ]
 }

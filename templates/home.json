@@ -14,7 +14,7 @@
         "section_height": "medium",
         "toggle_overlay": true,
         "open_in_new_tab": false,
-        "background_color": "rgba(0,0,0,0)",
+        "background_color": "#000000",
         "content_direction": "column",
         "padding_block_end": 72,
         "blurred_reflection": false,
@@ -45,7 +45,7 @@
             "font_size": "1rem",
             "max_width": "normal",
             "background": false,
-            "text_color": "{{ settings.color_palette.background }}",
+            "text_color": "#ffffff",
             "line_height": "normal",
             "type_preset": "h2",
             "corner_radius": 0,
@@ -70,7 +70,7 @@
             "custom_button_text": "{{ settings.color_palette.background }}",
             "custom_width_mobile": 100,
             "custom_button_border": "{{ settings.color_palette.background }}",
-            "custom_button_background": "rgba(0,0,0,0)"
+            "custom_button_background": "#251c1c"
           }
         }
       },
@@ -94,7 +94,7 @@
         "max_products": 8,
         "section_width": "page-width",
         "mobile_columns": "2",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "#ffffff",
         "mobile_card_size": "60cqw",
         "padding_block_end": 48,
         "carousel_on_mobile": false,
@@ -253,10 +253,210 @@
         }
       },
       "block_order": []
+    },
+    "carousel-1792665996057": {
+      "name": "Carousel",
+      "type": "carousel",
+      "hidden": false,
+      "settings": {
+        "columns": 3,
+        "columns_gap": 12,
+        "background_color": "#000000",
+        "padding_block_end": 48,
+        "padding_block_start": 48
+      },
+      "blocks": {
+        "static-header": {
+          "type": "group",
+          "static": true,
+          "settings": {
+            "gap": 12,
+            "width": "fill",
+            "border": "none",
+            "height": "fit",
+            "border_width": 1,
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "border_radius": 0,
+            "custom_height": 100,
+            "align_baseline": true,
+            "border_opacity": 100,
+            "video_position": "cover",
+            "background_media": "none",
+            "content_direction": "row",
+            "padding_block_end": 16,
+            "padding_inline_end": 0,
+            "vertical_alignment": "flex-end",
+            "vertical_on_mobile": false,
+            "custom_width_mobile": 100,
+            "padding_block_start": 0,
+            "horizontal_alignment": "space-between",
+            "padding_inline_start": 0,
+            "background_image_position": "cover",
+            "vertical_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start"
+          },
+          "blocks": {
+            "block-mvjf1r89-21-43mu8": {
+              "type": "text",
+              "settings": {
+                "font": "var(--font-body--family)",
+                "text": "<p>Discover elevated design </p>",
+                "wrap": "pretty",
+                "width": "fit-content",
+                "alignment": "left",
+                "max_width": "normal",
+                "type_preset": "h3"
+              }
+            }
+          },
+          "block_order": [
+            "block-mvjf1r89-21-43mu8"
+          ]
+        },
+        "static-carousel-content": {
+          "type": "_carousel-content",
+          "static": true,
+          "settings": {
+            "border": "none",
+            "height": "fit",
+            "position": "top",
+            "border_width": 1,
+            "border_radius": 0,
+            "border_opacity": 100,
+            "padding_block_end": 0,
+            "padding_inline_end": 0,
+            "padding_block_start": 0,
+            "padding_inline_start": 0
+          },
+          "blocks": {
+            "block-mvjf1r89-22-tg9q1": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjf1r89-23-i6dkb": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjf1r89-24-o2yqx": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Artistry in action </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjf1r89-25-yocko": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Bold style that's recognizable anywhere</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjf1r89-23-i6dkb",
+                "block-mvjf1r89-24-o2yqx",
+                "block-mvjf1r89-25-yocko"
+              ]
+            },
+            "block-mvjf1r89-26-3p378": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjf1r89-27-qy637": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjf1r89-28-5bzae": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Uncompromising standards </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjf1r89-29-s8z7j": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Expert construction and an impeccable finish</p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjf1r89-27-qy637",
+                "block-mvjf1r89-28-5bzae",
+                "block-mvjf1r89-29-s8z7j"
+              ]
+            },
+            "block-mvjf1r89-30-qy61t": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjf1r89-31-1sll4": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjf1r89-32-pclv2": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Made to last </p>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjf1r89-33-5c757": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Pieces that only get better with time and wear </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjf1r89-31-1sll4",
+                "block-mvjf1r89-32-pclv2",
+                "block-mvjf1r89-33-5c757"
+              ]
+            },
+            "block-mvjf1r89-34-wib49": {
+              "type": "_card",
+              "settings": {},
+              "blocks": {
+                "block-mvjf1r89-35-jyqb8": {
+                  "type": "image",
+                  "settings": {}
+                },
+                "block-mvjf1r89-36-q2n5n": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<h2>Quality you can feel</h2>",
+                    "type_preset": "h5"
+                  }
+                },
+                "block-mvjf1r89-37-f0ogk": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Authentic materials, no compromises </p>"
+                  }
+                }
+              },
+              "block_order": [
+                "block-mvjf1r89-35-jyqb8",
+                "block-mvjf1r89-36-q2n5n",
+                "block-mvjf1r89-37-f0ogk"
+              ]
+            }
+          },
+          "block_order": [
+            "block-mvjf1r89-22-tg9q1",
+            "block-mvjf1r89-26-3p378",
+            "block-mvjf1r89-30-qy61t",
+            "block-mvjf1r89-34-wib49"
+          ]
+        }
+      },
+      "block_order": []
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "carousel-1792665996057"
   ]
 }

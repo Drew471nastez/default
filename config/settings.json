@@ -54,7 +54,7 @@
     "type_size_h5": "14",
     "type_size_h6": "12",
     "color_palette": {
-      "color1": "#333333",
+      "color1": "#000000",
       "color2": "#DFDFDF",
       "background": "#ffffff",
       "foreground": "#000000"
@@ -64,7 +64,7 @@
     "show_cart_note": false,
     "type_body_font": "inter_n4",
     "cart_price_font": "subheading",
-    "page_text_color": "{{ settings.color_palette.foreground }}",
+    "page_text_color": "#ffffff",
     "type_accent_font": "inter_n7",
     "card_hover_effect": "none",
     "drawer_text_color": "{{ settings.color_palette.foreground }}",
@@ -128,7 +128,7 @@
     "palette_secondary_button_border": "{{ settings.color_palette.foreground }}",
     "palette_selected_variant_border": "{{ settings.color_palette.foreground }}",
     "currency_code_enabled_cart_items": false,
-    "palette_primary_button_background": "{{ settings.color_palette.foreground }}",
+    "palette_primary_button_background": "#000000",
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_product_pages": false,
     "palette_secondary_button_background": "rgba(0,0,0,0)",
