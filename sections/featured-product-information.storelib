@@ -41,6 +41,68 @@
   %}
 </featured-product-information>
 
+{% stylesheet %}
+  /* A real two-column grid. The product page uses subgrid, which collapses this section. */
+  featured-product-information .product-information__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  featured-product-information .product-information__grid .product-information__media,
+  featured-product-information .product-information__grid .product-details {
+    grid-column: 1 / -1;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    featured-product-information .product-information__grid.product-information--media-left,
+    featured-product-information .product-information__grid.product-information--media-right,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-left,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-right {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-column: 1 / -1;
+    }
+
+    featured-product-information .product-information__grid.product-information--media-left .product-information__media,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-left .product-information__media {
+      grid-column: 1;
+    }
+
+    featured-product-information .product-information__grid.product-information--media-left .product-details,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-left .product-details {
+      grid-column: 2;
+    }
+
+    featured-product-information .product-information__grid.product-information--media-right .product-information__media,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-right .product-information__media {
+      grid-column: 2;
+      order: 0;
+    }
+
+    featured-product-information .product-information__grid.product-information--media-right .product-details,
+    featured-product-information .product-information__grid.product-information__grid--half.product-information--media-right .product-details {
+      grid-column: 1;
+      order: 0;
+    }
+  }
+
+  featured-product-information .product-media-container {
+    width: 100%;
+  }
+
+  featured-product-information .media-gallery--carousel slideshow-arrows {
+    mix-blend-mode: normal;
+  }
+
+  featured-product-information .media-gallery--carousel slideshow-arrows .slideshow-control {
+    opacity: 1;
+  }
+{% endstylesheet %}
+
 
 
 </template>

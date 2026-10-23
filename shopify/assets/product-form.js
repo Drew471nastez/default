@@ -233,7 +233,7 @@ class ProductFormComponent extends Component {
     super.connectedCallback();
 
     const { signal } = this.#abortController;
-    const target = this.closest('.shopify-section, dialog, product-card');
+    const target = this.closest('product-card, dialog, featured-product-information, .shopify-section');
     target?.addEventListener(StandardEvents.productSelect, this.#onProductSelect, { signal });
 
     // Listen for cart updates to sync data-cart-quantity
@@ -1093,7 +1093,7 @@ class ProductFormComponent extends Component {
    * @returns {import('@theme/variant-picker').default | null}
    */
   #getVariantPicker() {
-    const container = this.closest('product-card') ?? this.closest('dialog') ?? this.closest('.shopify-section');
+    const container = this.closest('product-card') ?? this.closest('dialog') ?? this.closest('featured-product-information') ?? this.closest('.shopify-section');
     const pickers = /** @type {import('@theme/variant-picker').default[]} */ (
       Array.from(container?.querySelectorAll('variant-picker, swatches-variant-picker-component') ?? [])
     );

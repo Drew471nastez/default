@@ -149,16 +149,17 @@
 
   .search-modal__content {
     /* Approx set the top so when the content is at max height, the modal is centered */
-    --modal-top-margin: calc(50dvh - var(--modal-max-height) / 2 - 2rem);
-    --modal-width: 66dvw;
+    --modal-top-margin: calc(12vh);
+    --modal-width: min(36rem, calc(100vw - 48px));
 
     padding: 0;
-    border: var(--style-border-popover);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
 
     @media screen and (min-width: 750px) {
       width: var(--modal-width);
       margin-block-start: var(--modal-top-margin);
       overflow: hidden;
+      border-radius: 16px;
     }
   }
 
@@ -170,18 +171,61 @@
   }
 
   .dialog-modal[open].search-modal__content {
-    transform-origin: bottom center;
-    animation: search-element-slide-in-bottom 300ms var(--ease-out-quad) forwards;
+    transform-origin: top center;
+    animation: search-modal-in 200ms var(--ease-out-quad) forwards;
     border-radius: var(--search-border-radius);
-    box-shadow: var(--shadow-popover);
+    box-shadow: 0 18px 50px rgb(0 0 0 / 0.12);
 
     @media screen and (max-width: 749px) {
       border-radius: 0;
+      box-shadow: none;
+      animation: search-modal-in-mobile 220ms var(--ease-out-quad) forwards;
     }
   }
 
   .dialog-modal.search-modal__content.dialog-closing {
-    animation: search-element-slide-out-bottom 200ms var(--ease-out-quad) forwards;
+    animation: search-modal-out 160ms var(--ease-out-quad) forwards;
+  }
+
+  @keyframes search-modal-in {
+    from {
+      opacity: 0;
+      translate: 0 8px;
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes search-modal-in-mobile {
+    from {
+      opacity: 0;
+      translate: 0 -12px;
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes search-modal-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dialog-modal[open].search-modal__content,
+    .dialog-modal.search-modal__content.dialog-closing {
+      animation: none;
+    }
   }
 
   .search-modal__content[open] {
@@ -308,19 +352,14 @@
   }
 
   .predictive-search-form__header-inner {
-    background: var(--color-background);
-    border: var(--search-border-width) solid var(--color-border);
+    background: transparent;
+    border: 0;
     color: var(--color-foreground);
-    border-radius: var(--style-border-radius-popover);
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-
-    @media screen and (max-width: 749px) {
-      border-radius: var(--style-border-radius-inputs);
-      border: none;
-    }
   }
 
   .predictive-search-form__header-inner:focus-within {
@@ -338,12 +377,18 @@
     z-index: var(--layer-heightened);
     width: 100%;
     align-items: center;
-    background-color: var(--color-input-background);
-    border: var(--search-border-width) solid var(--color-border);
-    border-radius: var(--style-border-radius-inputs);
+    background-color: var(--color-background);
+    border: 0;
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+    border-radius: 0;
 
     @media screen and (max-width: 749px) {
-      padding: var(--padding-2xs) var(--padding-sm);
+      padding: 8px 12px;
+      min-height: 60px;
+    }
+
+    @media screen and (min-width: 750px) {
+      padding: 6px 8px 6px 4px;
     }
   }
 
@@ -357,9 +402,9 @@
   }
 
   input.search-input {
-    border-radius: var(--style-border-radius-inputs);
-    padding-block: var(--padding-sm);
-    font-size: var(--font-size--md);
+    border-radius: 0;
+    padding-block: 12px;
+    font-size: 1rem;
     width: 100%;
     color: var(--color-foreground);
     padding-inline: calc(var(--margin-lg) + var(--icon-size-lg)) 0;
@@ -368,6 +413,11 @@
     overflow: hidden;
     outline: none;
     border: 0;
+
+    @media screen and (max-width: 749px) {
+      font-size: 1.0625rem;
+      min-height: 44px;
+    }
   }
 
   input.search-input::placeholder {

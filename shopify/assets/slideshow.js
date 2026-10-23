@@ -322,6 +322,7 @@ export class Slideshow extends Component {
    */
   next(event, options) {
     event?.preventDefault();
+    event?.stopPropagation();
     this.select(this.nextIndex, event, options);
   }
 
@@ -333,6 +334,7 @@ export class Slideshow extends Component {
    */
   previous(event, options) {
     event?.preventDefault();
+    event?.stopPropagation();
     this.select(this.previousIndex, event, options);
   }
 
@@ -560,7 +562,10 @@ export class Slideshow extends Component {
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.isNested || this.disabled;
+    /* A product card inside another carousel still swipes its own pictures.
+       Dragging past either end is handed back to the parent slideshow. */
+    const keepCardSwipe = this.closest('.card-gallery') != null;
+    this.disabled = (this.isNested && !keepCardSwipe) || this.disabled;
 
     this.resume();
 

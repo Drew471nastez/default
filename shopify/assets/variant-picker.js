@@ -493,11 +493,30 @@ export default class VariantPicker extends Component {
     const element = this.closest(elementSelector);
     const newElement = newHtml.querySelector(elementSelector);
 
-    if (!element || !newElement) {
-      throw new Error(`No new element source found for ${elementSelector}`);
+    if (element && newElement) {
+      morph(element, newElement);
+      return;
     }
 
-    morph(element, newElement);
+    const root = element || this.closest('featured-product-information') || this.closest('.shopify-section');
+    if (!root) return;
+
+    for (const selector of ['media-gallery', 'product-price', 'product-inventory', 'product-form-component']) {
+      const current = root.querySelector(selector);
+      const next = newHtml.querySelector(selector);
+      if (!current || !next) continue;
+      try {
+        morph(current, next);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    try {
+      this.updateVariantPicker(newHtml);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /**

@@ -6,13 +6,13 @@ import { StandardEvents, ProductSelectEvent } from '@shopify/events';
 class ProductInventory extends Component {
   connectedCallback() {
     super.connectedCallback();
-    const closestSection = this.closest('.shopify-section, dialog');
+    const closestSection = this.closest('.shopify-section, dialog, featured-product-information');
     closestSection?.addEventListener(StandardEvents.productSelect, this.#handleProductSelect);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    const closestSection = this.closest('.shopify-section, dialog');
+    const closestSection = this.closest('.shopify-section, dialog, featured-product-information');
     closestSection?.removeEventListener(StandardEvents.productSelect, this.#handleProductSelect);
   }
 

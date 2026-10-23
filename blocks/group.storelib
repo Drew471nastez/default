@@ -2,7 +2,7 @@
 
 
 {%- capture children %}
-  {% content_for 'blocks' %}
+  {% content_for 'blocks', closest.product: closest.product %}
 {% endcapture %}
 
 {% render 'group',

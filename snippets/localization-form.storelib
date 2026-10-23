@@ -50,7 +50,7 @@
   {% assign localization_label = 'content.localization_region_and_language' | t %}
 
   {%- form 'localization',
-    id: 'LocalizationForm',
+    id: 'LocalizationForm-{{ form_id }}',
     class: 'localization-form',
     ref: 'form',
     return_to: back,
@@ -67,7 +67,7 @@
             </div>
             <input
               class="country-filter__input"
-              id="country-filter-input"
+              id="country-filter-input-{{ form_id }}"
               type="search"
               name="country_filter"
               value=""
@@ -87,7 +87,7 @@
             >
             <label
               class="field__label visually-hidden"
-              for="country-filter-input"
+              for="country-filter-input-{{ form_id }}"
             >
               {{- 'content.search' | t -}}
             </label>
@@ -263,7 +263,7 @@
           <span class="language-selector__label">{{ 'content.language' | t }}</span>
         {% endif %}
         <select
-          id="{{ localization_style }}Select"
+          id="{{ localization_style }}Select-{{ form_id }}"
           class="localization-form__select"
           name="language_code"
           aria-label="{{ 'content.language' | t }}"
@@ -338,15 +338,15 @@
     pointer-events: none;
   }
 
-  /* Each country with its flag, a small round mark before the name. */
+  /* Country flags stay rectangular. A circle crops the picture and looks muddy. */
   .localization-form__flag {
     flex-shrink: 0;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
+    width: 22px;
+    height: 15px;
+    border-radius: 2px;
     background-position: center;
     background-size: cover;
-    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / var(--opacity-10, 0.1));
+    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / 0.14);
   }
 
   .localization-form__list-item:focus-visible {
@@ -393,16 +393,17 @@
   }
 
   .localization-form__list-item:not([hidden]) {
-    margin-block-end: var(--margin-3xs);
+    margin-block-end: 2px;
     display: flex;
-    gap: var(--margin-sm);
-    padding: 8px;
+    gap: 10px;
+    min-height: 44px;
+    padding: 8px 10px;
     border-radius: 8px;
-    line-height: var(--font-line-height-md);
+    line-height: 1.3;
     align-items: center;
     text-align: start;
     cursor: pointer;
-    transition: background-color var(--animation-speed) var(--animation-easing);
+    transition: background-color 160ms ease;
 
     .country {
       flex: 1;
@@ -553,13 +554,20 @@
     font-size: var(--font-size-lg);
     padding-block: var(--padding-md);
     padding-inline: calc(var(--margin-md) + var(--padding-xl)) var(--padding-lg);
-    border: 1px solid var(--color-foreground);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
+    border-radius: 10px;
     color: var(--color-input-text);
     background-color: var(--color-input-background);
     outline-offset: -1px;
+    transition: border-color 160ms ease;
 
     @media screen and (min-width: 750px) {
-      height: 36px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    &:focus {
+      border-color: rgb(var(--color-foreground-rgb) / 0.45);
     }
   }
 

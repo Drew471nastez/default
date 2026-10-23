@@ -562,8 +562,12 @@ test('a featured product reaches every block inside it, and recently viewed find
 test('the logo is a picture, text, or both, with the text on either side', async () => {
   const logo=schema.find(group=>group.name==='Logo').settings;
   const ids=logo.map(setting=>setting.id).filter(Boolean);
-  for (const id of ['logo_style','logo','logo_inverse','logo_height','logo_height_mobile','logo_text','logo_text_position','logo_text_font','logo_text_weight','logo_text_size','logo_text_size_mobile','favicon']) assert(ids.includes(id),id);
-  assert(!logo.some(setting=>/Default logo|Mobile/i.test(setting.label||'')),'no "Default logo" or "Mobile" labels');
+  for (const id of ['logo_style','logo','logo_mobile','logo_inverse','logo_inverse_mobile','logo_height','logo_height_mobile','logo_text','logo_text_position','logo_text_font','logo_text_weight','logo_text_size','logo_text_size_mobile','favicon']) assert(ids.includes(id),id);
+  assert.equal(logo.find(setting=>setting.id==='logo').label,'Logo desktop');
+  assert.equal(logo.find(setting=>setting.id==='logo_mobile').label,'Logo mobile');
+  assert.equal(logo.find(setting=>setting.id==='logo_inverse').label,'Logo desktop on a transparent header');
+  assert.equal(logo.find(setting=>setting.id==='logo_inverse_mobile').label,'Logo mobile on a transparent header');
+  assert(!logo.some(setting=>/Default logo/i.test(setting.label||'')),'no "Default logo" label');
   const block=source('blocks/_header-logo.storelib');
   assert.match(block,/{%- when 'text' -%}\s*<span class="header-logo__text">{{ logo_text }}<\/span>/);
   assert.match(block,/header-logo--text-{{ settings.logo_text_position \| default: 'right' }}/);
